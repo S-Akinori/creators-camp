@@ -1,0 +1,36 @@
+/* .text {
+    font-weight: bold;
+    font-size: 1rem;
+    stroke: #652786;
+    fill: #ffffff;
+    letter-spacing: 11px;
+    text-anchor: middle;
+}
+
+.use:nth-of-type(1) {
+    stroke-width: 1rem;
+    paint-order: stroke;
+    stroke-linejoin: round;
+}
+
+.use:nth-of-type(2) {
+    stroke-width: 0;
+} */
+
+.text {
+    font-weight: bold;
+    stroke: #652786;
+    /* fill: #ffffff; */
+    letter-spacing: 5px;
+    text-anchor: middle;
+}
+
+.text:nth-of-type(1) {
+    stroke-width: 0.8rem;
+    paint-order: stroke;
+    stroke-linejoin: round;
+}
+
+.text:nth-of-type(2) {
+    stroke-width: 0;
+}

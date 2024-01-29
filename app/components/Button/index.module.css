@@ -1,0 +1,11 @@
+.ArrowButton::before {
+    content: '';
+    display: block;
+    position: absolute;
+    background: var(--accent-color);
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100%;
+    clip-path: polygon(0 0, 0% 100%, 100% 50%);
+}
