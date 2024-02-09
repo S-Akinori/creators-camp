@@ -34,3 +34,11 @@ body {
     text-wrap: balance;
   }
 }
+
+.page p {
+  margin-bottom: 1rem;
+}
+
+.page h2 {
+  margin-bottom: 1rem;
+}
