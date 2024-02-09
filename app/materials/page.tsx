@@ -13,8 +13,8 @@ export default function MaterialsIndexPage() {
                 <h1><TextShadow className="text-2xl">素材一覧</TextShadow></h1>
                 <div className="flex flex-wrap">
                     {tags.map((tag) => (
-                        <div className="p-4 w-1/2 md:w-1/5">
-                            <Button key={tag.id} className="w-full py-2" color="main-cont">
+                        <div key={tag.id} className="p-4 w-1/2 md:w-1/5">
+                            <Button className="w-full py-2" color="main-cont">
                                 {tag.name}
                             </Button>
                         </div>
