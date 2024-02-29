@@ -1,19 +1,24 @@
 import Image from "next/image";
 import Container from "../components/Container";
 import TextShadow from "../components/TextShadow";
-import Button from "../components/Button";
+import Button from "../components/atoms/Button";
 import Link from "next/link";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { getUser } from "../lib/auth";
+import { User } from "../types/User";
+import useFetchUser from "../lib/hooks/useFetchUser";
+import { useSession } from "next-auth/react";
+import { getUserMaterials } from "../lib/material";
+import MaterialList from "../components/organisms/MaterialList";
 
-const UserProfilePage = () => {
-    const user = {
-        name: "サンプルユーザー",
-        image: "/images/character_CLE_01.png",
-        contents: ["Image 1", "Image 2", "Video 1"],
-        description: "サンプルユーザーのプロフィールです。サンプルユーザーのプロフィールです。サンプルユーザーのプロフィールです。",
-    };
+const UserProfilePage = async () => {
+    const user = await getUser();
+    const materials = await getUserMaterials(user.id);
 
     return (
         <main className="min-h-screen">
+            {user && (
             <Container>
                 <div>
                     <div className="flex items-center mb-4">
@@ -34,18 +39,10 @@ const UserProfilePage = () => {
                 </div>
                 <div className="mt-8">
                     <h2><TextShadow className="text-2xl">素材一覧</TextShadow></h2>
-                    <div className="flex justify-center flex-wrap">
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                        <div className="w-1/2 md:w-1/4 p-4 mb-4"><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></div>
-                    </div>
+                    <MaterialList materials={materials} />
                 </div>
             </Container>
+            )}
         </main>
     );
 };

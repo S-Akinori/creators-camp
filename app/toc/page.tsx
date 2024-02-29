@@ -3,7 +3,7 @@ import Container from "../components/Container";
 import TextShadow from "../components/TextShadow";
 import Input from "../components/Form/Input";
 import Label from "../components/Form/Label";
-import Button from "../components/Button";
+import Button from "../components/atoms/Button";
 import ReactMarkdown from 'react-markdown';
 import { tocText } from "@/contents/toc";
 

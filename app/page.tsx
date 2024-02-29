@@ -1,22 +1,32 @@
 import Image from "next/image";
 import TextShadow from "./components/TextShadow";
 import FV from "./components/FV";
-import ArrowButton from "./components/Button/ArrowButton";
+import ArrowButton from "./components/atoms/Button/ArrowButton";
 import Title from "./components/Title";
 import Container from "./components/Container";
-import Button from "./components/Button";
+import Button from "./components/atoms/Button";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Link from "next/link";
+import useMaterial from "./lib/hooks/useMaterial";
+import UserCard from "./components/organisms/UserCard";
+import MaterialCard from "./components/organisms/MaterialCard";
+import { getCategoryMaterials, getMaterial, getMaterials } from "./lib/material";
+import { getCategories, getCategory } from "./lib/category";
 
-export default function Home() {
+export default async function Home() {
+  const materials = await getMaterials()
+  const plugins = await getCategory(2)
+  const musics = await getCategory(3)
+  const illustrations = await getCategory(4)
+  const categories = await getCategories();
   return (
     <>
       <Header />
       <div className="flex justify-end mt-8">
         <Link href="/" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
-        <Link href="/" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
-        <Link href="/" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
+        <Link href="/materials" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
+        <Link href="/user/material/create" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
       </div>
       <main className="min-h-screen">
         <FV />
@@ -40,30 +50,25 @@ export default function Home() {
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title>ジャンル一覧</Title>
           <div className="max-w-2xl flex justify-center flex-wrap mx-auto">
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/tool.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/plugin.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/bgm.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/se.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/voice.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/picture.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/dot.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/map.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/ui.png" width={110} height={165} alt="" /></div>
-            <div className="w-1/3 md:w-1/5 p-4 mb-4"><Image className="mx-auto" src="/images/background.png" width={110} height={165} alt="" /></div>
+            {categories?.map((category) => (
+              <div key={category.id} className="w-1/3 md:w-1/5 p-4 mb-4">
+                <Link href={`materials?category_id=${category.id}`}>
+                    <Image src={`/images/${category.slug}.png`} width={110} height={165} alt={category.name} />
+                </Link>
+              </div>
+            ))}
           </div>
         </Container>
         <Container>
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title>素材一覧</Title>
-          <div className="flex justify-center flex-wrap">
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
-            <div className="w-1/2 md:w-1/4 p-4 mb-4"><Link href='/materials/1'><Image className="mx-auto" src="/images/material.png" width={180} height={264} alt="" /></Link></div>
+          <div className="flex flex-wrap">
+            {materials?.map((material) => (
+              <MaterialCard key={material.id} material={material} />
+            ))}
+          </div>
+          <div className="text-right">
+            <Link href="/materials" className="bg-gray-400 py-2 px-20 text-white">もっと素材を見る →</Link>
           </div>
         </Container>
         <Container>
@@ -75,10 +80,9 @@ export default function Home() {
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">プラグインいいねランキング</TextShadow></p>
             </div>
             <div className="flex flex-wrap">
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
+              {plugins.materials?.map((material) => (
+                <MaterialCard key={material.id} material={material} />
+              ))}
             </div>
           </div>
           <div className="mb-8">
@@ -87,10 +91,9 @@ export default function Home() {
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">ミュージックいいねランキング</TextShadow></p>
             </div>
             <div className="flex flex-wrap">
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
+              {musics.materials?.map((material) => (
+                <MaterialCard key={material.id} material={material} />
+              ))}
             </div>
           </div>
           <div className="mb-8">
@@ -99,10 +102,9 @@ export default function Home() {
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">イラストいいねランキング</TextShadow></p>
             </div>
             <div className="flex flex-wrap">
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
-              <div className="p-4 w-1/2 md:w-1/4"><div className="bg-white border-4 border-gray-500 aspect-[2/3]"></div></div>
+              {illustrations.materials?.map((material) => (
+                <MaterialCard key={material.id} material={material} />
+              ))}
             </div>
           </div>
         </Container>

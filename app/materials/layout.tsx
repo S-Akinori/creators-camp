@@ -21,7 +21,7 @@ export default function LoginLayout({
     <html lang="ja">
       <body className={reggaeOne.className}>
         <Header />
-        <main className="py-16">
+        <main className="py-16 min-h-screen">
             {children}
         </main>
         <Footer />

@@ -6,7 +6,7 @@ import FormControl from "@/app/components/Form/FormControl";
 import Label from "@/app/components/Form/Label";
 import Textarea from "@/app/components/Form/Textarea";
 import Select from "@/app/components/Form/Select";
-import Button from "@/app/components/Button";
+import Button from "@/app/components/atoms/Button";
 
 const UserMaterialEditPage = () => {
     const user = {
