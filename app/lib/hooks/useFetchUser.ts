@@ -9,7 +9,7 @@ const useFetchUser = () => {
 
   useEffect(() => {
     getUser().then((res) => {
-      setUser(res.data)
+      setUser(res)
     })
   }, [])
 
