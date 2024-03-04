@@ -29,6 +29,10 @@ export const login = async ({email, password}: LoginProps) => {
     const res = await http.post('/login', {
         email,
         password
+    }, {
+        headers: {
+            'Accept': 'application/json'
+        }
     })
     return res
 }
@@ -40,14 +44,12 @@ export const logout = async () => {
 
 export const getUser = async (): Promise<User> => {
     // const res = await http.get('/user')
-    const res = await fetch(`${process.env.API_URL}/user`, {
+    console.log(cookies().get("laravel_session")?.value)
+    const res = await http.get(`/user`, {
         headers: {
-            Cookie: `laravel_session=${
-                cookies().get("laravel_session")?.value
-            }`,
+            referer: process.env.APP_URL,
+            Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
         },
-        credentials: "include",
     })
-    const data = await res.json()
-    return data;
+    return res.data;
 }

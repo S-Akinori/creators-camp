@@ -2,7 +2,7 @@
 
 import { User } from "@/app/types/User"
 import { useEffect, useState } from "react"
-import { getUser } from "../auth"
+import { getUser } from "../authClient"
 
 const useFetchUser = () => {
   const [user, setUser] = useState<User | null>(null)

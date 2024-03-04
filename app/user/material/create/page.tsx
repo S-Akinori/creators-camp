@@ -65,9 +65,9 @@ const UserMaterialCreatePage = () => {
         <main className="min-h-screen">
             <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
                 <div className="text-center">
-                    <p className="text-2xl font-bold">アップロード完了</p>
-                    <Button><Link href='/user/material/create'>続けて素材をアップする</Link></Button>
-                    <Button><Link href={'/materials/' + material?.id}>アップした素材を見る</Link></Button>
+                    <p className="text-2xl font-bold mb-4">アップロード完了</p>
+                    <Button className="mx-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                    <Button className="mx-4"><Link href={'/materials/' + material?.id}>アップした素材を見る</Link></Button>
                 </div>
             </Modal>
             <Container>

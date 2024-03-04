@@ -28,6 +28,11 @@ export const login = async ({email, password}: LoginProps) => {
     const res = await http.post('/login', {
         email,
         password
+    }, {
+        headers: {
+            'Accept': 'application/json'
+        },
+        withCredentials: true
     })
     return res
 }

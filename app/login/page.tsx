@@ -14,6 +14,7 @@ import { csrf } from "../lib/csrf";
 import FormControl from "../components/Form/FormControl";
 import ErrorMessage from "../components/atoms/Error";
 import { login } from "../lib/authClient";
+import { http } from "../lib/http";
 
 export default function Login() {
   const [errors, setErrors] = useState({} as any)
@@ -28,7 +29,9 @@ export default function Login() {
     await csrf()
     try {
       const res = await login(rawFormData)
+      const userRes = await http.get('/user')
       console.log(res)
+      console.log(userRes.data)
       router.push('/user')
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {

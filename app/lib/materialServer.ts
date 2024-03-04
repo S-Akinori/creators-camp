@@ -4,7 +4,6 @@ import { http } from "./http"
 import Axios from "axios"
 
 export const getMaterial = async (id: number) : Promise<Material> => {
-    console.log(cookies().get("laravel_session"))
     const res = await fetch(`${process.env.API_URL}/materials/${id}`, {
         headers: {
             Cookie: `laravel_session=${
