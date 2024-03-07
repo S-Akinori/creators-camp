@@ -11,7 +11,7 @@ import Link from "next/link";
 import useMaterial from "./lib/hooks/useMaterial";
 import UserCard from "./components/organisms/UserCard";
 import MaterialCard from "./components/organisms/MaterialCard";
-import { getCategoryMaterials, getMaterial, getMaterials } from "./lib/material";
+import { getCategoryMaterials, getMaterials } from "./lib/material";
 import { getCategories, getCategory } from "./lib/category";
 
 export default async function Home() {
@@ -20,6 +20,7 @@ export default async function Home() {
   const musics = await getCategory(3)
   const illustrations = await getCategory(4)
   const categories = await getCategories();
+  console.log(materials)
   return (
     <>
       <Header />
