@@ -2,25 +2,12 @@ import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
 
-// 共通のプロパティを定義
-interface BaseProps {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
-    color?: 'main' | 'accent' | 'main-cont' | 'accent-cont';
+    color?: 'main' | 'accent' | 'main-cont' | 'accent-cont'
+    href?: string;
     className?: string;
 }
-
-// hrefがある場合の型
-interface LinkProps extends BaseProps {
-    href: string;
-}
-
-// hrefがない場合の型
-interface ButtonProps extends BaseProps {
-    href?: never;
-}
-
-// Propsの型をhrefの有無によって分岐
-type Props = LinkProps | ButtonProps;
 
 export const Button = ({ children, color = 'main', className = '', href, ...rest }: Props) => {
     const colors = {
