@@ -22,6 +22,7 @@ export default async function Home() {
   const musicsData = await getCategory(3)
   const illustrationsData = await getCategory(4)
   const categories = await getCategories();
+  console.log(materialsPagination.data)
   return (
     <>
       <Header />
