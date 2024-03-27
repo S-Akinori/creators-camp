@@ -25,7 +25,7 @@ const UserProfileUpdateForm = ({user}: Props) => {
         setFormState('submitting')
         await csrf()
         try {
-            if(formData.has('file')) {
+            if((formData.get('file') as File).name !== '') {
                 const fileRes = await http.post('/file', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -33,8 +33,6 @@ const UserProfileUpdateForm = ({user}: Props) => {
                     })
                 const fileData = fileRes.data
                 formData.set('image', fileData.path)
-            } else {
-                formData.delete('file')
             }
             const data = Object.fromEntries(formData.entries())
             const res = await http.put('/user/profile-information', data)
