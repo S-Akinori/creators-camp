@@ -2,6 +2,8 @@ import { Material, MaterialError } from "@/app/types/Material";
 import Image from "next/image";
 import Link from "next/link";
 import UserCard from "../UserCard";
+import clsx from "clsx";
+import { reggaeOne } from "@/app/fonts";
 
 const MaterialCard = ({ material }: { material: Material }) => {
     return (
@@ -9,7 +11,7 @@ const MaterialCard = ({ material }: { material: Material }) => {
             <Link href={`/materials/${material.id}`} className="block w-full relative aspect-video">
                 <Image className="mx-auto relative" src={material.image} fill objectFit="cover" alt={material.name} />
             </Link>
-            <div className="bg-white p-2">
+            <div className={clsx(["bg-white p-2", reggaeOne.className])}>
                 <p>{material.name}</p>
                 {material.user && <UserCard user={material.user} />}
             </div>

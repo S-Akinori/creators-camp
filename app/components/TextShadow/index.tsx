@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './index.module.css';
+import { reggaeOne } from '@/app/fonts';
 
 interface Props {
     children: string | string[];
@@ -36,8 +37,8 @@ const TextShadow: React.FC<Props> = ({ children, className = '', color = 'main-c
 
     return (
         <svg className={aligns[align]} width={bbox.width * 1.1} height={bbox.height * 1.1}>
-            <text className={`${styles.text} ${className} ${colors[color]}`} x="50%" y="50%" dy="0.4em" ref={textRef}>{children}</text>
-            <text className={`${styles.text} ${className} ${colors[color]}`} x="50%" y="50%" dy="0.4em">{children}</text>
+            <text className={`${styles.text} ${className} ${colors[color]} ${reggaeOne.className}`} x="50%" y="50%" dy="0.4em">{children}</text>
+            <text className={`${styles.text} ${className} ${colors[color]} ${reggaeOne.className}`} x="50%" y="50%" dy="0.4em" ref={textRef}>{children}</text>
         </svg>
         // <svg
         //     className={`${aligns[align]} ${styles.svg}`}

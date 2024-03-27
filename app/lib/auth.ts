@@ -44,7 +44,6 @@ export const logout = async () => {
 
 export const getUser = async (): Promise<User> => {
     // const res = await http.get('/user')
-    console.log(cookies().get("laravel_session")?.value)
     const res = await http.get(`/user`, {
         headers: {
             referer: process.env.APP_URL,

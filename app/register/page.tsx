@@ -7,18 +7,21 @@ import Label from "../components/Form/Label";
 import Button from "../components/atoms/Button";
 import { redirect, useRouter } from "next/navigation";
 import { csrf } from "../lib/csrf";
-import { register } from "../lib/auth";
 import Link from "next/link";
 import Axios from "axios";
 import { useState } from "react";
 import ErrorMessage from "../components/atoms/Error";
 import FormControl from "../components/Form/FormControl";
+import LoadingIcon from "../components/atoms/Icons/LoadingIcons";
+import { register } from "../lib/authClient";
 
 export default function RegisterPage() {
+  const [state, setState] = useState<'ready' | 'submitting' | 'error' | 'success'>('ready')
   const [errors, setErrors] = useState({} as any)
   const router = useRouter()
 
   const create = async (formData: FormData) => {
+    setState('submitting')
     const rawFormData = {
       name: formData.get('name'),
       email: formData.get('email'),
@@ -30,12 +33,14 @@ export default function RegisterPage() {
     try {
       const res = await register(rawFormData);
       console.log(res.data)
+      setState('success')
       router.push('/user')
     } catch (e) {
       if (Axios.isAxiosError(e) && e.response) {
         const data = e.response.data
         setErrors(data.errors)
       }
+      setState('ready')
     }
   }
 
@@ -72,7 +77,11 @@ export default function RegisterPage() {
               </FormControl>
             </div>
             <div className="text-center mt-8">
-              <Button className="py-4 px-16">ユーザー登録</Button>
+              <Button className="py-4 px-16" disabled={state !== 'ready'}>
+                {state === 'ready' && 'ユーザー登録'}
+                {state === 'submitting' && <LoadingIcon />}
+                {state === 'error' && 'エラーが発生しました'}
+              </Button>
             </div>
           </form>
         </div>

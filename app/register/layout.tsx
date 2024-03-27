@@ -3,6 +3,7 @@ import { Inter, Reggae_One } from "next/font/google";
 import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { notoSansJP } from "../fonts";
 
 // const inter = Inter({ subsets: ["latin"] });
 const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
@@ -19,7 +20,7 @@ export default function LoginLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={reggaeOne.className}>
+      <body className={notoSansJP.className}>
         <Header />
         <main className="py-16 min-h-screen">
             {children}

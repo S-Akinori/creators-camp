@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cookies } from "next/headers";
 
 axios.defaults.withCredentials = true;
 export const http = axios.create({

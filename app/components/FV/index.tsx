@@ -2,6 +2,7 @@ import Image from "next/image";
 import Button from "../atoms/Button";
 import Container from "../Container";
 import Link from "next/link";
+import { reggaeOne } from "@/app/fonts";
 
 const FV = () => {
     return (
@@ -15,7 +16,7 @@ const FV = () => {
                     <Image className="mx-auto" src="/images/logo.png" width={1000} height={246} alt="クリエイターズキャンプ" />
                 </div>
                 <div className="text-center">
-                    <Button className="text-5xl"><Link href='/user'>マイページ</Link></Button>
+                    <Button className="text-5xl"><Link href='/user' className={reggaeOne.className}>マイページ</Link></Button>
                 </div>
             </Container>
         </div>

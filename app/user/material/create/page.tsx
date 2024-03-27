@@ -20,6 +20,8 @@ import ErrorMessage from "@/app/components/atoms/Error";
 import LoadingIcon from "@/app/components/atoms/Icons/LoadingIcons";
 import Modal from "@/app/components/molecules/Modal";
 import Link from "next/link";
+import clsx from "clsx";
+import { reggaeOne } from "@/app/fonts";
 
 
 
@@ -40,13 +42,11 @@ const UserMaterialCreatePage = () => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log(res.data)
             setMaterial(res.data);
             setFormState('success');
         } catch (e) {
             if (Axios.isAxiosError(e) && e.response) {
                 const data = e.response.data
-                console.log(data);
                 setErrors(data.errors);
             }
             setFormState('error');
@@ -66,13 +66,13 @@ const UserMaterialCreatePage = () => {
             <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
                 <div className="text-center">
                     <p className="text-2xl font-bold mb-4">アップロード完了</p>
-                    <Button className="mx-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
-                    <Button className="mx-4"><Link href={'/materials/' + material?.id}>アップした素材を見る</Link></Button>
+                    <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                    <Button className="mx-4 block" href={'/materials/' + material?.id}>アップした素材を見る</Button>
                 </div>
             </Modal>
             <Container>
                 <div>
-                    <h1 className="text-2xl text-main font-bold text-center">素材アップロード</h1>
+                    <h1 className={clsx([reggaeOne.className, "text-2xl text-main font-bold text-center"])}>素材アップロード</h1>
                 </div>
                 <div className="mt-8 mx-auto max-w-lg">
                     <form action={storeMaterial}>
@@ -83,7 +83,7 @@ const UserMaterialCreatePage = () => {
                         </FormControl>
                         <FormControl flex={false}>
                             <Label htmlFor="name" className="shrink-0 mr-4">タイトル</Label>
-                            <Input id="name" type="text" name="name" className="w-full" />
+                            <Input id="name" type="text" name="name" className="w-full"/>
                             {errors.name && <ErrorMessage message={errors.name[0]} />}
                         </FormControl>
                         <FormControl flex={false}>

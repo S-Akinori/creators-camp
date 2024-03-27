@@ -4,14 +4,6 @@ import { getUser } from './app/lib/auth'
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
-const http = axios.create({
-    baseURL: process.env.API_URL,
-    responseType: 'json',
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-    }
-})
  
 // This function can be marked `async` if using `await` inside
 export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
@@ -45,5 +37,5 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/user', '/login', '/register', '/user/:path*'],
+  matcher: ['/user', '/login', '/register', '/user', '/user/:path*', '/materials/:path*'],
 }

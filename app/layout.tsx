@@ -5,6 +5,7 @@ import Head from "next/head";
 import TypekitLoader from "./components/TypekitLoader";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { notoSansJP } from "./fonts";
 
 // const inter = Inter({ subsets: ["latin"] });
 const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
@@ -21,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={reggaeOne.className}>
+      <body className={notoSansJP.className}>
         {children}
       </body>
     </html>

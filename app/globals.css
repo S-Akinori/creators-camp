@@ -42,3 +42,7 @@ body {
 .page h2 {
   margin-bottom: 1rem;
 }
+
+button:disabled {
+  opacity: 0.75;
+}
