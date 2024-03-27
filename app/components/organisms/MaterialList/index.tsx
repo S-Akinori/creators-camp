@@ -16,11 +16,4 @@ const MaterialList = ({ materials }: Props) => {
     );
 }
 
-export const ResultMaterialList = async ({categoryId}: {categoryId: number}) => {
-    const category = await getCategory(categoryId);
-
-    const materials = category.materials
-    return <MaterialList materials={materials} />
-}
-
 export default MaterialList;
