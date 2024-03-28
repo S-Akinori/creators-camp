@@ -10,10 +10,7 @@ import { tocText } from "@/contents/toc";
 export default function Login() {
     return (
         <Container>
-            <h1><TextShadow className="text-xl">利用規約</TextShadow></h1>
-            <div className="p-4 mx-auto mt-8 page" style={{ background: 'rgba(255,255,255,0.6)' }}>
-                <ReactMarkdown>{tocText}</ReactMarkdown>
-            </div>
+            <h1><TextShadow className="text-xl">当サイトについて</TextShadow></h1>
         </Container>
     );
 }

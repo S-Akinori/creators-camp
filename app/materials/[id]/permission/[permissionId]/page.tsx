@@ -20,6 +20,8 @@ import PermissionRequestButton from "@/app/components/organisms/PermissionReques
 import { http } from "@/app/lib/http";
 import { cookies } from "next/headers";
 import AcceptButton from "@/app/components/organisms/AcceptButton";
+import clsx from "clsx";
+import { reggaeOne } from "@/app/fonts";
 
 interface Props {
     params: {
@@ -48,7 +50,7 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
         <Container>
             <div className="md:flex">
                 <div className="md:w-1/2">
-                    <h1 className="text-main font-bold text-3xl mb-4">{material.name}</h1>
+                    <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
                     <div className="border-main border-2">
                         <Thumbnail src={material.image} alt={material.name} />
                     </div>
@@ -62,7 +64,7 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
                 </div>
                 <div className="md:w-1/2 p-4">
                     <div className="bg-white p-4 h-full">
-                        <h2 className="mb-4 text-center text-main text-2xl">
+                        <h2 className={clsx(["mb-4 text-center text-main text-2xl"])}>
                             こちらのユーザーから承認依頼が届いています
                         </h2>
                         <div>

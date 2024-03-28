@@ -95,7 +95,7 @@ const MaterialDetailPage = async ({params}: Props) => {
             </div>
             <div className="mt-16">
                 <h2 className="mb-4">
-                    <TextShadow className="text-xl">{user.name}さんの</TextShadow>
+                    <TextShadow className="text-xl">{material.user.name}さんの</TextShadow>
                     <TextShadow className="text-xl">その他の素材</TextShadow>
                 </h2>
                 <div className="flex flex-wrap">

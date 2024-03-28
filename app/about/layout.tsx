@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Reggae_One } from "next/font/google";
-import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "利用規約",
-  description: "利用規約についてのページです。",
+  title: "当サイトについて",
+  description: "当サイトについてのページです。",
 };
 
-export default function TOCLayout({
+export default function AboutPageLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -19,7 +17,7 @@ export default function TOCLayout({
     <html lang="ja">
       <body className={notoSansJP.className}>
         <Header />
-        <main className="py-16">
+        <main className="py-16 min-h-screen">
             {children}
         </main>
         <Footer />

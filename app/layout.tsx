@@ -12,7 +12,7 @@ const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
   title: "クリエイターズキャンプ",
-  description: "ゲーム開発者のための素材共有サイト",
+  description: "ゲーム開発者のための素材共有サイトです。誰でも素材の共有ができます。",
 };
 
 export default function RootLayout({
