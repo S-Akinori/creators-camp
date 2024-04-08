@@ -24,6 +24,11 @@ import { PermissionToken } from "@/app/types/PermissionToken";
 import clsx from "clsx";
 import { reggaeOne } from "@/app/fonts";
 import { getUser } from "@/app/lib/auth";
+import MaterialDeleteButton from "@/app/components/organisms/MaterialDeleteButton";
+import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
+import MusicPlayer from "@/app/components/molecules/AudioPlayer";
+import VideoPlayer from "@/app/components/molecules/VideoPlayer";
+import PreviewButton from "@/app/components/organisms/PreviewButton";
 
 interface Props {
     params: {
@@ -32,28 +37,46 @@ interface Props {
 }
 
 const checkPermissionState = (required: number, permission_tokens: PermissionToken[]) => {
-    if(required == 0) return 'approved'
-    else if(permission_tokens.length && permission_tokens[0].is_active == 1) return 'pending'
-    else if(permission_tokens.length && permission_tokens[0].is_active == 0 && permission_tokens[0].is_approved == 0) return 'disapproved'
-    else if(permission_tokens.length && permission_tokens[0].is_active == 0 && permission_tokens[0].is_approved == 1) return 'approved'
+    if (required == 0) return 'approved'
+    else if (permission_tokens.length && permission_tokens[0].is_active == 1) return 'pending'
+    else if (permission_tokens.length && permission_tokens[0].is_active == 0 && permission_tokens[0].is_approved == 0) return 'disapproved'
+    else if (permission_tokens.length && permission_tokens[0].is_active == 0 && permission_tokens[0].is_approved == 1) return 'approved'
     else return 'ready'
 }
 
-const MaterialDetailPage = async ({params}: Props) => {
+const MaterialDetailPage = async ({ params }: Props) => {
     const user = await getUser()
     const material = await getMaterial(Number(params.id))
     const userMaterialsPagination = await getUserMaterials(material.user.id)
-    const {category, materialsPagination} = await getCategory(material.category_id)
+    const { category, materialsPagination } = await getCategory(material.category_id)
     const permissionState = checkPermissionState(material.permission, material.permission_tokens)
+    const fileType = identifyFileTypeByExtension(material.file)
 
     return (
         <Container>
             <div className="md:flex">
                 <div className="md:w-1/2">
                     <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
-                    {material.user_id == user.id && <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4'])}>素材を編集する</Button>}
-                    <div className="border-main border-2">
+                    {material.user_id == user.id && (
+                        <div className="md:flex">
+                            <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
+                            <MaterialDeleteButton material={material} />
+                        </div>
+                    )}
+                    <div className="relative border-main border-2">
                         <Thumbnail src={material.image} alt={material.name} />
+                        {(fileType === 'music' || fileType === 'video') && (
+                            <div className="absolute left-0 top-0 w-full h-full flex justify-center items-end">
+                                <PreviewButton className="mb-4" id={material.id} fileType={fileType} />
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex mt-4">
+                        {material.images && material.images.map((image, index) => (
+                            <div key={index} className="p-2 md:w-1/3">
+                                <Thumbnail src={image} alt={material.name} />
+                            </div>
+                        ))}
                     </div>
                     <div>
                         <p>{material.description}</p>

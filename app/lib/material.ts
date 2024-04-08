@@ -2,8 +2,20 @@ import { cookies } from "next/headers"
 import { Material, Pagination } from "../types/Material"
 import { http } from "./http"
 
-export const getMaterials = async () : Promise<Pagination<Material>> => {
-    const res = await http.get('/materials')
+interface Props {
+    category_id?: number
+    page?: number
+    orderBy?: string
+}
+
+export const getMaterials = async ({category_id, page, orderBy}: Props = {}) : Promise<Pagination<Material>> => {
+    const res = await http.get('/materials', {
+        params: {
+            category_id,
+            page,
+            orderBy
+        }
+    })
     return res.data
 }
 

@@ -32,15 +32,16 @@ export default function RegisterPage() {
     await csrf();
     try {
       const res = await register(rawFormData);
-      console.log(res.data)
       setState('success')
-      router.push('/user')
     } catch (e) {
       if (Axios.isAxiosError(e) && e.response) {
         const data = e.response.data
         setErrors(data.errors)
       }
-      setState('ready')
+      setState('error')
+      setTimeout(() => {
+        setState('ready')
+      }, 3000)
     }
   }
 
@@ -80,10 +81,16 @@ export default function RegisterPage() {
               <Button className="py-4 px-16" disabled={state !== 'ready'}>
                 {state === 'ready' && 'ユーザー登録'}
                 {state === 'submitting' && <LoadingIcon />}
+                {state === 'success' && '登録完了'}
                 {state === 'error' && 'エラーが発生しました'}
               </Button>
             </div>
           </form>
+          {state === 'success' && (
+            <div className="p-4 mt-4 border-2 border-main">
+              入力したメールアドレス宛てに認証メールを送信しました。メール内のリンクをクリックして登録を完了してください。
+            </div>
+          )}
         </div>
         <div className="text-center mt-8 text-main">
           <Link href="/login" className="underline">登録済みの方はこちら</Link>

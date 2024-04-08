@@ -15,19 +15,21 @@ import { getCategoryMaterials, getMaterials } from "./lib/material";
 import { getCategories, getCategory } from "./lib/category";
 import clsx from "clsx";
 import { reggaeOne } from "./fonts";
+import { ThumbUpOffAlt } from "@mui/icons-material";
+import DownloadIcon from '@mui/icons-material/Download';
+import MaterialListClient from "./components/organisms/MaterialListClient";
 
 export default async function Home() {
   const materialsPagination = await getMaterials()
   const pluginsData = await getCategory(2)
   const musicsData = await getCategory(3)
-  const illustrationsData = await getCategory(4)
+  const illustrationsData = await getCategory(6)
   const categories = await getCategories();
-  console.log(materialsPagination.data)
   return (
     <>
       <Header />
       <div className="flex justify-end mt-8">
-        <Link href="/" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
+        <Link href="/news" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
         <Link href="/materials" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
         <Link href="/user/material/create" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
       </div>
@@ -64,14 +66,10 @@ export default async function Home() {
         </Container>
         <Container className="mb-12">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
-          <Title>素材一覧</Title>
-          <div className="flex flex-wrap">
-            {materialsPagination.data?.map((material) => (
-              <MaterialCard key={material.id} material={material} />
-            ))}
-          </div>
+          <Title className="mb-8">素材一覧</Title>
+          <MaterialListClient />
           <div className="text-right">
-            <Link href="/materials" className="bg-gray-400 py-2 px-20 text-white">もっと素材を見る →</Link>
+            <Link href={'/materials'} className="bg-gray-400 py-2 px-20 text-white">素材をもっと見る →</Link>
           </div>
         </Container>
         <Container className="mb-12">
@@ -123,9 +121,9 @@ export default async function Home() {
         <Container className="mt-24 mb-24">
           <div className="relative text-center">
             <Image src="/images/bg-camp.png" width={570} height={180} alt="クリエイターズキャンプ" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute top-1/2 -translate-y-1/2 left-0 w-1/5 aspect-[2/3]"><Image src="/images/character_RECY_01.png" width={200} height={150} alt="" className="absolute top-1/2 -translate-y-1/2 right-0" /></div>
+            <div className="absolute top-1/2 -translate-y-1/2 left-0 w-1/5 max-w-60 aspect-[2/3]"><Image src="/images/character_RECY_01.png" width={200} height={150} alt="" className="absolute top-1/2 -translate-y-1/2 right-0" /></div>
             <div className="relative"><Button href="/register"><TextShadow className={clsx(["text-3xl", reggaeOne.className])}>新規登録</TextShadow></Button></div>
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 w-1/5 aspect-square"><Image src="/images/character_CLE_01.png" fill alt="" /></div>
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 w-1/5 max-w-60 aspect-square"><Image src="/images/character_CLE_01.png" fill alt="" /></div>
           </div>
         </Container>
       </main>

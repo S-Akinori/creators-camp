@@ -8,10 +8,13 @@ import { getUserMaterials } from "../lib/material";
 import MaterialList from "../components/organisms/MaterialList";
 import LogoutButton from "../components/organisms/LogoutButton";
 import { reggaeOne } from "../fonts";
+import { getUserFavoriteMaterials } from "../lib/server/material";
+import MaterialCard from "../components/organisms/MaterialCard";
 
 const UserProfilePage = async () => {
     const user = await getUser();
     const materialsPagination = await getUserMaterials(user.id);
+    const favoriteMaterialsPagination = await getUserFavoriteMaterials();
 
     return (
         <Container className={reggaeOne.className}>
@@ -40,6 +43,14 @@ const UserProfilePage = async () => {
             <div className="mt-8">
                 <h2><TextShadow className="text-2xl">素材一覧</TextShadow></h2>
                 <MaterialList materials={materialsPagination.data} />
+            </div>
+            <div className="mt-8">
+                <h2><TextShadow className="text-2xl">お気に入りの素材</TextShadow></h2>
+                <div className="flex flex-wrap">
+                    {favoriteMaterialsPagination.data.map((paginationData) => (
+                        <MaterialCard key={paginationData.id} material={paginationData.material} />
+                    ))}
+                </div>
             </div>
         </Container>
     );

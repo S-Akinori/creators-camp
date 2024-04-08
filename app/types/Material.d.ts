@@ -9,6 +9,7 @@ export interface Material {
     permission: number;
     file: string;
     image: string;
+    images: string[]
     user: User
     user_id: number;
     created_at: string;
@@ -16,6 +17,9 @@ export interface Material {
     likes: any[]
     favorites: any[]
     permission_tokens: PermissionToken[]
+    download_count: number
+    like_count: number
+    favorite_count: number
 }
 
 export interface MaterialError {

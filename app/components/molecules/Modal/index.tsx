@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 
 interface Props {
     children: React.ReactNode;
@@ -6,10 +7,7 @@ interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal: React.FC<Props> = ({ children, open, setOpen }) => {
-    if(!open) return null;
-
-    return (
+const Modal = ({ children, open, setOpen }: Props) => open ? ReactDOM.createPortal(
         <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50'>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg">
                 <button onClick={() => setOpen(!open)} className="absolute top-0 right-0 p-2">
@@ -20,9 +18,6 @@ const Modal: React.FC<Props> = ({ children, open, setOpen }) => {
                 {children}
             </div>
         </div>
-    );
-}
+    , document.body) : null;
 
 export default Modal;
-
-

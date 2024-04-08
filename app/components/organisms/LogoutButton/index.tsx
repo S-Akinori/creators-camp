@@ -11,7 +11,7 @@ const LogoutButton = () => {
         await csrf();
         try {
             const res = await http.post('/logout');
-            router.push('/login');
+            window.location.href = '/login';
         } catch {
             alert('ログアウトに失敗しました');
         }

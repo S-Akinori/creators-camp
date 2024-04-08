@@ -19,7 +19,6 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
         credentials: 'include'
     });
     const data = await res.json()
-    // console.log('data', data)
     if(req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/register') {
         if (res.status !== 401) {
             return NextResponse.redirect(new URL('/user', req.url))
@@ -27,7 +26,9 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
             return NextResponse.next()
         }
     } else {
-        if (res.status !== 401) {
+        if (res.status !== 401 && !data.email_verified_at) {
+            return NextResponse.redirect(new URL('/login/email-verify', req.url))
+        } else if(res.status !== 401) {
             return NextResponse.next()
         } else {
             return NextResponse.redirect(new URL('/login', req.url))
@@ -37,5 +38,5 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/user', '/login', '/register', '/user', '/user/:path*', '/materials/:path*'],
+  matcher: ['/login', '/register', '/user', '/user/:path*', '/materials/:path*'],
 }

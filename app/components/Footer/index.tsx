@@ -15,8 +15,8 @@ const Footer = () => {
               <Link href='/toc' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>ご利用規約</TextShadow></Link>
               <Link href='/contact' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>お問い合わせ</TextShadow></Link>
               <Link href='/about' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>サイトについて</TextShadow></Link>
-              <Link href='' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>サイトマップ</TextShadow></Link>
-              <Link href='' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>スポンサー</TextShadow></Link>
+              <Link href='/sitemap' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>サイトマップ</TextShadow></Link>
+              <Link href='/sponser' className='mr-2 mb-4'><TextShadow className="md:text-xl" align='left'>スポンサー</TextShadow></Link>
           </div>
       </Container>
     </footer>

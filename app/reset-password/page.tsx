@@ -17,31 +17,31 @@ import { login } from "../lib/authClient";
 import { http } from "../lib/http";
 import LoadingIcon from "../components/atoms/Icons/LoadingIcons";
 
-export default function Login() {
+
+export default function Login({searchParams} : {searchParams: { [key: string]: string | string[] | undefined }}) {
   const [errors, setErrors] = useState({} as any)
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle')
+  const email = searchParams.email as string
+  const token = searchParams.token as string
   const router = useRouter()
 
   const action = async (formData: FormData) => {
     setFormState('submitting')
-    const rawFormData = {
-      email: formData.get('email'),
-      password: formData.get('password'),
-    }
 
     await csrf()
+    formData.append('token', token)
     try {
-      const res = await login(rawFormData)
-      const userRes = await http.get('/user')
-      window.location.href = '/user'
+      const res = await http.post('/reset-password', formData)
+      setFormState('success')
+      setTimeout(() => {
+        router.push('/login')
+      }, 3000)
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
         const data = e.response.data
         setErrors(data.errors)
-        console.log(data)
       }
       setFormState('error')
-    } finally {
       setTimeout(() => {
         setFormState('idle')
       }, 3000)
@@ -50,42 +50,45 @@ export default function Login() {
 
   return (
       <Container>
-        <h1><TextShadow className="text-xl">ログイン</TextShadow></h1>
+        <h1><TextShadow className="text-xl">パスワードリセット</TextShadow></h1>
         <div className="max-w-sm mx-auto mt-8">
           <form action={action}>
             <div>
               <FormControl>
                 <Label htmlFor="email" className="mr-4 w-28 shrink-0">メールアドレス</Label>
                 <div>
-                  <Input id="email" name="email" type="email" className="w-full" />
+                  <Input id="email" name="email" type="email" className="w-full" defaultValue={email} />
                   {errors.email && <ErrorMessage message={errors.email[0]} />}
                 </div>
               </FormControl>
             </div>
             <div>
               <FormControl>
-                <Label htmlFor="passward" className="mr-4 w-28 shrink-0">パスワード</Label>
+                <Label htmlFor="password" className="mr-4 w-28 shrink-0">パスワード</Label>
                 <div>
-                  <Input id="passward" name="password" type="password" className="w-full" />
+                  <Input id="password" name="password" type="password" className="w-full" />
                   {errors.password && <ErrorMessage message={errors.password[0]} />}
                 </div>
               </FormControl>
             </div>
+            <div>
+              <FormControl>
+                <Label htmlFor="password_confirmation" className="mr-4 w-28 shrink-0">パスワード確認</Label>
+                <div>
+                  <Input id="password_confirmation" name="password_confirmation" type="password_confirmation" className="w-full" />
+                  {errors.password && <ErrorMessage message={errors.password_confirmation[0]} />}
+                </div>
+              </FormControl>
+            </div>
             <div className="text-center mt-8">
-              <Button className="py-4 px-16">
-                {formState === 'idle' && 'ログイン'}
+              <Button className="py-4 px-16" disabled={formState !== 'idle'}>
+                {formState === 'idle' && '送信'}
                 {formState === 'submitting' && <LoadingIcon />}
                 {formState === 'error' && 'エラーが発生しました'}
-                {formState === 'success' && 'ログインしました'}
+                {formState === 'success' && 'パスワードをリセットしました'}
               </Button>
             </div>
           </form>
-          <div className="text-center mt-8 text-main">
-            <Link href="/forgot-password" className="underline">パスワードを忘れた方はこちら</Link>
-          </div>
-          <div className="text-center mt-8 text-main">
-            <Link href="/register" className="underline">新規登録はこちら</Link>
-          </div>
         </div>
       </Container>
   );

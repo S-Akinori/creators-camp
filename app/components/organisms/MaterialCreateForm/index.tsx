@@ -1,0 +1,231 @@
+'use client'
+import Image from "next/image";
+import Container from "@/app/components/Container";
+import Input from "@/app/components/Form/Input";
+import FormControl from "@/app/components/Form/FormControl";
+import Label from "@/app/components/Form/Label";
+import Textarea from "@/app/components/Form/Textarea";
+import Select from "@/app/components/Form/Select";
+import Button from "@/app/components/atoms/Button";
+import { csrf } from "@/app/lib/csrf";
+import { http } from "@/app/lib/http";
+import Axios from "axios";
+import { useEffect, useState } from "react";
+import { Material, MaterialError } from "@/app/types/Material";
+import { Category } from "@/app/types/Category";
+import ErrorMessage from "@/app/components/atoms/Error";
+import LoadingIcon from "@/app/components/atoms/Icons/LoadingIcons";
+import Modal from "@/app/components/molecules/Modal";
+import clsx from "clsx";
+import { reggaeOne } from "@/app/fonts";
+import Thumbnail from "@/app/components/atoms/Thumbnail";
+import { IconButton, Tooltip } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
+
+interface ImageFile {
+    file: File;
+    url: string;
+}
+
+interface Props {
+    categories: Category[]
+    material?: Material
+}
+
+const MaterialCreateForm = ({ categories, material }: Props) => {
+    const [errors, setErrors] = useState<MaterialError>({})
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [images, setImages] = useState<ImageFile[]>([]);
+    const [fileType, setFileType] = useState<string | null>(null);
+    const [formState, setFormState] = useState<'error' | 'success' | 'submitting' | 'ready'>('ready')
+    const [isNew, setIsNew] = useState<boolean>(!material)
+    const [storedMaterial, setStoredMaterial] = useState<Material | null>(null)
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files ? event.target.files[0] : null;
+        if (file) {
+            if (file.type.startsWith('image/')) {
+                setFileType('image');
+            } else if (file.type.startsWith('video/')) {
+                setFileType('video');
+            } else if (file.type.startsWith('audio/')) {
+                setFileType('audio');
+            } else {
+                setFileType(null);
+            }
+            const reader = new FileReader();
+            reader.onload = (loadEvent) => {
+                const result = loadEvent.target?.result;
+                setPreviewUrl(result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            const url = URL.createObjectURL(file);
+            setImages([...images, { file, url }]);
+        }
+    };
+
+    const handleDelete = (index: number) => {
+        setImages(images.filter((_, i) => i !== index));
+    };
+
+    const storeMaterial = async (formData: FormData) => {
+        images.forEach((image, index) => {
+            formData.append(`images[]`, image.file);
+        });
+        setErrors({});
+        setFormState('submitting');
+        await csrf();
+        try {
+            if (isNew) {
+                const res = await http.post('/materials', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                setStoredMaterial(res.data);
+            } else {
+                const res = await http.post(`/materials/${material?.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'X-HTTP-Method-Override': 'PUT'
+                    }
+                });
+            }
+            setFormState('success');
+        } catch (e) {
+            if (Axios.isAxiosError(e) && e.response) {
+                const data = e.response.data
+                setErrors(data.errors);
+            }
+            setFormState('error');
+        };
+    }
+
+    console.log(images)
+
+    useEffect(() => {
+        const setData = async (material: Material) => {
+            const res = await http.get(`/materials/${material.id}/download`, {
+                responseType: 'blob'
+            });
+            const blob = new Blob([res.data], { type: res.data.type });
+            const url = URL.createObjectURL(blob)
+            setPreviewUrl(url)
+            const type = identifyFileTypeByExtension(material.file);
+            setFileType(type);
+            const imageRes = await fetch('/images/dummy.png');
+            const imageBlob = await imageRes.blob();
+
+            setImages(material.images.map((image) => {
+                const lastSlashIndex = image.lastIndexOf('/');
+                const fileName = image.substring(lastSlashIndex + 1);
+                return { file: new File([imageBlob], fileName, { type: 'image/png' }), url: image }
+            }));
+        }
+        if (material) {
+            setData(material);
+        }
+    }, [])
+
+    return (
+        <>
+            {isNew && (
+                <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
+                    <div className="text-center">
+                        <p className="text-2xl font-bold mb-4">アップロード完了</p>
+                        <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                        <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+                    </div>
+                </Modal>
+            )}
+            {!isNew && (
+                <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
+                    <div className="text-center">
+                        <p className="text-2xl font-bold mb-4">保存しました</p>
+                        <Button className="mx-4 block" href={'/materials/' + material?.id}>保存した素材を確認</Button>
+                    </div>
+                </Modal>
+            )}
+            <div className="mt-8 mx-auto max-w-lg">
+                <form action={storeMaterial}>
+                    <FormControl flex={false}>
+                        <Label htmlFor="file" className="shrink-0 mr-4">素材</Label>
+                        <Input id="file" type="file" name="file" className="w-full" onChange={handleFileChange} />
+                        <span>※複数素材をアップするにはzipファイルでアップしてください</span>
+                        {errors.file && <ErrorMessage message={errors.file[0]} />}
+                        {(fileType == 'image' && previewUrl) && (
+                            <div className="mt-4">
+                                <Thumbnail src={previewUrl} />
+                            </div>
+                        )}
+                        {(fileType == 'video' && previewUrl) && (
+                            <video className="w-full aspect-video mt-4" src={previewUrl} controls />
+                        )}
+                        {(fileType == 'audio' && previewUrl) && (
+                            <audio className="w-full mt-4" src={previewUrl} controls />
+                        )}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label htmlFor="name" className="shrink-0 mr-4">タイトル</Label>
+                        <Input id="name" type="text" name="name" className="w-full" defaultValue={material?.name} />
+                        {errors.name && <ErrorMessage message={errors.name[0]} />}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label htmlFor="description" className="shrink-0 mr-4">説明</Label>
+                        <Textarea id="description" rows={5} name="description" className="w-full" defaultValue={material?.description} />
+                        {errors.description && <ErrorMessage message={errors.description[0]} />}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label className="shrink-0 mr-4">スクリーンショット</Label>
+                        {errors.image && <ErrorMessage message={errors.image[0]} />}
+                        <div className="flex items-start flex-wrap">
+                            {images.map((image, index) => (
+                                <div key={index} className="relative mb-4 p-2 w-1/3">
+                                    <Thumbnail src={image.url} />
+                                    <div className="w-full flex items-center justify-center">
+                                        <Tooltip title='削除'>
+                                            <IconButton onClick={() => handleDelete(index)}><Delete /></IconButton>
+                                        </Tooltip>
+                                    </div>
+                                </div>
+                            ))}
+                            <button type="button" className="block mb-4 w-1/3 aspect-video bg-gray-200">
+                                <label htmlFor={`image`} className="flex items-center justify-center w-full h-full cursor-pointer">画像を追加</label>
+                                <Input id={`image`} type="file" name="image" className="w-full" onChange={handleImageChange} hidden />
+                            </button>
+                        </div>
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label htmlFor="category_id" className="shrink-0 mr-4">カテゴリー</Label>
+                        <Select id="category_id" name="category_id" className="w-full" defaultValue={material?.category_id}>
+                            {categories && categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </Select>
+                        {errors.category_id && <ErrorMessage message={errors.category_id[0]} />}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label htmlFor="permission" className="shrink-0 mr-4">承認の有無</Label>
+                        <Select id="permission" name="permission" className="w-full" defaultValue={material?.permission}>
+                            <option value="1">承認を必要にする</option>
+                            <option value="0">承認を必要にしない</option>
+                        </Select>
+                        {errors.permission && <ErrorMessage message={errors.permission[0]} />}
+                    </FormControl>
+                    <div className="text-center mt-8">
+                        <Button className="py-4 px-16" disabled={formState == 'submitting'}>{formState == 'submitting' ? <LoadingIcon /> : '保存'}</Button>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
+};
+
+export default MaterialCreateForm;
