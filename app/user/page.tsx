@@ -13,6 +13,9 @@ import MaterialCard from "../components/organisms/MaterialCard";
 
 const UserProfilePage = async () => {
     const user = await getUser();
+    if (!user) {
+        return null;
+    }
     const materialsPagination = await getUserMaterials(user.id);
     const favoriteMaterialsPagination = await getUserFavoriteMaterials();
 
