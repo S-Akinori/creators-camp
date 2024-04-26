@@ -42,13 +42,17 @@ export const logout = async () => {
     return res
 }
 
-export const getUser = async (): Promise<User> => {
+export const getUser = async (): Promise<User | null> => {
     // const res = await http.get('/user')
-    const res = await http.get(`/user`, {
-        headers: {
-            referer: process.env.APP_URL,
-            Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
-        },
-    })
-    return res.data;
+    try {
+        const res = await http.get(`/user`, {
+            headers: {
+                referer: process.env.APP_URL,
+                Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
+            },
+        })
+        return res.data;
+    } catch (error) {
+        return null
+    }
 }

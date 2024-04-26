@@ -33,7 +33,11 @@ export default function Login() {
     try {
       const res = await login(rawFormData)
       const userRes = await http.get('/user')
-      window.location.href = '/user'
+      if(userRes.data.role === 'admin') {
+        window.location.href = '/admin'
+      } else {
+        window.location.href = '/user'
+      }
     } catch (e) {
       if (axios.isAxiosError(e) && e.response) {
         const data = e.response.data

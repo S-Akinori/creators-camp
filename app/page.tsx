@@ -35,8 +35,8 @@ export default async function Home() {
       </div>
       <main className="min-h-screen">
         <FV />
-        <div className="bg-gray-400 mb-8">
-          <div className={clsx(["flex flex-wrap justify-center max-w-4xl mx-auto", reggaeOne.className])}>
+        <div className="mb-8">
+          <div className={clsx(["flex flex-wrap justify-center max-w-5xl mx-auto", reggaeOne.className])}>
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/users"><TextShadow className=" md:text-xl">クリエイター</TextShadow></ArrowButton></div>
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/materials?category_id=3"><TextShadow className=" md:text-xl">ミュージック</TextShadow></ArrowButton></div>
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/materials?category_id=6"><TextShadow className=" md:text-xl">イラスト</TextShadow></ArrowButton></div>
@@ -54,11 +54,11 @@ export default async function Home() {
         <Container>
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title>ジャンル一覧</Title>
-          <div className="max-w-2xl flex justify-center flex-wrap mx-auto">
+          <div className="max-w-5xl flex justify-center flex-wrap mx-auto">
             {categories?.map((category) => (
               <div key={category.id} className="w-1/3 md:w-1/5 p-4 mb-4">
                 <Link href={`materials?category_id=${category.id}`}>
-                  <Image src={`/images/${category.slug}.png`} width={110} height={165} alt={category.name} />
+                  <Image src={`/images/${category.slug}.png`} width={220} height={330} alt={category.name} />
                 </Link>
               </div>
             ))}

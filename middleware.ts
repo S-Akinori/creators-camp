@@ -20,7 +20,9 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
     });
     const data = await res.json()
     if(req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/register') {
-        if (res.status !== 401) {
+        if(res.status !== 401 && data.role === 'admin') {
+            return NextResponse.redirect(new URL('/admin', req.url))
+        } else if (res.status !== 401) {
             return NextResponse.redirect(new URL('/user', req.url))
         } else {
             return NextResponse.next()
@@ -38,5 +40,5 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/login', '/register', '/user', '/user/:path*', '/materials/:path*'],
+  matcher: ['/login', '/register', '/user', '/user/:path*', '/materials/[id]/:path*', '/admin', '/admin/:path*'],
 }

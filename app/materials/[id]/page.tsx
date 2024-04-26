@@ -49,7 +49,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
     const material = await getMaterial(Number(params.id))
     const userMaterialsPagination = await getUserMaterials(material.user.id)
     const { category, materialsPagination } = await getCategory(material.category_id)
-    const permissionState = checkPermissionState(material.permission, material.permission_tokens)
+    const permissionState = user ? checkPermissionState(material.permission, material.permission_tokens) : 'ready'
     const fileType = identifyFileTypeByExtension(material.file)
 
     return (
@@ -57,7 +57,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
             <div className="md:flex">
                 <div className="md:w-1/2">
                     <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
-                    {material.user_id == user.id && (
+                    {material.user_id == user?.id && (
                         <div className="md:flex">
                             <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
                             <MaterialDeleteButton material={material} />
@@ -87,7 +87,8 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         )}
                         {permissionState === 'ready' && (
                             <>
-                                <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>
+                                {user && <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>}
+                                {!user && <Button className="mt-8 w-full py-4 text-center" href="/login">ログインして承認依頼する</Button>}
                                 <p className="text-red-600">この素材はクリエイターへの承認依頼が必要です</p>
                             </>
                         )}
@@ -110,8 +111,12 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             <p className="text-center">{material.user.description}</p>
                         </div>
                         <div className="flex flex-wrap items-center justify-center mt-4">
-                            <LikeButton materialId={material.id} defaultLiked={material.likes.length > 0} likeId={material.likes.length > 0 ? material.likes[0].id : null} />
-                            <FavoriteButton materialId={material.id} defaultFavorited={material.favorites.length > 0} favoriteId={material.favorites.length > 0 ? material.favorites[0].id : null} />
+                            {user && (
+                                <>
+                                    <LikeButton materialId={material.id} defaultLiked={material.likes.length > 0} likeId={material.likes.length > 0 ? material.likes[0].id : null} />
+                                    <FavoriteButton materialId={material.id} defaultFavorited={material.favorites.length > 0} favoriteId={material.favorites.length > 0 ? material.favorites[0].id : null} />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

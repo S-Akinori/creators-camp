@@ -17,7 +17,7 @@ const UserProfileEditPage = async () => {
         <Container>
             <div className="mb-8">
                 <h1><TextShadow className="text-2xl">プロフィール編集</TextShadow></h1>
-                <UserProfileUpdateForm user={user} /> 
+                {user && <UserProfileUpdateForm user={user} />} 
             </div>
             <div>
                 <h2><TextShadow className="text-2xl">パスワード変更</TextShadow></h2>

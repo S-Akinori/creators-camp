@@ -6,19 +6,33 @@ import { reggaeOne } from "@/app/fonts";
 
 const FV = () => {
     return (
-        <div className="w-full relative py-20 mb-8 bg-cover bg-[left_-20rem_top_0] md:bg-center" style={{ backgroundImage: 'url(/images/bg-fv.png)', backgroundRepeat: 'no-repeat' }}>
-            <Container>
-                <div className="flex justify-center items-center">
-                    <div className="relative md:absolute top-1/2 md:-translate-y-1/2 left-0 w-1/3 md:w-1/4 max-w-72 aspect-square"><Image src="/images/character_CLE_01.png" fill alt="" /></div>
-                    <div className="relative md:absolute top-1/2 md:-translate-y-1/2 right-0 w-1/4 md:w-1/5 max-w-72 aspect-[2/3]"><Image src="/images/character_RECY_01.png" fill alt="" /></div>
+        <div className="w-full relative mb-8 bg-cover md:bg-contain bg-center" style={{ backgroundImage: 'url(/images/bg-fv.png)', backgroundRepeat: 'no-repeat' }}>
+            <div className="hidden md:flex justify-center items-center">
+                <div className="relative pr-4"><Image src="/images/character_CLE_01.png" width={480} height={480} alt="" /></div>
+                <div>
+                    <div className="text-center mx-auto">
+                        <Image className="mx-auto" src="/images/logo.png" width={1000} height={246} alt="クリエイターズキャンプ" />
+                    </div>
+                    <div className="text-center">
+                        <Button className="text-5xl"><Link href='/user' className={reggaeOne.className}>マイページ</Link></Button>
+                    </div>
                 </div>
-                <div className="text-center md:w-1/2 mx-auto">
-                    <Image className="mx-auto" src="/images/logo.png" width={1000} height={246} alt="クリエイターズキャンプ" />
+                <div className="relative pl-4"><Image src="/images/character_RECY_01.png" width={386} height={536} alt="" /></div>
+            </div>
+            <div className="md:hidden p-4">
+                <div className="flex items-center">
+                    <div className="relative px-4"><Image src="/images/character_CLE_01.png" width={480} height={480} alt="" /></div>
+                    <div className="relative px-4"><Image src="/images/character_RECY_01.png" width={386} height={536} alt="" /></div>
                 </div>
-                <div className="text-center">
-                    <Button className="text-5xl"><Link href='/user' className={reggaeOne.className}>マイページ</Link></Button>
+                <div className="">
+                    <div className="text-center mx-auto">
+                        <Image className="mx-auto" src="/images/logo.png" width={1000} height={246} alt="クリエイターズキャンプ" />
+                    </div>
+                    <div className="text-center">
+                        <Button className="text-5xl"><Link href='/user' className={reggaeOne.className}>マイページ</Link></Button>
+                    </div>
                 </div>
-            </Container>
+            </div>
         </div>
     );
 }
