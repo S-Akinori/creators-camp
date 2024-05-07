@@ -10,6 +10,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'recreators-camp.akinorisahoda.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'back.recreators-camp.com',
+            }
         ]
     },
 };
