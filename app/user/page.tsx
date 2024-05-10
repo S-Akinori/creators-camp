@@ -36,7 +36,7 @@ const UserProfilePage = async () => {
                     </div>
                 </div>
                 <div>
-                    <h1 className="text-2xl text-main font-bold">{user.name}</h1>
+                    <h2 className="text-2xl text-main font-bold">{user.name}</h2>
                 </div>
                 <p>{user.description}</p>
             </div>

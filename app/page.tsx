@@ -18,6 +18,7 @@ import { reggaeOne } from "./fonts";
 import { ThumbUpOffAlt } from "@mui/icons-material";
 import DownloadIcon from '@mui/icons-material/Download';
 import MaterialListClient from "./components/organisms/MaterialListClient";
+import NewsList from "./components/organisms/NewsList";
 
 export default async function Home() {
   const materialsPagination = await getMaterials()
@@ -43,12 +44,18 @@ export default async function Home() {
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/materials?category_id=2"><TextShadow className=" md:text-xl">プラグイン</TextShadow></ArrowButton></div>
           </div>
         </div>
-        <Container className="flex justify-center">
+        <Container className="flex justify-center mb-12">
           <div className="mx-4">
             <Image src="/images/banner.png" width={500} height={161} alt="" />
           </div>
           <div className="mx-4">
             <Image src="/images/banner.png" width={500} height={161} alt="" />
+          </div>
+        </Container>
+        <Container className="mb-12">
+          <div className="max-w-5xl mx-auto">
+            <Title className="mb-4">お知らせ</Title>
+            <NewsList />
           </div>
         </Container>
         <Container>
@@ -78,43 +85,31 @@ export default async function Home() {
           <div className="mb-8">
             <div className="relative mb-4">
               <Image src='/images/icon-plugin.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">{pluginsData.category.name}いいねランキング</TextShadow></p>
+              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">プラグインいいねランキング</TextShadow></p>
             </div>
-            <div className="flex flex-wrap">
-              {pluginsData.materialsPagination.data?.map((material) => (
-                <MaterialCard key={material.id} material={material} />
-              ))}
-            </div>
+            <MaterialListClient categoryId={2} />
             <div className="text-right">
-              <Link href={'/materials?category_id=' + pluginsData.category.id} className="bg-gray-400 py-2 px-20 text-white">{pluginsData.category.name}素材を見る →</Link>
+              <Link href={'/materials?category_id=' + pluginsData.category.id} className="bg-gray-400 py-2 px-20 text-white">プラグイン素材を見る →</Link>
             </div>
           </div>
           <div className="mb-8">
             <div className="relative mb-4">
               <Image src='/images/icon-bgm.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">{musicsData.category.name}いいねランキング</TextShadow></p>
+              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">BGMいいねランキング</TextShadow></p>
             </div>
-            <div className="flex flex-wrap">
-              {musicsData.materialsPagination.data?.map((material) => (
-                <MaterialCard key={material.id} material={material} />
-              ))}
-            </div>
+            <MaterialListClient categoryId={3} />
             <div className="text-right">
-              <Link href={'/materials?category_id=' + musicsData.category.id} className="bg-gray-400 py-2 px-20 text-white">{musicsData.category.name}素材を見る →</Link>
+              <Link href={'/materials?category_id=' + musicsData.category.id} className="bg-gray-400 py-2 px-20 text-white">BGM素材を見る →</Link>
             </div>
           </div>
           <div className="mb-8">
             <div className="relative mb-4">
               <Image src='/images/icon-picture.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">{illustrationsData.category.name}いいねランキング</TextShadow></p>
+              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">立ち絵いいねランキング</TextShadow></p>
             </div>
-            <div className="flex flex-wrap">
-              {illustrationsData.materialsPagination.data?.map((material) => (
-                <MaterialCard key={material.id} material={material} />
-              ))}
-            </div>
+            <MaterialListClient categoryId={6} />
             <div className="text-right">
-              <Link href={'/materials?category_id=' + illustrationsData.category.id} className="bg-gray-400 py-2 px-20 text-white">{illustrationsData.category.name}素材を見る →</Link>
+              <Link href={'/materials?category_id=' + illustrationsData.category.id} className="bg-gray-400 py-2 px-20 text-white">立ち絵素材を見る →</Link>
             </div>
           </div>
         </Container>

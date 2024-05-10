@@ -34,7 +34,7 @@ const LikeButton = ({materialId, defaultLiked, likeId = null}: Props) => {
     }
     return (
         <Button color={liked ? 'main' : 'main-cont'} className="mx-2 mb-4" onClick={onClick}>
-            {liked ? 'いいね済み' : 'この素材をいいね！'} <ThumbUpOffAltIcon className={liked ? 'fill-main-cont' : 'fill-main'} />
+            {liked ? 'いいね済み' : 'いいね！'} <ThumbUpOffAltIcon className={liked ? 'fill-main-cont' : 'fill-main'} />
         </Button>
     );
 }

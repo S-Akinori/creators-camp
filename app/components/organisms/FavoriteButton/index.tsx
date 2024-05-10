@@ -34,7 +34,7 @@ const FavoriteButton = ({materialId, defaultFavorited, favoriteId = null}: Props
     }
     return (
         <Button color={favorited ? 'accent' : 'accent-cont'} className="mx-2 mb-4" onClick={onClick}>
-            {favorited ? 'お気に入り済' : 'この素材をお気に入り！'} <StarBorderIcon className={favorited ? 'fill-accent-cont' : 'fill-accent'} />
+            {favorited ? 'お気に入り済' : 'お気に入り！'} <StarBorderIcon className={favorited ? 'fill-accent-cont' : 'fill-accent'} />
         </Button>
     );
 }

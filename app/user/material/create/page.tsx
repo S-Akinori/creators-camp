@@ -15,10 +15,10 @@ const UserMaterialCreatePage = async () => {
 
     return (
         <Container>
-            <div>
+            <div className="bg-white py-4">
                 <h1 className={clsx([reggaeOne.className, "text-2xl text-main font-bold text-center"])}>素材アップロード</h1>
+                <MaterialCreateForm categories={categories} />
             </div>
-            <MaterialCreateForm categories={categories} />
         </Container>
     );
 };

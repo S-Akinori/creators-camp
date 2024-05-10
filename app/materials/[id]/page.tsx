@@ -29,6 +29,7 @@ import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtensi
 import MusicPlayer from "@/app/components/molecules/AudioPlayer";
 import VideoPlayer from "@/app/components/molecules/VideoPlayer";
 import PreviewButton from "@/app/components/organisms/PreviewButton";
+import Link from "next/link";
 
 interface Props {
     params: {
@@ -56,48 +57,58 @@ const MaterialDetailPage = async ({ params }: Props) => {
         <Container>
             <div className="md:flex">
                 <div className="md:w-1/2">
-                    <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
-                    {material.user_id == user?.id && (
-                        <div className="md:flex">
-                            <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
-                            <MaterialDeleteButton material={material} />
+                    <div className="bg-white p-4">
+                        <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
+                        {material.user_id == user?.id && (
+                            <div className="md:flex">
+                                <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
+                                <MaterialDeleteButton material={material} />
+                            </div>
+                        )}
+                        <div className="relative border-main border-2">
+                            <Thumbnail src={material.image} alt={material.name} />
+                            {(fileType === 'music' || fileType === 'video') && (
+                                <div className="absolute left-0 top-0 w-full h-full flex justify-center items-end">
+                                    <PreviewButton className="mb-4" id={material.id} fileType={fileType} />
+                                </div>
+                            )}
                         </div>
-                    )}
-                    <div className="relative border-main border-2">
-                        <Thumbnail src={material.image} alt={material.name} />
-                        {(fileType === 'music' || fileType === 'video') && (
-                            <div className="absolute left-0 top-0 w-full h-full flex justify-center items-end">
-                                <PreviewButton className="mb-4" id={material.id} fileType={fileType} />
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex mt-4">
-                        {material.images && material.images.map((image, index) => (
-                            <div key={index} className="p-2 md:w-1/3">
-                                <Thumbnail src={image} alt={material.name} />
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <p>{material.description}</p>
-                    </div>
-                    <div className={reggaeOne.className}>
-                        {permissionState === 'approved' && (
-                            <DownloadButton id={params.id} name={material.name}>ダウンロード</DownloadButton>
-                        )}
-                        {permissionState === 'ready' && (
-                            <>
-                                {user && <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>}
-                                {!user && <Button className="mt-8 w-full py-4 text-center" href="/login">ログインして承認依頼する</Button>}
-                                <p className="text-red-600">この素材はクリエイターへの承認依頼が必要です</p>
-                            </>
-                        )}
-                        {permissionState === 'pending' && (
-                            <Button className="mt-8 w-full py-4" disabled>クリエイターへの承認依頼中です</Button>
-                        )}
-                        {permissionState === 'disapproved' && (
-                            <Button className="mt-8 w-full py-4" disabled>承認されませんでした</Button>
-                        )}
+                        <div className="flex mt-4">
+                            {material.images && material.images.map((image, index) => (
+                                <div key={index} className="p-2 md:w-1/3">
+                                    <Thumbnail src={image} alt={material.name} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex items-center justify-end mt-4 text-sm">
+                            {user && (
+                                <>
+                                    <LikeButton materialId={material.id} defaultLiked={material.likes.length > 0} likeId={material.likes.length > 0 ? material.likes[0].id : null} />
+                                    <FavoriteButton materialId={material.id} defaultFavorited={material.favorites.length > 0} favoriteId={material.favorites.length > 0 ? material.favorites[0].id : null} />
+                                </>
+                            )}
+                        </div>
+                        <div>
+                            <p className="text-lg">{material.description}</p>
+                        </div>
+                        <div className={reggaeOne.className}>
+                            {permissionState === 'approved' && (
+                                <DownloadButton id={params.id} name={material.name}>ダウンロード</DownloadButton>
+                            )}
+                            {permissionState === 'ready' && (
+                                <>
+                                    {user && <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>}
+                                    {!user && <Button className="mt-8 w-full py-4 text-center" href="/login">ログインして承認依頼する</Button>}
+                                    <p className="text-red-600">この素材はクリエイターへの承認依頼が必要です</p>
+                                </>
+                            )}
+                            {permissionState === 'pending' && (
+                                <Button className="mt-8 w-full py-4" disabled>クリエイターへの承認依頼中です</Button>
+                            )}
+                            {permissionState === 'disapproved' && (
+                                <Button className="mt-8 w-full py-4" disabled>承認されませんでした</Button>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="md:w-1/2 p-4">
@@ -107,16 +118,8 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         </h2>
                         <div>
                             <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mx-auto border-main border" />
-                            <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}>{material.user.name}</p>
+                            <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
                             <p className="text-center">{material.user.description}</p>
-                        </div>
-                        <div className="flex flex-wrap items-center justify-center mt-4">
-                            {user && (
-                                <>
-                                    <LikeButton materialId={material.id} defaultLiked={material.likes.length > 0} likeId={material.likes.length > 0 ? material.likes[0].id : null} />
-                                    <FavoriteButton materialId={material.id} defaultFavorited={material.favorites.length > 0} favoriteId={material.favorites.length > 0 ? material.favorites[0].id : null} />
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>

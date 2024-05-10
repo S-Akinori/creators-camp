@@ -9,7 +9,7 @@ import { tocText } from "@/contents/toc";
 
 export default function AboutPage() {
     return (
-        <Container>
+        <Container className="page">
             <h1><TextShadow className="text-xl">当サイトについて</TextShadow></h1>
             <Image src="/images/logo.png" className="mx-auto" alt="about" width={545} height={123} />
             <div className="mt-8 max-w-screen-lg mx-auto">

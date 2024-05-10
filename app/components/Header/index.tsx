@@ -7,7 +7,7 @@ import { reggaeOne } from "@/app/fonts";
 
 const Header = () => {
     return (
-        <header className="header">
+        <header className="header bg-white">
             <div className="flex items-center justify-between">
                 <div className="px-2">
                     <Link href="/"><Image src="/images/logo.png" width={200} height={80} alt="logo" /></Link>

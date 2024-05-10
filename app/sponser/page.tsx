@@ -11,8 +11,8 @@ export default function SponserPage() {
     return (
         <Container>
             <div className="relative">
-                <Image src="/images/bg-fv.png" className="mx-auto mb-4" alt="about" width={960} height={265} />
-                <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><TextShadow className="text-2xl">スポンサーの皆様</TextShadow></h1>
+                <Image src="/images/bg-fv.png" className="mx-auto mb-4" alt="about" width={800} height={220} />
+                <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><TextShadow className="text-3xl">スポンサーの皆様</TextShadow></h1>
             </div>
             <div className="flex justify-center">
                 <Image src="/images/bow2.png" sizes="(max-width: 768px) 30vw" className="" alt="about" width={300} height={300} />
