@@ -1,3 +1,4 @@
+import { Category } from "./Category";
 import { PermissionToken } from "./PermissionToken";
 import { User } from "./User";
 
@@ -6,10 +7,12 @@ export interface Material {
     name: string;
     description: string;
     category_id: number;
+    category: Category;
     permission: number;
     file: string;
     image: string;
     images: string[]
+    status: 'active' | 'inactive' | 'deleted';
     user: User
     user_id: number;
     created_at: string;

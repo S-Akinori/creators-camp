@@ -38,7 +38,7 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
             params: searchParams,
             headers: {
                 referer: process.env.APP_URL,
-                Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
+                Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
             },
         })
     const permissionToken = permissionTokenRes.data

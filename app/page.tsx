@@ -21,7 +21,7 @@ import MaterialListClient from "./components/organisms/MaterialListClient";
 import NewsList from "./components/organisms/NewsList";
 
 export default async function Home() {
-  const materialsPagination = await getMaterials()
+  // const materialsPagination = await getMaterials()
   const pluginsData = await getCategory(2)
   const musicsData = await getCategory(3)
   const illustrationsData = await getCategory(6)

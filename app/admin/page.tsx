@@ -12,7 +12,7 @@ export default function AdminPage() {
         <Container>
             <h1 className="mb-4"><TextShadow className="text-xl">管理画面</TextShadow></h1>
             <div className="text-center">
-                管理者はこちらでお知らせの更新ができます。
+                管理者はこちらでお知らせ管理やユーザー管理など、各種管理を行うことができます。左のメニューバーから選択してください。
             </div>
         </Container>
     );

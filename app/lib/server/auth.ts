@@ -12,7 +12,7 @@ export const update = async (data: FormData) => {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
                 referer: process.env.APP_URL,
-                Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
+                Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
             },
             withXSRFToken: true
         })

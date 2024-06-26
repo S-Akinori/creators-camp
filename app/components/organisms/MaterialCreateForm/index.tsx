@@ -108,8 +108,6 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         };
     }
 
-    console.log(images)
-
     useEffect(() => {
         const setData = async (material: Material) => {
             const res = await http.get(`/materials/${material.id}/download`, {

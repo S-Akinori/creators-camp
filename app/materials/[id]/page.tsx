@@ -30,6 +30,11 @@ import MusicPlayer from "@/app/components/molecules/AudioPlayer";
 import VideoPlayer from "@/app/components/molecules/VideoPlayer";
 import PreviewButton from "@/app/components/organisms/PreviewButton";
 import Link from "next/link";
+import Textarea from "@/app/components/Form/Textarea";
+import CommentForm from "@/app/components/organisms/CommentForm";
+import { getComments } from "@/app/lib/server/comment";
+import { comment } from "postcss";
+import { toDateString } from "@/app/lib/functions/toDateString";
 
 interface Props {
     params: {
@@ -52,6 +57,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
     const { category, materialsPagination } = await getCategory(material.category_id)
     const permissionState = user ? checkPermissionState(material.permission, material.permission_tokens) : 'ready'
     const fileType = identifyFileTypeByExtension(material.file)
+    const comments = await getComments(material.id)
 
     return (
         <Container>
@@ -144,6 +150,37 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         <MaterialCard key={material.id} material={material} />
                     ))}
                 </div>
+            </div>
+            <div className="mt-16">
+                <h2 className="mb-4">
+                    <TextShadow className="text-xl mb-4">この素材のコメント</TextShadow>
+                </h2>
+                {comments.data.length == 0 && <p className="text-center">コメントはまだありません</p>}
+                {comments.data.length > 0 && comments.data.map((comment) => (
+                    <div key={comment.id} className="bg-white border-b border-main p-4 mt-4">
+                        <div className="mb-4">
+                            <UserCard user={comment.user} />
+                            <p>{toDateString(comment.created_at)}</p>
+                        </div>
+                        <p>{comment.content}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="mt-16">
+                {user && (
+                    <div>
+                        <h2 className="mb-4">
+                            <TextShadow className="text-xl">コメントを投稿する</TextShadow>
+                        </h2>
+                        <CommentForm materialId={material.id} />
+                    </div>
+                )}
+                {!user && (
+                    <div className="border-2 border-main p-4 mx-auto w-max text-center">
+                        <p>コメントを投稿するにはログインが必要です</p>
+                        <Button className="mt-4 py-4" href="/login">ログインする</Button>
+                    </div>
+                )}
             </div>
         </Container>
     )

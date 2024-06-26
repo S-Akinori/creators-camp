@@ -10,7 +10,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
     const res = await fetch(`${process.env.API_URL}/user`, {
         method: 'GET',
         headers: {
-            Cookie: `laravel_session=${cookies().get("laravel_session")?.value}`,
+            Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
             referer: process.env.APP_URL ?? '',
             origin: process.env.APP_URL ?? '',
             Accept: 'application/json'

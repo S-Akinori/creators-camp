@@ -7,4 +7,10 @@ export interface User {
     updated_at: string;
     description: string;
     image: string;
+    x_link: string;
+    website: string;
+    created_game: string;
+    contributed_game: string;
+    status: 'active' | 'inactive' | 'deleted';
+    last_login_at: string;
 }

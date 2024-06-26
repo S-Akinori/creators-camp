@@ -7,9 +7,10 @@ export const AdminMenu = () => {
             <nav className="">
                 <ul className="">
                     <li className="mb-4 pb-2 border-b border-main"><Link href='/admin/news'>お知らせ</Link></li>
-                    {/* <li className="mb-4 pb-2 border-b border-main"><Link href=''>ユーザー</Link></li>
-                    <li className="mb-4 pb-2 border-b border-main"><Link href=''>素材</Link></li>
-                    <li className="mb-4 pb-2 border-b border-main"><Link href=''>カテゴリー</Link></li> */}
+                    <li className="mb-4 pb-2 border-b border-main"><Link href='/admin/users'>ユーザー</Link></li>
+                    <li className="mb-4 pb-2 border-b border-main"><Link href='/admin/materials'>素材</Link></li>
+                    <li className="mb-4 pb-2 border-b border-main"><Link href='/admin/comments'>コメント</Link></li>
+                    <li className="mb-4 pb-2 border-b border-main"><Link href='/admin/categories'>カテゴリー</Link></li>
                 </ul>
             </nav>
             <LogoutButton />
