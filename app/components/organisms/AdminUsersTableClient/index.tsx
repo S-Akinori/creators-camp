@@ -38,6 +38,7 @@ export default function AdminUsersTableClient() {
 
     const updateStatus = async (id: number, status: string) => {
         setStatus('submitting')
+        await csrf()
         try {
             await http.put(`/admin/users/${id}`, { status });
             const res = await http.get('/users');

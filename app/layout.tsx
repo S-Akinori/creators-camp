@@ -6,6 +6,7 @@ import TypekitLoader from "./components/TypekitLoader";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { notoSansJP } from "./fonts";
+import GoogleAdsense from "./components/molecules/GoogleAdsense.tsx";
 
 // const inter = Inter({ subsets: ["latin"] });
 const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
@@ -25,6 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <GoogleAdsense pId="1983473550632743" />
       <body className={notoSansJP.className}>
         {children}
       </body>

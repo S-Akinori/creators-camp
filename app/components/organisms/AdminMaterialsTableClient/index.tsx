@@ -9,6 +9,7 @@ import Modal from '../../molecules/Modal';
 import LoadingIcon from '../../atoms/Icons/LoadingIcons';
 import Link from 'next/link';
 import { toDateString } from '@/app/lib/functions/toDateString';
+import { csrf } from '@/app/lib/csrf';
 
 interface UpdateData {
     id: number;
@@ -40,6 +41,7 @@ export default function AdminMaterialsTableClient() {
 
     const updateStatus = async (id: number, status: string) => {
         setStatus('submitting')
+        await csrf()
         try {
             await http.put(`/admin/materials/${id}`, { status });
             const res = await http.get('/materials?page=${page}');

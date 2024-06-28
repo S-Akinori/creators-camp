@@ -38,6 +38,7 @@ export default function AdminCommentsTableClient() {
 
     const updateStatus = async (id: number | string, status: string) => {
         setStatus('submitting')
+        await csrf()
         const comment = await getComment(id);
         try {
             await http.put(`/comments/${id}`, {
