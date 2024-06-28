@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { toDateString } from '@/app/lib/functions/toDateString';
 import { Comment } from '@/app/types/Comment';
 import { getComment } from '@/app/lib/comment';
+import { csrf } from '@/app/lib/csrf';
 
 interface UpdateData {
     id: number| string;
@@ -38,9 +39,9 @@ export default function AdminCommentsTableClient() {
 
     const updateStatus = async (id: number | string, status: string) => {
         setStatus('submitting')
-        await csrf()
         const comment = await getComment(id);
         try {
+            await csrf()
             await http.put(`/comments/${id}`, {
                 status: status,
                 material_id: comment.material_id,

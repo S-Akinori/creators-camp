@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import Modal from '../../molecules/Modal';
 import LoadingIcon from '../../atoms/Icons/LoadingIcons';
 import Link from 'next/link';
+import { csrf } from '@/app/lib/csrf';
 
 interface UpdateData {
     id: number;
@@ -38,8 +39,8 @@ export default function AdminUsersTableClient() {
 
     const updateStatus = async (id: number, status: string) => {
         setStatus('submitting')
-        await csrf()
         try {
+            await csrf()
             await http.put(`/admin/users/${id}`, { status });
             const res = await http.get('/users');
             setUsers(res.data);

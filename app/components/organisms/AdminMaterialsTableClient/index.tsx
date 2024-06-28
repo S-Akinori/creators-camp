@@ -41,8 +41,8 @@ export default function AdminMaterialsTableClient() {
 
     const updateStatus = async (id: number, status: string) => {
         setStatus('submitting')
-        await csrf()
         try {
+            await csrf()
             await http.put(`/admin/materials/${id}`, { status });
             const res = await http.get('/materials?page=${page}');
             setMaterialsPagenation(res.data);
