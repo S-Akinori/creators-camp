@@ -1,58 +1,56 @@
-import Image from "next/image";
 import Container from "../components/Container";
 import TextShadow from "../components/TextShadow";
 import Button from "../components/atoms/Button";
-import { getMaterials } from "../lib/material";
 import MaterialCard from "../components/organisms/MaterialCard";
 import { getCategories, getCategory } from "../lib/category";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import clsx from "clsx";
-import { reggaeOne } from "../fonts";
 import { Download, ThumbUpOffAltOutlined } from "@mui/icons-material";
+import { reggaeOne } from "../fonts";
+import clsx from "clsx";
+import { getMaterials } from "../lib/material";
+import { Material, Pagination as PaginationType } from "../types/Material";
+import { search } from "../lib/search";
+import MaterialList from "../components/organisms/MaterialList";
+import CategoryList from "../components/organisms/CategoryList";
+import Pagination from "../components/organisms/Pagination";
+import MaterialSearchForm from "../components/organisms/MaterialSearchForm";
+import { updateQueryString } from "../lib/functions/updateQueryString";
 
 export default async function MaterialsIndexPage({searchParams} : {searchParams: { [key: string]: string | undefined }}) {
-    const categoryId = searchParams.category_id ? Number(searchParams.category_id) : 1;
+    const categoryId = searchParams.category_id ? Number(searchParams.category_id) : 0;
     const page = searchParams.page ? Number(searchParams.page) : 1;
     const orderBy = searchParams.order_by ?? 'download_count'
-    console.log(categoryId, page, orderBy)
-    // const materials = await getMaterials();
+    const keyword = searchParams.keyword ?? ''
     const categories = await getCategories();
-    const {category, materialsPagination} = await getCategory(categoryId, page, orderBy);
+
+    let category = { id: 0, name: '全カテゴリー' };
+    let materialsPagination : PaginationType<Material>;
+
+    if(keyword) {
+        materialsPagination = await search<Material>(keyword, 'materials', categoryId);
+    } else {
+        if (categoryId === 0) {
+            console.log(orderBy)
+            materialsPagination = await getMaterials({page: page, orderBy: orderBy});
+        } else {
+            const result = await getCategory(categoryId, page, orderBy);
+            category = result.category;
+            materialsPagination = result.materialsPagination;
+        }
+    }
 
     return (
         <Container>
             <h1 className="mb-8"><TextShadow className="text-2xl">素材一覧</TextShadow></h1>
-            <div className="flex flex-wrap">
-                {categories.map((cat) => (
-                    <div key={cat.id} className="p-2 w-1/2 md:w-1/5">
-                        <Button href={`/materials?category_id=${cat.id}`} className="w-full py-2 block text-center" color={categoryId == cat.id ? 'main' : 'main-cont'}>
-                            {cat.name}
-                        </Button>
-                    </div>
-                ))}
-            </div>
+            <MaterialSearchForm />
+            <CategoryList categories={categories} categoryId={categoryId} />
             <div className={clsx(['flex justify-center md:justify-end mt-4', reggaeOne.className])}>
-                <div className="mx-4"><Button className="rounded-none text-center" href={`/materials?category_id=${category.id}&order_by=like_count`} color={orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAltOutlined /> </Button></div>
-                <div className="mx-4"><Button className="rounded-none text-center" href={`/materials?category_id=${category.id}&order_by=download_count`} color={orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
+                <div className="mx-4"><Button className="rounded-none text-center" href={`/materials?${updateQueryString(searchParams, 'order_by', 'like_count')}`} color={orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAltOutlined /> </Button></div>
+                <div className="mx-4"><Button className="rounded-none text-center" href={`/materials?${updateQueryString(searchParams, 'order_by', 'download_count')}`} color={orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
             </div>
-            <div className="flex flex-wrap">
-                {materialsPagination.data?.map((material) => (
-                    <MaterialCard key={material.id} material={material} />
-                ))}
-            </div>
-            <div className="flex justify-center my-4">
-            {materialsPagination.total > materialsPagination.per_page && (
-                <div className="flex">
-                    <Button key="prev" href={`/materials?category_id=${category.id}&order_by=${orderBy}&page=${page - 1}`} className={`mx-1`} color='main-cont'>←</Button>
-                    {Array.from({ length: materialsPagination.total - 1 }, (_, index) => (
-                        <Button key={index} href={`/materials?category_id=${category.id}&order_by=${orderBy}&page=${index + 1}`} className={`mx-1`} color={index + 1 == materialsPagination.current_page ? 'main' : 'main-cont'}>
-                            {index + 1}
-                        </Button>
-                    ))}
-                    <Button key="next" href={`/materials?category_id=${category.id}&order_by=${orderBy}&page=${page + 1}`} className={`mx-1`} color='main-cont'>→</Button>
-                </div>
-            )}
+            <MaterialList materials={materialsPagination.data} />
+            <Pagination<Material> pagination={materialsPagination} api={`/materials?category_id=${category.id}&order_by=${orderBy}&keyword=${keyword}`} page={page} />
+            <div className="mt-4 text-center">
+                <Button href="/users" className="py-4">ユーザー一覧へ</Button>
             </div>
         </Container>
     );

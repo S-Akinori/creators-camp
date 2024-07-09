@@ -1,14 +1,14 @@
 import clsx from "clsx";
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement>{
     children: React.ReactNode;
     flex?: boolean;
     className?: string;
 }
 
-const FormControl = ({children, flex = true, className}: Props) => {
+const FormControl = ({children, flex = true, className, ...rest}: Props) => {
     return (
-        <div className={clsx('mb-4', flex && 'md:flex justify-center items-center', className)}>
+        <div {...rest} className={clsx('mb-4', flex && 'md:flex justify-center items-center', className)}>
             {children}
         </div>
     )

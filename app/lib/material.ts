@@ -11,9 +11,9 @@ interface Props {
 export const getMaterials = async ({category_id, page, orderBy}: Props = {}) : Promise<Pagination<Material>> => {
     const res = await http.get('/materials', {
         params: {
-            category_id,
-            page,
-            orderBy
+            category_id: category_id,
+            page: page,
+            order_by: orderBy
         }
     })
     return res.data

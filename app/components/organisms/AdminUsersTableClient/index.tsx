@@ -9,6 +9,10 @@ import Modal from '../../molecules/Modal';
 import LoadingIcon from '../../atoms/Icons/LoadingIcons';
 import Link from 'next/link';
 import { csrf } from '@/app/lib/csrf';
+import FormControl from '../../Form/FormControl';
+import Input from '../../Form/Input';
+import { search } from '@/app/lib/search';
+import SearchForm from '../SearchForm';
 
 interface UpdateData {
     id: number;
@@ -53,13 +57,17 @@ export default function AdminUsersTableClient() {
         } catch (e) {
             setStatus('error');
         }
-
     }
 
     const setModal = (id: number, status: 'active' | 'inactive' | 'deleted') => {
         setUpdateData({ id, status });
         setOpen(true);
     }
+
+    const handleSearch = async (query: string) => {
+        const data = await search<User>(query, 'users');
+        setUsers(data);
+      };
 
     return (
         <>
@@ -90,11 +98,11 @@ export default function AdminUsersTableClient() {
                 </Modal>
             )}
             <div className='bg-white'>
+                <SearchForm onSearch={handleSearch} />
                 <div className='flex text-center'>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-12'>ID</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-60'>ユーザー名</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-60'>メールアドレス</div>
-                    {/* <div className='p-2 bg-main text-main-cont border border-main-cont w-40'>パスワード</div> */}
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-40'>最終ログイン日</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-32'>ステータス</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont grow'>操作</div>

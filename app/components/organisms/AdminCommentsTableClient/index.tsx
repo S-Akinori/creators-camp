@@ -10,6 +10,8 @@ import { toDateString } from '@/app/lib/functions/toDateString';
 import { Comment } from '@/app/types/Comment';
 import { getComment } from '@/app/lib/comment';
 import { csrf } from '@/app/lib/csrf';
+import SearchForm from '../SearchForm';
+import { search } from '@/app/lib/search';
 
 interface UpdateData {
     id: number| string;
@@ -67,6 +69,11 @@ export default function AdminCommentsTableClient() {
         setOpen(true);
     }
 
+    const handleSearch = async (query: string) => {
+        const data = await search<Comment>(query, 'comments');
+        setCommentsPagenation(data);
+      };
+
     return (
         <>
             {updateData && (
@@ -96,6 +103,7 @@ export default function AdminCommentsTableClient() {
                 </Modal>
             )}
             <div className='bg-white'>
+                <SearchForm onSearch={handleSearch} />
                 <div className='flex text-center'>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-12'>ID</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-64'>素材名</div>

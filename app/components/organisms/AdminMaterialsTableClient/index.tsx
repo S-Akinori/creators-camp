@@ -10,6 +10,8 @@ import LoadingIcon from '../../atoms/Icons/LoadingIcons';
 import Link from 'next/link';
 import { toDateString } from '@/app/lib/functions/toDateString';
 import { csrf } from '@/app/lib/csrf';
+import { search } from '@/app/lib/search';
+import SearchForm from '../SearchForm';
 
 interface UpdateData {
     id: number;
@@ -63,6 +65,11 @@ export default function AdminMaterialsTableClient() {
         setOpen(true);
     }
 
+    const handleSearch = async (query: string) => {
+        const data = await search<Material>(query, 'materials');
+        setMaterialsPagenation(data);
+      };
+
     return (
         <>
             {updateData && (
@@ -92,6 +99,7 @@ export default function AdminMaterialsTableClient() {
                 </Modal>
             )}
             <div className='bg-white'>
+                <SearchForm onSearch={handleSearch} />
                 <div className='flex text-center'>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-12'>ID</div>
                     <div className='p-2 bg-main text-main-cont border border-main-cont w-60'>素材名</div>

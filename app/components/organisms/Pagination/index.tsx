@@ -12,13 +12,13 @@ const Pagination = <T,>({pagination, api, page = 1}: Props<T>) => {
     return (
         <div className="flex justify-center my-4">
             <div className="flex">
-                <Button key="prev" href={`${api}?page=${page - 1}`} className={`mx-1`} color='main-cont'>←</Button>
-                {Array.from({ length: pagination.total - 1 }, (_, index) => (
-                    <Button key={index} href={`${api}?page=${index + 1}`} className={`mx-1`} color={index + 1 == pagination.current_page ? 'main' : 'main-cont'}>
+                <Button key="prev" href={`${api}&page=${page - 1}`} className={`mx-1`} color='main-cont'>←</Button>
+                {Array.from({ length: pagination.last_page }, (_, index) => (
+                    <Button key={index} href={`${api}&page=${index + 1}`} className={`mx-1`} color={index + 1 == pagination.current_page ? 'main' : 'main-cont'}>
                         {index + 1}
                     </Button>
                 ))}
-                <Button key="next" href={`/${api}?page=${page + 1}`} className={`mx-1`} color='main-cont'>→</Button>
+                <Button key="next" href={`${api}&page=${page + 1}`} className={`mx-1`} color='main-cont'>→</Button>
             </div>
         </div>
     )
