@@ -1,5 +1,6 @@
 import { Pagination as PaginationType } from "@/app/types/Material";
 import Button from "../../atoms/Button";
+import { updateQueryString } from "@/app/lib/functions/updateQueryString";
 
 interface Props<T> {
     pagination: PaginationType<T>
@@ -9,6 +10,7 @@ interface Props<T> {
 
 const Pagination = <T,>({pagination, api, page = 1}: Props<T>) => {
     if(pagination.total <= pagination.per_page) return null
+
     return (
         <div className="flex justify-center my-4">
             <div className="flex">

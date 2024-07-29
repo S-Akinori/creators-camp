@@ -1,5 +1,6 @@
 import { Category } from "./Category";
 import { PermissionToken } from "./PermissionToken";
+import { Tag } from "./Tag";
 import { User } from "./User";
 
 export interface Material {
@@ -23,6 +24,8 @@ export interface Material {
     download_count: number
     like_count: number
     favorite_count: number
+    tags: Tag[]
+    is_ai_generated: number
 }
 
 export interface MaterialError {
@@ -32,6 +35,8 @@ export interface MaterialError {
     permission?: string[];
     file?: string[];
     image?: string[];
+    tag?: string[];
+    is_ai_generated?: string[];
 }
 
 export interface Pagination<T> {

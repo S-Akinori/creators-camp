@@ -10,9 +10,13 @@ interface QueryParams {
    * @param value - 追加または更新するクエリパラメータの値
    * @returns 新しいクエリ文字列
    */
-  export const updateQueryString = (currentParams: QueryParams, key: string, value: string): string => {
-    const params = new URLSearchParams(currentParams as Record<string, string>);
-    params.set(key, value);
+  export const updateQueryString = (currentParams: QueryParams | string, key: string, value: string): string => {
+    const params = new URLSearchParams(currentParams as string);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
     return params.toString();
   }
   

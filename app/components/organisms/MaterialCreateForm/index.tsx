@@ -19,9 +19,11 @@ import Modal from "@/app/components/molecules/Modal";
 import clsx from "clsx";
 import { reggaeOne } from "@/app/fonts";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
-import { IconButton, Tooltip } from "@mui/material";
+import { Autocomplete, Chip, IconButton, TextField, Tooltip } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
+import { getTags, storeTag } from "@/app/lib/tag";
+import { Tag } from "@/app/types/Tag";
 
 interface ImageFile {
     file: File;
@@ -41,6 +43,8 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const [formState, setFormState] = useState<'error' | 'success' | 'submitting' | 'ready'>('ready')
     const [isNew, setIsNew] = useState<boolean>(!material)
     const [storedMaterial, setStoredMaterial] = useState<Material | null>(null)
+    const [fetchedTags, setFetchedTags] = useState<Tag[]>([])
+    const [tags, setTags] = useState<string[]>([]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
@@ -83,6 +87,16 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         setFormState('submitting');
         await csrf();
         try {
+
+            const tagIds = await Promise.all(tags.map(async (tag) => {
+                const res = await storeTag(tag);
+                return res.id;
+            }));
+            console.log(tagIds)
+            tagIds.forEach((tagId) => {
+                console.log(tagId)
+                formData.append('tags[]', tagId.toString());
+            });
             if (isNew) {
                 const res = await http.post('/materials', formData, {
                     headers: {
@@ -127,10 +141,22 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 return { file: new File([imageBlob], fileName, { type: 'image/png' }), url: image }
             }));
         }
+        const fetchTags = async () => {
+            const data = await getTags();
+            const tagNames = material?.tags.map((tag) => tag.name);
+            setFetchedTags(data);
+        }
+
         if (material) {
             setData(material);
+            fetchTags();
+            setTags(material.tags.map((tag) => tag.name));
         }
     }, [])
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string[]) => {
+        setTags(newValue);
+    };
 
     return (
         <>
@@ -216,6 +242,42 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                             <option value="0">承認を必要にしない</option>
                         </Select>
                         {errors.permission && <ErrorMessage message={errors.permission[0]} />}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Autocomplete
+                            multiple
+                            id="tags-filled"
+                            options={fetchedTags.map((tag) => tag.name)}
+                            freeSolo
+                            value={tags}
+                            onChange={handleChange}
+                            renderTags={(value: readonly string[], getTagProps) =>
+                                value.map((option: string, index: number) => {
+                                    const { key, ...tagProps } = getTagProps({ index });
+                                    return (
+                                        <Chip variant="outlined" label={option} key={key} {...tagProps} />
+                                    );
+                                })
+                            }
+                            renderInput={(params) => (
+                                <>
+                                    <Label>タグ</Label>
+                                    <TextField
+                                        {...params}
+                                        variant="filled"
+                                        className="border-main border-2 bg-gray-200 rounded"
+                                    />
+                                </>
+                            )}
+                        />
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label htmlFor="is_ai_generated" className="shrink-0 mr-4">AIの利用</Label>
+                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full" defaultValue={material?.is_ai_generated}>
+                            <option value="1">利用している</option>
+                            <option value="0">利用していない</option>
+                        </Select>
+                        {errors.is_ai_generated && <ErrorMessage message={errors.is_ai_generated[0]} />}
                     </FormControl>
                     <div className="text-center mt-8">
                         <Button className="py-4 px-16" disabled={formState == 'submitting'}>{formState == 'submitting' ? <LoadingIcon /> : '保存'}</Button>

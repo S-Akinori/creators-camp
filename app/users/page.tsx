@@ -12,6 +12,7 @@ import { User } from "../types/User";
 import UserSearchForm from "../components/organisms/UserSearchForm";
 import { Pagination as PaginationType } from "../types/Material";
 import { search } from "../lib/search";
+import { limitStringLengthWithEllipsis } from "../lib/functions/limitStringLengthWithEllipsis";
 
 export default async function UsersIndexPage({searchParams} : {searchParams: { [key: string]: string | undefined }}) {
     const page = searchParams.page ? Number(searchParams.page) : 1;
@@ -36,7 +37,7 @@ export default async function UsersIndexPage({searchParams} : {searchParams: { [
                                 <Image src={user.image} width={100} height={100} alt={user.name} className="rounded-full mx-auto border-main border" />
                             </Link>
                             <div className="text-center mb-4"><Link href={`/users/${user.id}`} className="text-center text-main text-xl">{user.name}</Link></div>
-                            <p className="text-center">{user.description}</p>
+                            {user.description && <p>{limitStringLengthWithEllipsis(user.description, 60)}</p>}
                         </div>
                     </div>
                 ))}

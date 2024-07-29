@@ -4,7 +4,7 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 const Select = ({ children, ...props }: Props) => {
     return (
-        <select {...props} className={`border-main border-2 rounded p-4 bg-gray-200 ${props.className}`}>
+        <select {...props} className={`border-main border-2 rounded p-4 bg-white ${props.className}`}>
             {children}
         </select>
     );

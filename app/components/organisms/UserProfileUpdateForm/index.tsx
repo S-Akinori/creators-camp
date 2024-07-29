@@ -13,6 +13,7 @@ import LoadingIcon from "../../atoms/Icons/LoadingIcons"
 import ErrorMessage from "../../atoms/Error"
 import SuccessMessage from "../../atoms/Message"
 import { ChangeEvent, useState } from "react"
+import Select from "../../Form/Select"
 
 interface Props {
     user: User
@@ -77,13 +78,47 @@ const UserProfileUpdateForm = ({user}: Props) => {
                 <Input id="name" name="name" type="text" className="w-full" defaultValue={user.name} />
             </FormControl>
             <FormControl flex={false}>
-                <Label htmlFor="description" className="shrink-0 mr-4">説明文
-                </Label>
+                <Label htmlFor="description" className="shrink-0 mr-4">説明文</Label>
                 <Textarea id="description" name="description" className="w-full">{user.description}</Textarea>
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="email" className="shrink-0 mr-4">メールアドレス</Label>
                 <Input id="email" name="email" type="text" className="w-full" defaultValue={user.email} />
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="email" className="shrink-0 mr-4">クリエイタータイプ</Label>
+                <Select id="role" name="role" className="w-full" defaultValue={user.role}>
+                    <option value="ゲームプランナー">ゲームプランナー</option>
+                    <option value="ゲームデザイナー">ゲームデザイナー</option>
+                    <option value="イラストレーター">イラストレーター</option>
+                    <option value="グラフィッカー">グラフィッカー</option>
+                    <option value="サウンドクリエイター">サウンドクリエイター</option>
+                    <option value="シナリオライター">シナリオライター</option>
+                    <option value="テスター">テスター</option>
+                    <option value="プログラマー">プログラマー</option>
+                    <option value="声優">声優</option>
+                    <option value="その他クリエイター">その他クリエイター</option>
+                </Select>
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="skill" className="shrink-0 mr-4">スキル</Label>
+                <Textarea id="skill" name="skill" className="w-full">{user.skill}</Textarea>
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="x_link" className="shrink-0 mr-4">Xリンク</Label>
+                <Input id="x_link" name="x_link" type="text" className="w-full" defaultValue={user.x_link} />
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="website" className="shrink-0 mr-4">WEBサイト</Label>
+                <Input id="website" name="website" type="text" className="w-full" defaultValue={user.website} />
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="created_game" className="shrink-0 mr-4">作成したゲーム</Label>
+                <Textarea id="created_game" name="created_game" className="w-full">{user.created_game}</Textarea>
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="contributed_game" className="shrink-0 mr-4">貢献したゲーム</Label>
+                <Textarea id="contributed_game" name="contributed_game" className="w-full">{user.contributed_game}</Textarea>
             </FormControl>
             <div className="text-center mt-8">
                 <button type="submit" className="py-4 px-16 bg-main text-white rounded-full" disabled={formState === 'submitting'}>

@@ -21,7 +21,6 @@ export const getUserFavoriteMaterials = async () : Promise<Pagination<Favorite>>
             Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
         },
     })
-    console.log(res.data)
     return res.data
 }
 

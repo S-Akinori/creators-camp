@@ -10,6 +10,11 @@ import LogoutButton from "../components/organisms/LogoutButton";
 import { reggaeOne } from "../fonts";
 import { getUserFavoriteMaterials } from "../lib/server/material";
 import MaterialCard from "../components/organisms/MaterialCard";
+import { http } from "../lib/http";
+import { csrf } from "../lib/csrf";
+import { getFollowings } from "../lib/server/follow";
+import UserCard from "../components/organisms/UserCard";
+import { limitStringLengthWithEllipsis } from "../lib/functions/limitStringLengthWithEllipsis";
 
 const UserProfilePage = async () => {
     const user = await getUser();
@@ -18,7 +23,8 @@ const UserProfilePage = async () => {
     }
     const materialsPagination = await getUserMaterials(user.id);
     const favoriteMaterialsPagination = await getUserFavoriteMaterials();
-
+    const followingsPagination = await getFollowings(user.id);
+    console.log(followingsPagination);
     return (
         <Container className={reggaeOne.className}>
             <div>
@@ -52,6 +58,22 @@ const UserProfilePage = async () => {
                 <div className="flex flex-wrap">
                     {favoriteMaterialsPagination.data.map((paginationData) => (
                         <MaterialCard key={paginationData.id} material={paginationData.material} />
+                    ))}
+                </div>
+            </div>
+            <div className="mt-8">
+                <h2><TextShadow className="text-2xl">フォローしたユーザー</TextShadow></h2>
+                <div className="flex flex-wrap">
+                    {followingsPagination.data.map((paginationData) => (
+                        <div key={paginationData.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
+                        <div className="bg-white p-4">
+                            <Link href={`/users/${paginationData.id}`} className="text-center">
+                                <Image src={paginationData.image} width={100} height={100} alt={paginationData.name} className="rounded-full mx-auto border-main border" />
+                            </Link>
+                            <div className="text-center mb-4"><Link href={`/users/${user.id}`} className="text-center text-main text-xl">{paginationData.name}</Link></div>
+                            {paginationData.description && <p>{limitStringLengthWithEllipsis(paginationData.description, 60)}</p>}
+                        </div>
+                    </div>
                     ))}
                 </div>
             </div>

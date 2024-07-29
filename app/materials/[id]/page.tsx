@@ -2,11 +2,7 @@
 import Button from "@/app/components/atoms/Button";
 import Container from "@/app/components/Container";
 import TextShadow from "@/app/components/TextShadow";
-import Title from "@/app/components/Title";
-import { user } from "@/contents/user";
 import Image from "next/image";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { IconButton, Tooltip } from "@mui/material"; import useMaterial from "@/app/lib/hooks/useMaterial";
 import { getUserMaterials } from "@/app/lib/material";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
 import UserCard from "@/app/components/organisms/UserCard";
@@ -14,27 +10,22 @@ import MaterialCard from "@/app/components/organisms/MaterialCard";
 import { getCategory } from "@/app/lib/category";
 import DownloadButton from "@/app/components/organisms/DownloadButton";
 import LikeButton from "@/app/components/organisms/LikeButton";
-import { csrf } from "@/app/lib/csrf";
 import { getMaterial } from "@/app/lib/server/material";
 import FavoriteButton from "@/app/components/organisms/FavoriteButton";
 import PermissionRequestButton from "@/app/components/organisms/PermissionRequestButton";
-import { http } from "@/app/lib/http";
-import { cookies } from "next/headers";
 import { PermissionToken } from "@/app/types/PermissionToken";
 import clsx from "clsx";
 import { reggaeOne } from "@/app/fonts";
 import { getUser } from "@/app/lib/auth";
 import MaterialDeleteButton from "@/app/components/organisms/MaterialDeleteButton";
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
-import MusicPlayer from "@/app/components/molecules/AudioPlayer";
-import VideoPlayer from "@/app/components/molecules/VideoPlayer";
 import PreviewButton from "@/app/components/organisms/PreviewButton";
 import Link from "next/link";
-import Textarea from "@/app/components/Form/Textarea";
 import CommentForm from "@/app/components/organisms/CommentForm";
 import { getComments } from "@/app/lib/server/comment";
-import { comment } from "postcss";
 import { toDateString } from "@/app/lib/functions/toDateString";
+import FollowButton from "@/app/components/organisms/FollowButton";
+import { getIsFollowing } from "@/app/lib/server/follow";
 
 interface Props {
     params: {
@@ -58,13 +49,20 @@ const MaterialDetailPage = async ({ params }: Props) => {
     const permissionState = user ? checkPermissionState(material.permission, material.permission_tokens) : 'ready'
     const fileType = identifyFileTypeByExtension(material.file)
     const comments = await getComments(material.id)
+    const isFollowing = user ? await getIsFollowing(material.user.id) : false
 
     return (
         <Container>
             <div className="md:flex">
                 <div className="md:w-1/2">
-                    <div className="bg-white p-4">
+                    <div className="bg-white p-4 relative">
                         <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
+                        {material.is_ai_generated && (
+                            <div className="absolute top-4 right-4 rounded-full border-2 border-main text-main font-bold w-12 aspect-square text-center leading-tight">
+                                AI<br/>
+                                利用
+                            </div>
+                        )}
                         {material.user_id == user?.id && (
                             <div className="md:flex">
                                 <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
@@ -96,6 +94,11 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         </div>
                         <div>
                             <p className="text-lg">{material.description}</p>
+                            <div>
+                                {material.tags.map((tag) => (
+                                    <Link key={tag.id} href={`/materials?tag_id=${tag.id}`} className="text-main">#{tag.name}</Link>
+                                ))}
+                            </div>
                         </div>
                         <div className={reggaeOne.className}>
                             {permissionState === 'approved' && (
@@ -126,6 +129,11 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mx-auto border-main border" />
                             <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
                             <p className="text-center">{material.user.description}</p>
+                            {user && (
+                            <div className="mt-4 text-center">
+                                <FollowButton userId={material.user.id} isFollowing={isFollowing} />
+                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
