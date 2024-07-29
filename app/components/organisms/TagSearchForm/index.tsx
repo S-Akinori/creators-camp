@@ -12,7 +12,7 @@ import { Autocomplete, TextField } from '@mui/material';
 const TagSearchForm: React.FC = () => {
     const router = useRouter();
     const [tags, setTags] = useState<Tag[]>([]);
-    const [tagId, setTagId] = useState<string|number>(null);
+    const [tagId, setTagId] = useState<string|number|null>(null);
 
     useEffect(() => {
         const fetchTags = async () => {
