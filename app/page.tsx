@@ -8,15 +8,9 @@ import Button from "./components/atoms/Button";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Link from "next/link";
-import useMaterial from "./lib/hooks/useMaterial";
-import UserCard from "./components/organisms/UserCard";
-import MaterialCard from "./components/organisms/MaterialCard";
-import { getCategoryMaterials, getMaterials } from "./lib/material";
 import { getCategories, getCategory } from "./lib/category";
 import clsx from "clsx";
 import { reggaeOne } from "./fonts";
-import { ThumbUpOffAlt } from "@mui/icons-material";
-import DownloadIcon from '@mui/icons-material/Download';
 import MaterialListClient from "./components/organisms/MaterialListClient";
 import NewsList from "./components/organisms/NewsList";
 

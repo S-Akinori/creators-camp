@@ -1,9 +1,8 @@
-// 'use client';
 import Button from "@/app/components/atoms/Button";
 import Container from "@/app/components/Container";
 import TextShadow from "@/app/components/TextShadow";
 import Image from "next/image";
-import { getUserMaterials } from "@/app/lib/material";
+import { getMaterials, getUserMaterials } from "@/app/lib/material";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
 import UserCard from "@/app/components/organisms/UserCard";
 import MaterialCard from "@/app/components/organisms/MaterialCard";
@@ -45,7 +44,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
     const user = await getUser()
     const material = await getMaterial(Number(params.id))
     const userMaterialsPagination = await getUserMaterials(material.user.id)
-    const { category, materialsPagination } = await getCategory(material.category_id)
+    const relatedMaterialsPagination = material.category_id > 0 ? await getMaterials({category_id: material.category_id}) : await getMaterials()
     const permissionState = user ? checkPermissionState(material.permission, material.permission_tokens) : 'ready'
     const fileType = identifyFileTypeByExtension(material.file)
     const comments = await getComments(material.id)
@@ -63,7 +62,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
                                 利用
                             </div>
                         )}
-                        {material.user_id == user?.id && (
+                        {(material.user_id == user?.id) && (
                             <div className="md:flex">
                                 <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
                                 <MaterialDeleteButton material={material} />
@@ -126,8 +125,8 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             ユーザー情報
                         </h2>
                         <div>
-                            <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mx-auto border-main border" />
-                            <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
+                            <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mb-4 mx-auto border-main border" />
+                            <p className={clsx(["text-center text-main text-xl mb-4", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
                             <p className="text-center">{material.user.description}</p>
                             {user && (
                             <div className="mt-4 text-center">
@@ -154,7 +153,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
                     <TextShadow className="text-xl">同じカテゴリーの素材</TextShadow>
                 </h2>
                 <div className="flex flex-wrap">
-                    {materialsPagination.data.map((material) => (
+                    {relatedMaterialsPagination.data.map((material) => (
                         <MaterialCard key={material.id} material={material} />
                     ))}
                 </div>

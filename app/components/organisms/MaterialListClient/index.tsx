@@ -42,8 +42,8 @@ const MaterialListClient = ({categoryId, orderBy = 'download_count'}: Params) =>
     return (
         <div>
             <div className={clsx(['flex justify-end', reggaeOne.className])}>
-                <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({orderBy: 'like_count'})} color={params.orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAlt /> </Button></div>
-                <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({orderBy: 'download_count'})} color={params.orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
+                <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({categoryId: categoryId, orderBy: 'like_count'})} color={params.orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAlt /> </Button></div>
+                <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({categoryId: categoryId, orderBy: 'download_count'})} color={params.orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
             </div>
             <div className="flex flex-wrap">
                 {materialsPagination?.data?.map((material) => (

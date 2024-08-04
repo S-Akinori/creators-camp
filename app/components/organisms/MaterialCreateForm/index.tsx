@@ -143,15 +143,15 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         }
         const fetchTags = async () => {
             const data = await getTags();
-            const tagNames = material?.tags.map((tag) => tag.name);
+            // const tagNames = material?.tags.map((tag) => tag.name);
             setFetchedTags(data);
         }
 
         if (material) {
             setData(material);
-            fetchTags();
             setTags(material.tags.map((tag) => tag.name));
         }
+        fetchTags();
     }, [])
 
     const handleChange = (event: React.SyntheticEvent, newValue: string[]) => {

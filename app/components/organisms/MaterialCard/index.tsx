@@ -12,7 +12,7 @@ const MaterialCard = ({ material }: { material: Material }) => {
             <div className="mb-4 relative bg-white shadow" key={material.id}>
                 <div className="relative">
                     <Link href={`/materials/${material.id}`} className="block w-full relative aspect-video">
-                        <Image className="mx-auto relative" src={material.image} fill objectFit="cover" alt={material.name} />
+                        <Image className="mx-auto relative object-cover" src={material.image} fill alt={material.name} />
                     </Link>
                     <div className={clsx(["flex absolute right-0 bottom-0", reggaeOne.className])}>
                         <div className="bg-main text-main-cont p-1 text-sm"><Download className="text-sm" /> {material.download_count}</div>
