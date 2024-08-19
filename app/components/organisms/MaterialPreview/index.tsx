@@ -70,8 +70,8 @@ const MaterialPreview: React.FC<MaterialPreviewProps> = async ({ material, image
                         <div>
                             <p className="text-lg">{material.description}</p>
                             <div>
-                                {material.tags.map((tag) => (
-                                    <span className="text-main">#{tag}</span>
+                                {material.tags.map((tag, index) => (
+                                    <span key={index} className="text-main">#{tag}</span>
                                 ))}
                             </div>
                         </div>
