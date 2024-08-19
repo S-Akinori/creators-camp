@@ -4,7 +4,6 @@ import TextShadow from "../components/TextShadow";
 import Button from "../components/atoms/Button";
 import Link from "next/link";
 import { getUser } from "../lib/auth";
-import { getUserMaterials } from "../lib/material";
 import MaterialList from "../components/organisms/MaterialList";
 import LogoutButton from "../components/organisms/LogoutButton";
 import { reggaeOne } from "../fonts";
@@ -14,15 +13,16 @@ import { getFollowings } from "../lib/server/follow";
 import { limitStringLengthWithEllipsis } from "../lib/functions/limitStringLengthWithEllipsis";
 import NewsList from "../components/organisms/NewsList";
 import NotificationList from "../components/organisms/NotificationList";
+import { getMaterials } from "../lib/auth/material";
 
 const UserProfilePage = async () => {
     const user = await getUser();
     if (!user) {
         return null;
     }
-    const materialsPagination = await getUserMaterials(user.id);
+    const materialsPagination = await getMaterials();
     const favoriteMaterialsPagination = await getUserFavoriteMaterials();
-    const followingsPagination = await getFollowings(user.id);
+    const followingsPagination = await getFollowings({ id: user.id });
     return (
         <Container className={reggaeOne.className}>
             <div className="md:flex">
@@ -62,13 +62,20 @@ const UserProfilePage = async () => {
             <div className="mt-8">
                 <h2><TextShadow className="text-2xl">素材一覧</TextShadow></h2>
                 <MaterialList materials={materialsPagination.data} />
+                <div className="text-right">
+                    <Link href='/user/materials' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
+                </div>
             </div>
             <div className="mt-8">
                 <h2><TextShadow className="text-2xl">お気に入りの素材</TextShadow></h2>
                 <div className="flex flex-wrap">
                     {favoriteMaterialsPagination.data.map((paginationData) => (
-                        <MaterialCard key={paginationData.id} material={paginationData.material} />
+                        <MaterialCard key={paginationData.id} material={paginationData} />
+
                     ))}
+                </div>
+                <div className="text-right">
+                    <Link href='/user/materials/favorites' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
                 </div>
             </div>
             <div className="mt-8">
@@ -85,6 +92,9 @@ const UserProfilePage = async () => {
                             </div>
                         </div>
                     ))}
+                </div>
+                <div className="text-right">
+                    <Link href='/user/followings' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
                 </div>
             </div>
         </Container>

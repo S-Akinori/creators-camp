@@ -7,6 +7,7 @@ import Button from "../../atoms/Button";
 import { reggaeOne } from "@/app/fonts";
 import { Download, ThumbUpOffAlt } from "@mui/icons-material";
 import clsx from "clsx";
+import { getMaterials } from "@/app/lib/material";
 
 interface Params {
     categoryId?: number;
@@ -14,13 +15,8 @@ interface Params {
 }
 
 const fetchMaterials = async ({categoryId, orderBy}: Params): Promise<Pagination<Material>> => {
-    const res = await http.get(`/materials`, {
-        params: {
-            category_id: categoryId,
-            order_by: orderBy
-        }
-    })
-    return res.data
+    const data = await getMaterials({category_id: categoryId, orderBy: orderBy})
+    return data
 }
 
 const MaterialListClient = ({categoryId, orderBy = 'download_count'}: Params) => {

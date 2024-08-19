@@ -25,6 +25,7 @@ import { getComments } from "@/app/lib/server/comment";
 import { toDateString } from "@/app/lib/functions/toDateString";
 import FollowButton from "@/app/components/organisms/FollowButton";
 import { getIsFollowing } from "@/app/lib/server/follow";
+import ShareButtons from "@/app/components/organisms/ShareButtons";
 
 interface Props {
     params: {
@@ -116,6 +117,9 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             {permissionState === 'disapproved' && (
                                 <Button className="mt-8 w-full py-4" disabled>承認されませんでした</Button>
                             )}
+                        </div>
+                        <div className="mt-4">
+                            <ShareButtons />
                         </div>
                     </div>
                 </div>

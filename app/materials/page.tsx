@@ -15,17 +15,19 @@ import Pagination from "../components/organisms/Pagination";
 import MaterialSearchForm from "../components/organisms/MaterialSearchForm";
 import { updateQueryString } from "../lib/functions/updateQueryString";
 import AISearchForm from "../components/organisms/AISearchForm";
+import { csrf } from "../lib/csrf";
 
 export default async function MaterialsIndexPage({searchParams} : {searchParams: { [key: string]: string | undefined }}) {
-    const categoryId = searchParams.category_id ? Number(searchParams.category_id) : 0;
+    const categoryId = searchParams.category_id ? Number(searchParams.category_id) : undefined;
     const page = searchParams.page ? Number(searchParams.page) : 1;
     const orderBy = searchParams.order_by ?? 'download_count'
     const keyword = searchParams.keyword ?? ''
     const exceptAi = searchParams.except_ai ?? '0'
     const categories = await getCategories();
 
-    let category = { id: 0, name: '全カテゴリー' };
     let materialsPagination : PaginationType<Material>;
+
+    await csrf();
 
     if(keyword) {
         materialsPagination = await getMaterials({page: page, orderBy: orderBy, search: keyword, except_ai: parseInt(exceptAi), category_id: categoryId});

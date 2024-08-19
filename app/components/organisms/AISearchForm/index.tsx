@@ -3,7 +3,7 @@ import { Checkbox } from "@mui/material";
 import FormControl from "../../Form/FormControl";
 import Label from "../../Form/Label";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { updateQueryString } from "@/app/lib/functions/updateQueryString";
 
 interface Props {
@@ -14,10 +14,11 @@ const AISearchForm = ({defaultChecked = false}: Props) => {
     const router = useRouter();
     const [checked, setChecked] = useState(defaultChecked);
     const searchParams = useSearchParams()
+    const pathname = usePathname()
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newQuery = updateQueryString(searchParams.toString(), 'except_ai', e.target.checked ? '1' : '0');
-        router.push('/materials?' + newQuery);
+        router.push(`${pathname}?${newQuery}`);
     };
 
     useEffect(() => {

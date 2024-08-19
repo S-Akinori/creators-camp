@@ -3,9 +3,21 @@ import { cookies } from "next/headers"
 import { http } from "../http"
 import { Favorite } from "@/app/types/Favorite"
 
+interface Props {
+    user_id?: number
+    category_id?: number
+    page?: number
+    orderBy?: string
+    search?: string
+    tag_id?: number
+    except_ai?: number
+}
+
+
 export const getMaterial = async (id: number) : Promise<Material> => {
     const res = await http.get(`/materials/${id}`, {
         headers: {
+            'Content-Type': 'multipart/form-data',
             referer: process.env.APP_URL,
             Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
         },
@@ -14,12 +26,21 @@ export const getMaterial = async (id: number) : Promise<Material> => {
 }
 
 
-export const getUserFavoriteMaterials = async () : Promise<Pagination<Favorite>> => {
+export const getUserFavoriteMaterials = async ({user_id, category_id, search, tag_id, except_ai, page, orderBy}: Props = {}) : Promise<Pagination<Material>> => {
     const res = await http.get(`/user/favorites`, {
         headers: {
             referer: process.env.APP_URL,
             Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
         },
+        params: {
+            user_id: user_id,
+            category_id: category_id,
+            search: search,
+            tag_id: tag_id,
+            except_ai: except_ai,
+            page: page,
+            order_by: orderBy
+        }
     })
     return res.data
 }

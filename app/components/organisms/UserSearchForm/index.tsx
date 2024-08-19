@@ -31,7 +31,7 @@ const UserSearchForm: React.FC = () => {
     const updateQueryParams = (key: string, value: string) => {
         const newQuery = { ...query, [key]: value };
         const queryString = new URLSearchParams(newQuery).toString();
-        router.push(`/users?${queryString}`);
+        router.push(`${pathname}/?${queryString}`);
     };
 
 

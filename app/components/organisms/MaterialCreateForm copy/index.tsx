@@ -23,7 +23,7 @@ import { Tag } from "@/app/types/Tag";
 import { useRouter } from "next/navigation";
 import MaterialPreview from "../MaterialPreview";
 import Container from "../../Container";
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
 
 
 interface ImageFile {
@@ -52,15 +52,17 @@ interface MaterialPreviewProps {
       description: string
       file: File | string
       image: File | string
-      images: File[]
+      images: File[] | string[]
       tags: string[]
       permission: number
       is_ai_generated: number
   }
 
-const MaterialEditForm = ({ categories, material }: Props) => {
+const MaterialCreateForm = ({ categories, material }: Props) => {
+    const {register, handleSubmit, control, formState:{errors}} = useForm<InputProps>();
+    const onSubmit: SubmitHandler<InputProps> = data => console.log(data);
     const router = useRouter();
-    const [errors, setErrors] = useState<MaterialError>({})
+    // const [errors, setErrors] = useState<MaterialError>({})
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [images, setImages] = useState<ImageFile[]>([]);
     const [fileType, setFileType] = useState<string | null>(null);
@@ -102,7 +104,6 @@ const MaterialEditForm = ({ categories, material }: Props) => {
     };
 
     const handleDelete = (index: number) => {
-        console.log(index)
         setImages(images.filter((_, i) => i !== index));
     };
 
@@ -112,7 +113,6 @@ const MaterialEditForm = ({ categories, material }: Props) => {
         });
         setErrors({});
         const obj = formDataToObject(formData) as MaterialPreviewProps;
-        
         obj.tags = tags
         setMaterialFormData(formData);
         setPreviewMaterial(obj);
@@ -129,12 +129,13 @@ const MaterialEditForm = ({ categories, material }: Props) => {
             tagIds.forEach((tagId) => {
                 materialFormData.append('tags[]', tagId.toString());
             });
-            const res = await http.post(`/materials/${material?.id}`, materialFormData, {
+            const res = await http.post('/materials', materialFormData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'X-HTTP-Method-Override': 'PUT'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
+            const data = res.data as Material;
+            setStoredMaterial(data);
             setPreviewOpen(false);
             setFormState('success');
         } catch (e) {
@@ -186,19 +187,18 @@ const MaterialEditForm = ({ categories, material }: Props) => {
             setPreviewUrl(url)
             const type = identifyFileTypeByExtension(material.file);
             setFileType(type);
-
             const imageRes = await fetch('/images/dummy.png');
             const imageBlob = await imageRes.blob();
 
-            const imageFiles = material.images.map( (image) => {
+            setImages(material.images.map((image) => {
                 const lastSlashIndex = image.lastIndexOf('/');
                 const fileName = image.substring(lastSlashIndex + 1);
                 return { file: new File([imageBlob], fileName, { type: 'image/png' }), url: image }
-            })
-            setImages(imageFiles);
+            }));
         }
         const fetchTags = async () => {
             const data = await getTags();
+            // const tagNames = material?.tags.map((tag) => tag.name);
             setFetchedTags(data);
         }
 
@@ -217,8 +217,9 @@ const MaterialEditForm = ({ categories, material }: Props) => {
         <>
             <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
                 <div className="text-center">
-                    <p className="text-2xl font-bold mb-4">保存しました</p>
-                    <Button className="mx-4 block" href={'/materials/' + material?.id}>保存した素材を確認</Button>
+                    <p className="text-2xl font-bold mb-4">アップロード完了</p>
+                    <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                    <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
                 </div>
             </Modal>
             {(previewMaterial && previewOpen) && (
@@ -226,7 +227,7 @@ const MaterialEditForm = ({ categories, material }: Props) => {
                     <div className="overflow-y-scroll h-4/5">
                         <Container>
                             <div className="bg-white">
-                                <MaterialPreview material={previewMaterial} images={images} />
+                                <MaterialPreview material={previewMaterial}/>
                             </div>
                         </Container>
                     </div>
@@ -244,7 +245,7 @@ const MaterialEditForm = ({ categories, material }: Props) => {
                 </div>
             )}
             <div className="mt-8 mx-auto max-w-lg">
-                <form action={preview}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <FormControl flex={false}>
                         <Label htmlFor="file" className="shrink-0 mr-4">素材 *</Label>
                         <Input id="file" type="file" name="file" className="w-full" onChange={handleFileChange} />
@@ -264,13 +265,23 @@ const MaterialEditForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="name" className="shrink-0 mr-4">タイトル *</Label>
-                        <Input id="name" type="text" name="name" className="w-full" defaultValue={material?.name} />
-                        {errors.name && <ErrorMessage message={errors.name[0]} />}
+                        <Input 
+                            {...register('name', {required: '必須項目です。', maxLength: {value: 255, message: '50文字以内で入力してください'}})}
+                            id="name" 
+                            type="text"
+                            className="w-full"
+                        />
+                        {(errors.name && errors.name.message) && <ErrorMessage message={errors.name.message} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="description" className="shrink-0 mr-4">説明 *</Label>
-                        <Textarea id="description" rows={5} name="description" className="w-full" defaultValue={material?.description} />
-                        {errors.description && <ErrorMessage message={errors.description[0]} />}
+                        <Textarea 
+                            {...register('description', {required: '必須項目です。', maxLength: {value: 400, message: '400文字以内で入力してください'}})}
+                            id="description" 
+                            rows={5} 
+                            className="w-full"
+                         />
+                        {(errors.description && errors.description.message) && <ErrorMessage message={errors.description.message} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label className="shrink-0 mr-4">スクリーンショット *</Label>
@@ -294,20 +305,20 @@ const MaterialEditForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="category_id" className="shrink-0 mr-4">カテゴリー</Label>
-                        <Select id="category_id" name="category_id" className="w-full" defaultValue={material?.category_id}>
+                        <Select {...register('category_id')} id="category_id" className="w-full">
                             {categories && categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </Select>
-                        {errors.category_id && <ErrorMessage message={errors.category_id[0]} />}
+                        {(errors.category_id && errors.category_id.message) && <ErrorMessage message={errors.category_id.message} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="permission" className="shrink-0 mr-4">承認の有無</Label>
-                        <Select id="permission" name="permission" className="w-full" defaultValue={material?.permission}>
+                        <Select {...register('permission')} id="permission" className="w-full">
                             <option value="1">承認を必要にする</option>
                             <option value="0">承認を必要にしない</option>
                         </Select>
-                        {errors.permission && <ErrorMessage message={errors.permission[0]} />}
+                        {(errors.permission && errors.permission.message) && <ErrorMessage message={errors.permission.message} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Autocomplete
@@ -339,11 +350,11 @@ const MaterialEditForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="is_ai_generated" className="shrink-0 mr-4">AIの利用</Label>
-                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full" defaultValue={material?.is_ai_generated}>
+                        <Select {...register('is_ai_generated')} id="is_ai_generated" className="w-full">
                             <option value="1">利用している</option>
                             <option value="0">利用していない</option>
                         </Select>
-                        {errors.is_ai_generated && <ErrorMessage message={errors.is_ai_generated[0]} />}
+                        {(errors.is_ai_generated && errors.is_ai_generated.message) && <ErrorMessage message={errors.is_ai_generated.message} />}
                     </FormControl>
                     <div className="text-center mt-8">
                         <Button className="py-4 px-16 mx-4" type="submit" disabled={formState == 'submitting'}>確認</Button>
@@ -354,4 +365,4 @@ const MaterialEditForm = ({ categories, material }: Props) => {
     );
 };
 
-export default MaterialEditForm;
+export default MaterialCreateForm;

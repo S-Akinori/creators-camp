@@ -14,7 +14,18 @@ export const getIsFollowing = async (id: number) : Promise<boolean> => {
     return res.data.isFollowing
 }
 
-export const getFollowings = async (id: number) : Promise<Pagination<User>> => {
-    const res = await http.get(`/users/${id}/followings`)
+interface Props {
+    id: number | string
+    page?: number
+    search?: string
+}
+
+export const getFollowings = async ({id, page, search}: Props) : Promise<Pagination<User>> => {
+    const res = await http.get(`/users/${id}/followings`, {
+        params: {
+            page,
+            search,
+        },
+    })
     return res.data
 }

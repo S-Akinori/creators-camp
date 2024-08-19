@@ -1,6 +1,4 @@
 'use client'
-import Image from "next/image";
-import Container from "@/app/components/Container";
 import Input from "@/app/components/Form/Input";
 import FormControl from "@/app/components/Form/FormControl";
 import Label from "@/app/components/Form/Label";
@@ -16,14 +14,17 @@ import { Category } from "@/app/types/Category";
 import ErrorMessage from "@/app/components/atoms/Error";
 import LoadingIcon from "@/app/components/atoms/Icons/LoadingIcons";
 import Modal from "@/app/components/molecules/Modal";
-import clsx from "clsx";
-import { reggaeOne } from "@/app/fonts";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
 import { Autocomplete, Chip, IconButton, TextField, Tooltip } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
 import { getTags, storeTag } from "@/app/lib/tag";
 import { Tag } from "@/app/types/Tag";
+import { useRouter } from "next/navigation";
+import MaterialPreview from "../MaterialPreview";
+import Container from "../../Container";
+import { useForm, SubmitHandler } from "react-hook-form"
+
 
 interface ImageFile {
     file: File;
@@ -35,7 +36,30 @@ interface Props {
     material?: Material
 }
 
+interface InputProps {
+    file: File
+    name: string
+    description: string
+    images: File[]
+    category_id: number
+    permission: number
+    tags: string[]
+    is_ai_generated: number
+}
+
+interface MaterialPreviewProps {
+      name: string
+      description: string
+      file: File | string
+      image: File | string
+      images: File[]
+      tags: string[]
+      permission: number
+      is_ai_generated: number
+  }
+
 const MaterialCreateForm = ({ categories, material }: Props) => {
+    const router = useRouter();
     const [errors, setErrors] = useState<MaterialError>({})
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [images, setImages] = useState<ImageFile[]>([]);
@@ -45,6 +69,9 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const [storedMaterial, setStoredMaterial] = useState<Material | null>(null)
     const [fetchedTags, setFetchedTags] = useState<Tag[]>([])
     const [tags, setTags] = useState<string[]>([]);
+    const [previewMaterial, setPreviewMaterial] = useState<MaterialPreviewProps | null>(null);
+    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+    const [materialFormData, setMaterialFormData] = useState<FormData>(new FormData());
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
@@ -79,39 +106,45 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         setImages(images.filter((_, i) => i !== index));
     };
 
-    const storeMaterial = async (formData: FormData) => {
+    const preview = async (formData: FormData) => {
         images.forEach((image, index) => {
             formData.append(`images[]`, image.file);
         });
         setErrors({});
-        setFormState('submitting');
+        const obj = formDataToObject(formData) as MaterialPreviewProps;
+        obj.tags = tags
+        setMaterialFormData(formData);
+        setPreviewMaterial(obj);
+        setPreviewOpen(true);
+    }
+
+    const store = async () => {
         await csrf();
         try {
-
             const tagIds = await Promise.all(tags.map(async (tag) => {
                 const res = await storeTag(tag);
                 return res.id;
             }));
-            console.log(tagIds)
             tagIds.forEach((tagId) => {
-                console.log(tagId)
-                formData.append('tags[]', tagId.toString());
+                materialFormData.append('tags[]', tagId.toString());
             });
             if (isNew) {
-                const res = await http.post('/materials', formData, {
+                const res = await http.post('/materials', materialFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                setStoredMaterial(res.data);
+                const data = res.data as Material;
+                setStoredMaterial(data);
             } else {
-                const res = await http.post(`/materials/${material?.id}`, formData, {
+                const res = await http.post(`/materials/${material?.id}`, materialFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-HTTP-Method-Override': 'PUT'
                     }
                 });
             }
+            setPreviewOpen(false);
             setFormState('success');
         } catch (e) {
             if (Axios.isAxiosError(e) && e.response) {
@@ -119,7 +152,37 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 setErrors(data.errors);
             }
             setFormState('error');
+            setTimeout(() => {
+                setFormState('ready');
+            }, 3000);
         };
+    }
+
+    const formDataToObject = (formData: FormData) => {
+        const object: { [key: string]: any } = {};
+
+        formData.forEach((value, key) => {
+          // Keyが `[]` で終わっている場合、配列として扱う
+          if (key.endsWith('[]')) {
+            const cleanKey = key.slice(0, -2); // `[]` を削除
+            if (!object[cleanKey]) {
+              object[cleanKey] = [];
+            }
+            object[cleanKey].push(value);
+          } else {
+            if (object[key]) {
+              if (Array.isArray(object[key])) {
+                object[key].push(value);
+              } else {
+                object[key] = [object[key], value];
+              }
+            } else {
+              object[key] = value;
+            }
+          }
+        });
+      
+        return object;
     }
 
     useEffect(() => {
@@ -160,27 +223,39 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
 
     return (
         <>
-            {isNew && (
-                <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
-                    <div className="text-center">
-                        <p className="text-2xl font-bold mb-4">アップロード完了</p>
-                        <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
-                        <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+            <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
+                <div className="text-center">
+                    <p className="text-2xl font-bold mb-4">アップロード完了</p>
+                    <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                    <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+                </div>
+            </Modal>
+            {(previewMaterial && previewOpen) && (
+                <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
+                    <div className="overflow-y-scroll h-4/5">
+                        <Container>
+                            <div className="bg-white">
+                                <MaterialPreview material={previewMaterial} images={images} />
+                            </div>
+                        </Container>
                     </div>
-                </Modal>
-            )}
-            {!isNew && (
-                <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
-                    <div className="text-center">
-                        <p className="text-2xl font-bold mb-4">保存しました</p>
-                        <Button className="mx-4 block" href={'/materials/' + material?.id}>保存した素材を確認</Button>
-                    </div>
-                </Modal>
+                    <Container>
+                        <div className="mt-4 p-4 mx-auto flex justify-center bg-white max-w-max">
+                            <Button className="mr-4" onClick={() => store()} disabled={formState !== 'ready'}>
+                                {formState === 'ready' && '保存する'}
+                                {formState === 'submitting' && <LoadingIcon />}
+                                {formState === 'error' && 'エラーが発生しました'}
+                                {formState === 'success' && '更新しました'}
+                            </Button>
+                            <Button onClick={() => setPreviewOpen(false)} disabled={formState !== 'ready'}>修正する</Button>
+                        </div>
+                    </Container>
+                </div>
             )}
             <div className="mt-8 mx-auto max-w-lg">
-                <form action={storeMaterial}>
+                <form action={preview}>
                     <FormControl flex={false}>
-                        <Label htmlFor="file" className="shrink-0 mr-4">素材</Label>
+                        <Label htmlFor="file" className="shrink-0 mr-4">素材 *</Label>
                         <Input id="file" type="file" name="file" className="w-full" onChange={handleFileChange} />
                         <span>※複数素材をアップするにはzipファイルでアップしてください</span>
                         {errors.file && <ErrorMessage message={errors.file[0]} />}
@@ -197,17 +272,17 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         )}
                     </FormControl>
                     <FormControl flex={false}>
-                        <Label htmlFor="name" className="shrink-0 mr-4">タイトル</Label>
-                        <Input id="name" type="text" name="name" className="w-full" defaultValue={material?.name} />
+                        <Label htmlFor="name" className="shrink-0 mr-4">タイトル *</Label>
+                        <Input id="name" type="text" name="name" className="w-full" />
                         {errors.name && <ErrorMessage message={errors.name[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
-                        <Label htmlFor="description" className="shrink-0 mr-4">説明</Label>
-                        <Textarea id="description" rows={5} name="description" className="w-full" defaultValue={material?.description} />
+                        <Label htmlFor="description" className="shrink-0 mr-4">説明 *</Label>
+                        <Textarea id="description" rows={5} name="description" className="w-full" />
                         {errors.description && <ErrorMessage message={errors.description[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
-                        <Label className="shrink-0 mr-4">スクリーンショット</Label>
+                        <Label className="shrink-0 mr-4">スクリーンショット *</Label>
                         {errors.image && <ErrorMessage message={errors.image[0]} />}
                         <div className="flex items-start flex-wrap">
                             {images.map((image, index) => (
@@ -228,7 +303,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="category_id" className="shrink-0 mr-4">カテゴリー</Label>
-                        <Select id="category_id" name="category_id" className="w-full" defaultValue={material?.category_id}>
+                        <Select id="category_id" name="category_id" className="w-full">
                             {categories && categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
@@ -237,7 +312,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="permission" className="shrink-0 mr-4">承認の有無</Label>
-                        <Select id="permission" name="permission" className="w-full" defaultValue={material?.permission}>
+                        <Select id="permission" name="permission" className="w-full">
                             <option value="1">承認を必要にする</option>
                             <option value="0">承認を必要にしない</option>
                         </Select>
@@ -273,14 +348,14 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="is_ai_generated" className="shrink-0 mr-4">AIの利用</Label>
-                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full" defaultValue={material?.is_ai_generated}>
+                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full">
                             <option value="1">利用している</option>
                             <option value="0">利用していない</option>
                         </Select>
                         {errors.is_ai_generated && <ErrorMessage message={errors.is_ai_generated[0]} />}
                     </FormControl>
                     <div className="text-center mt-8">
-                        <Button className="py-4 px-16" disabled={formState == 'submitting'}>{formState == 'submitting' ? <LoadingIcon /> : '保存'}</Button>
+                        <Button className="py-4 px-16 mx-4" type="submit" disabled={formState == 'submitting'}>確認</Button>
                     </div>
                 </form>
             </div>

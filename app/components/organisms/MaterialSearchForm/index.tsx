@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../atoms/Button';
 import FormControl from '../../Form/FormControl';
 
+
 const MaterialSearchForm: React.FC = () => {
     const router = useRouter();
     const pathname = usePathname()
@@ -31,7 +32,7 @@ const MaterialSearchForm: React.FC = () => {
     const updateQueryParams = (key: string, value: string) => {
         const newQuery = { ...query, [key]: value };
         const queryString = new URLSearchParams(newQuery).toString();
-        router.push(`/materials?${queryString}`);
+        router.push(`${pathname}?${queryString}`);
     };
 
 

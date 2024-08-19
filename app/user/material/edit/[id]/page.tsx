@@ -4,6 +4,7 @@ import { reggaeOne } from "@/app/fonts";
 import { getMaterial } from "@/app/lib/material";
 import { getCategories } from "@/app/lib/category";
 import MaterialCreateForm from "@/app/components/organisms/MaterialCreateForm";
+import MaterialEditForm from "@/app/components/organisms/MaterialEditForm";
 
 interface Props {
     params: {
@@ -20,7 +21,7 @@ const UserMaterialEditPage = async ({ params }: Props) => {
                 <h1 className={clsx([reggaeOne.className, "text-2xl text-main font-bold text-center"])}>素材編集</h1>
             </div>
             <div className="mt-8 mx-auto max-w-lg">
-                <MaterialCreateForm material={material} categories={categories} />
+                <MaterialEditForm material={material} categories={categories} />
             </div>
         </Container>
     );
