@@ -15,7 +15,8 @@ import {
 
 
 const ShareButtons: React.FC = () => {
-    const url = window.location.href;
+    const pathname = usePathname();
+    const url = 'https://recreators-camp.com' + pathname;
     
     return (
         <div className="flex justify-center space-x-4">

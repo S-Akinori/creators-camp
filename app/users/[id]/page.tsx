@@ -7,6 +7,10 @@ import { getUser } from "@/app/lib/server/user";
 import {getUser as auth} from "@/app/lib/auth"
 import FollowButton from "@/app/components/organisms/FollowButton";
 import { getIsFollowing } from "@/app/lib/server/follow";
+import XIcon from '@mui/icons-material/X';
+import LinkIcon from '@mui/icons-material/Link';
+import Link from "next/link";
+
 
 interface Props {
     params: {
@@ -27,14 +31,40 @@ const UserDetailPage = async ({params}: Props) => {
                     <Image src={user.image} width={150} height={150} alt={user.name} className="rounded-full border-2 border-main" />
                 </div>
                 <div className="ml-4">
-                    <h1 className="text-main font-bold text-3xl mb-4 text-left">{user.name}</h1>
+                    <div className="flex items-center mb-4">
+                        <h1 className="text-main font-bold text-3xl mb-0 text-left mr-4">{user.name}</h1>
+                        {currentUser && (
+                            <div className="text-center">
+                                <FollowButton userId={user.id} isFollowing={isFollowing} />
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex">
+                        {user.website && <Link href={user.website} className="rounded-full border-2 border-main flex items-center justify-center aspect-square w-8 mr-4" target="_blank"><LinkIcon /></Link>}
+                        {user.x_link && <Link href={user.x_link} className="rounded-full border-2 border-main flex items-center justify-center aspect-square w-8" target="_blank"><XIcon /></Link>}
+                    </div>
                     <p>{user.description}</p>
-                    {currentUser && (
-                        <div className="text-center mt-4">
-                            <FollowButton userId={user.id} isFollowing={isFollowing} />
-                        </div>
-                    )}
                 </div>
+            </div>
+            <div className="mt-4 p-4 border border-main">
+                <table>
+                    <tr>
+                        <th className="text-left p-2">クリエイタータイプ</th>
+                        <td>{user.role}</td>
+                    </tr>
+                    <tr>
+                        <th className="text-left p-2">スキル</th>
+                        <td>{user.skill}</td>
+                    </tr>
+                    <tr>
+                        <th className="text-left p-2">作ったゲーム</th>
+                        <td>{user.created_game}</td>
+                    </tr>
+                    <tr>
+                        <th className="text-left p-2">貢献したゲーム</th>
+                        <td>{user.contributed_game}</td>
+                    </tr>
+                </table>
             </div>
             <div className="mt-16">
                 <h2 className="mb-4">

@@ -41,7 +41,7 @@ const NotificationList: React.FC = () => {
             <div>
               {notification.type === 'follow' && (
                 <>
-                <Link className='underline text-main' href={`/user/${notification.data.follower_id}`}>{notification.data.follower_name}</Link>
+                <Link className='underline text-main' href={`/users/${notification.data.follower_id}`}>{notification.data.follower_name}</Link>
                 さんにフォローされたよ！
                 </>
               )}

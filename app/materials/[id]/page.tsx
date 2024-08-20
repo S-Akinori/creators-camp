@@ -26,6 +26,7 @@ import { toDateString } from "@/app/lib/functions/toDateString";
 import FollowButton from "@/app/components/organisms/FollowButton";
 import { getIsFollowing } from "@/app/lib/server/follow";
 import ShareButtons from "@/app/components/organisms/ShareButtons";
+import Modal from "@/app/components/molecules/Modal";
 
 interface Props {
     params: {
@@ -57,7 +58,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
                 <div className="md:w-1/2">
                     <div className="bg-white p-4 relative">
                         <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
-                        {material.is_ai_generated && (
+                        {(material.is_ai_generated == 1) && (
                             <div className="absolute top-4 right-4 rounded-full border-2 border-main text-main font-bold w-12 aspect-square text-center leading-tight">
                                 AI<br/>
                                 利用
@@ -106,9 +107,13 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             )}
                             {permissionState === 'ready' && (
                                 <>
-                                    {user && <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>}
+                                    {user && (
+                                        <>
+                                        <PermissionRequestButton id={params.id}>クリエイターへ承認依頼する</PermissionRequestButton>
+                                        </>
+                                    )}
                                     {!user && <Button className="mt-8 w-full py-4 text-center" href="/login">ログインして承認依頼する</Button>}
-                                    <p className="text-red-600">この素材はクリエイターへの承認依頼が必要です</p>
+                                    <p className="text-red-600 text-center">この素材はクリエイターへの承認依頼が必要です</p>
                                 </>
                             )}
                             {permissionState === 'pending' && (
