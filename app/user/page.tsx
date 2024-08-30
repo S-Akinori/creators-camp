@@ -43,60 +43,94 @@ const UserProfilePage = async () => {
                     <div>
                         <h2 className="text-2xl text-main font-bold">{user.name}</h2>
                     </div>
-                    <p>{user.description}</p>
+                    <p>{limitStringLengthWithEllipsis(user.description, 120)}</p>
+                    <div className="mt-4 p-4 border border-main">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th className="text-left p-2">クリエイタータイプ</th>
+                                    <td>{user.role}</td>
+                                </tr>
+                                <tr>
+                                    <th className="text-left p-2">スキル</th>
+                                    <td>{user.skill}</td>
+                                </tr>
+                                <tr>
+                                    <th className="text-left p-2">作ったゲーム</th>
+                                    <td>{user.created_game}</td>
+                                </tr>
+                                <tr>
+                                    <th className="text-left p-2">貢献したゲーム</th>
+                                    <td>{user.contributed_game}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div className="md:w-1/2 p-4">
-                    <div>
+                    <div className="mb-8">
                         <h2 className="mb-4"><TextShadow className="text-2xl">運営からのお知らせ</TextShadow></h2>
                         <NewsList />
+                        <div className="text-center">
+                            <Button><Link href='/news'>お知らせ一覧へ</Link></Button>
+                        </div>
                     </div>
                     <div>
                         <h2 className="mb-4"><TextShadow className="text-2xl">マイニュース</TextShadow></h2>
                         <NotificationList />
+                        <div className="text-center">
+                            <Button><Link href='/user/my-news'>マイニュース一覧へ</Link></Button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="mt-4">
                 <Button><Link href='/user/material/create'>素材をアップロードする</Link></Button>
             </div>
-            <div className="mt-8">
-                <h2><TextShadow className="text-2xl">素材一覧</TextShadow></h2>
-                <MaterialList materials={materialsPagination.data} />
-                <div className="text-right">
-                    <Link href='/user/materials' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
+            {materialsPagination.data.length > 0 && (
+                <div className="mt-8">
+                    <h2><TextShadow className="text-2xl">素材一覧</TextShadow></h2>
+                    <MaterialList materials={materialsPagination.data} />
+                    <div className="text-right">
+                        <Link href='/user/materials' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
+                    </div>
                 </div>
-            </div>
-            <div className="mt-8">
-                <h2><TextShadow className="text-2xl">お気に入りの素材</TextShadow></h2>
-                <div className="flex flex-wrap">
-                    {favoriteMaterialsPagination.data.map((paginationData) => (
-                        <MaterialCard key={paginationData.id} material={paginationData} />
+            )}
+            {favoriteMaterialsPagination.data.length > 0 && (
+                <div className="mt-8">
+                    <h2><TextShadow className="text-2xl">お気に入りの素材</TextShadow></h2>
+                    <div className="flex flex-wrap">
+                        {favoriteMaterialsPagination.data.map((paginationData) => (
+                            <MaterialCard key={paginationData.id} material={paginationData} />
 
-                    ))}
+                        ))}
+                    </div>
+                    <div className="text-right">
+                        <Link href='/user/materials/favorites' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
+                    </div>
                 </div>
-                <div className="text-right">
-                    <Link href='/user/materials/favorites' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
-                </div>
-            </div>
-            <div className="mt-8">
-                <h2><TextShadow className="text-2xl">フォローしたユーザー</TextShadow></h2>
-                <div className="flex flex-wrap">
-                    {followingsPagination.data.map((paginationData) => (
-                        <div key={paginationData.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
-                            <div className="bg-white p-4">
-                                <Link href={`/users/${paginationData.id}`} className="text-center">
-                                    <Image src={paginationData.image} width={100} height={100} alt={paginationData.name} className="rounded-full mx-auto border-main border" />
-                                </Link>
-                                <div className="text-center mb-4"><Link href={`/users/${user.id}`} className="text-center text-main text-xl">{paginationData.name}</Link></div>
-                                {paginationData.description && <p>{limitStringLengthWithEllipsis(paginationData.description, 60)}</p>}
+            )}
+            {followingsPagination.data.length > 0 && (
+                <div className="mt-8">
+                    <h2><TextShadow className="text-2xl">フォローしたユーザー</TextShadow></h2>
+                    <div className="flex flex-wrap">
+                        {followingsPagination.data.map((paginationData) => (
+                            <div key={paginationData.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
+                                <div className="bg-white p-4">
+                                    <Link href={`/users/${paginationData.id}`} className="text-center">
+                                        <Image src={paginationData.image} width={100} height={100} alt={paginationData.name} className="rounded-full mx-auto border-main border" />
+                                    </Link>
+                                    <div className="text-center mb-4"><Link href={`/users/${user.id}`} className="text-center text-main text-xl">{paginationData.name}</Link></div>
+                                    {paginationData.description && <p>{limitStringLengthWithEllipsis(paginationData.description, 60)}</p>}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                    <div className="text-right">
+                        <Link href='/user/followings' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
+                    </div>
                 </div>
-                <div className="text-right">
-                    <Link href='/user/followings' className="bg-gray-400 py-2 px-20 text-white">もっとを見る →</Link>
-                </div>
-            </div>
+            )}
         </Container>
     );
 };

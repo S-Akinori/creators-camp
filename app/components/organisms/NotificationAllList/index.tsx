@@ -5,36 +5,25 @@ import { http } from '@/app/lib/http';
 import Button from '../../atoms/Button';
 import Link from 'next/link';
 import { csrf } from '@/app/lib/csrf';
+import { Notification } from '@/app/types/Notification';
 
-interface Notification {
-  id: number;
-  type: string;
-  data: any;
-  read: boolean;
+interface Props {
+  notifications: Notification[];
 }
 
-const NotificationList: React.FC = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const response = await http.get('/notifications');
-      setNotifications(response.data);
-    };
-
-    fetchNotifications();
-  }, []);
-
+const NotificationAllList = ({notifications}: Props) => {
+  const [newNotifications, setNewNotifications] = useState<Notification[]>(notifications);
   const markAsRead = async (id: number) => {
     await csrf();
     const res = await http.post(`/notifications/${id}/read`);
-    setNotifications(notifications.filter(n => n.id !== id)); // 既読にした通知をリストから削除
+    //既読にした通知のreadを1に変更
+    setNewNotifications(notifications.map(n => n.id === id ? {...n, read: 1} : n));
   };
 
   return (
     <div>
       <ul>
-        {notifications.map(notification => (
+        {newNotifications.map(notification => (
           <li key={notification.id} className='py-2 mb-4 border-b-2 border-main flex'>
             <div>
               {notification.type === 'follow' && (
@@ -66,7 +55,7 @@ const NotificationList: React.FC = () => {
                 </>
               )}
             </div>
-            <Button className='text-sm ml-auto !px-2 ml-4 shrink-0' onClick={() => markAsRead(notification.id)}>既読にする</Button>
+            {notification.read == 0 && <Button className='text-sm ml-auto !px-2 ml-4 shrink-0' onClick={() => markAsRead(notification.id)}>既読にする</Button>}
           </li>
         ))}
       </ul>
@@ -74,4 +63,4 @@ const NotificationList: React.FC = () => {
   );
 };
 
-export default NotificationList;
+export default NotificationAllList;

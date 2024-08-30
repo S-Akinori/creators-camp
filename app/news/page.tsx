@@ -16,7 +16,7 @@ export default async function NewsIndexPage() {
     const newsList = await getNews()
     return (
         <Container>
-            <h1 className="mb-8"><TextShadow className="text-xl">ニュース</TextShadow></h1>
+            <h1 className="mb-8"><TextShadow className="text-xl">お知らせ</TextShadow></h1>
             <div>
                 <ul>
                     {newsList.data.map(news => (

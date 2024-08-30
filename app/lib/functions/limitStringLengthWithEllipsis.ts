@@ -5,8 +5,9 @@
  * @returns 最大文字数を超えた場合はトリミングされ、省略記号が追加された文字列
  */
 export function limitStringLengthWithEllipsis(str: string, maxLength: number): string {
-    if (str.length > maxLength) {
-      return str.slice(0, maxLength) + '...';
-    }
-    return str;
+  if(!str) return '';
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength) + '...';
   }
+  return str;
+}

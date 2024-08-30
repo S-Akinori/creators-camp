@@ -1,21 +1,22 @@
 'use client'
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { csrf } from "@/app/lib/csrf";
 import { http } from "@/app/lib/http";
 import axios from "axios";
-import { Material } from "@/app/types/Material";
-import { Category } from "@/app/types/Category";
 import FormControl from "../../Form/FormControl";
 import Textarea from "../../Form/Textarea";
 import ErrorMessage from "../../atoms/Error";
 import Button from "../../atoms/Button";
 import LoadingIcon from "../../atoms/Icons/LoadingIcons";
+import { Comment } from "@/app/types/Comment";
 
 interface Props {
     materialId: number|string
+    comments: Comment[]
+    setComments: Dispatch<SetStateAction<Comment[]>>
 }
 
-const CommentForm = ({materialId}: Props) => {
+const CommentForm = ({materialId, comments, setComments}: Props) => {
     const [errors, setErrors] = useState({} as any)
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle')
 
@@ -25,8 +26,9 @@ const CommentForm = ({materialId}: Props) => {
         formData.append('material_id', materialId.toString());
         await csrf()
         try {
-            await http.post(`/comments`, formData);
+            const res = await http.post(`/comments`, formData);
             setFormState('success')
+            setComments([...comments, res.data])
         } catch (e) {
             if (axios.isAxiosError(e) && e.response) {
                 const data = e.response.data

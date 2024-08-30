@@ -7,12 +7,13 @@ import { http } from '@/app/lib/http';
 import { Button } from '@mui/material';
 import Modal from '../../molecules/Modal';
 import LoadingIcon from '../../atoms/Icons/LoadingIcons';
-import Link from 'next/link';
 import { csrf } from '@/app/lib/csrf';
 import FormControl from '../../Form/FormControl';
 import Input from '../../Form/Input';
 import { search } from '@/app/lib/search';
 import SearchForm from '../SearchForm';
+import Link from 'next/link';
+import { toDateString } from '@/app/lib/functions/toDateString';
 
 interface UpdateData {
     id: number;
@@ -110,10 +111,9 @@ export default function AdminUsersTableClient() {
                 {users && users.data.map((user) => (
                     <div key={user.id} className='flex py-4 border-b border-main'>
                         <div className='w-12 text-center'>{user.id}</div>
-                        <div className='w-60 text-center'>{user.name}</div>
+                        <div className='w-60 text-center'><Link href={`/users/${user.id}`} target='_blank' className='underline'>{user.name}</Link></div>
                         <div className='w-60 text-center'>{user.email}</div>
-                        {/* <div className='w-40 text-center'>********</div> */}
-                        <div className='w-40 text-center'>{user.updated_at}</div>
+                        <div className='w-40 text-center'>{toDateString(user.last_login_at)}</div>
                         <div className='w-32 text-center'>{textMap[user.status]}</div>
                         <div className=' text-center grow'>
                             <Button variant="outlined" sx={{ margin: '.25rem' }} onClick={() => setModal(user.id, 'deleted')}>削除</Button>

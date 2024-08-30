@@ -116,7 +116,7 @@ export default function AdminCommentsTableClient() {
                 {commentsPagenation && commentsPagenation.data.map((comment) => (
                     <div key={comment.id} className='flex py-4 border-b border-main'>
                         <div className='w-12 text-center'>{comment.id}</div>
-                        <div className='w-64 text-center'>{comment.material.name}</div>
+                        <div className='w-64 text-center'><Link href={`/materials/${comment.material_id}`} target='_blank'>{comment.material.name}</Link></div>
                         <div className='w-72 text-center'>{comment.content}</div>
                         <div className='w-48 text-center'>{comment.user.name}</div>
                         <div className='w-32 text-center'>{textMap[comment.status]}</div>

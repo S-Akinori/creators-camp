@@ -12,9 +12,9 @@ const AdminCategoryEditPage = async ({ params }: Props) => {
     const {category} = await getCategory(Number(params.id))
     return (
         <Container>
-            <h1>素材情報更新</h1>
-            <p>素材ID: {category.id}</p>
-            <p>素材名：{category.name}</p>
+            <h1>カテゴリー情報更新</h1>
+            <p>カテゴリーID: {category.id}</p>
+            <p>カテゴリー名：{category.name}</p>
             <div className="mt-4">
                 <AdminCategoryUpdateForm category={category} />
             </div>

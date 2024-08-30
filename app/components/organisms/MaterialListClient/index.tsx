@@ -8,6 +8,8 @@ import { reggaeOne } from "@/app/fonts";
 import { Download, ThumbUpOffAlt } from "@mui/icons-material";
 import clsx from "clsx";
 import { getMaterials } from "@/app/lib/material";
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+
 
 interface Params {
     categoryId?: number;
@@ -38,6 +40,7 @@ const MaterialListClient = ({categoryId, orderBy = 'download_count'}: Params) =>
     return (
         <div>
             <div className={clsx(['flex justify-end', reggaeOne.className])}>
+                <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({categoryId: categoryId, orderBy: 'created_at'})} color={params.orderBy === 'created_at' ? 'main' : 'main-cont'}>新着順<br /> <FiberNewIcon /> </Button></div>
                 <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({categoryId: categoryId, orderBy: 'like_count'})} color={params.orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAlt /> </Button></div>
                 <div className="mx-4"><Button className="rounded-none" onClick={() => fetchNewData({categoryId: categoryId, orderBy: 'download_count'})} color={params.orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
             </div>

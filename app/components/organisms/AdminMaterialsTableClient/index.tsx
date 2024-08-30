@@ -39,8 +39,6 @@ export default function AdminMaterialsTableClient() {
         fetchNews()
     }, [page]);
 
-    console.log(materialsPagenation)
-
     const updateStatus = async (id: number, status: string) => {
         setStatus('submitting')
         try {
@@ -113,7 +111,7 @@ export default function AdminMaterialsTableClient() {
                 {materialsPagenation && materialsPagenation.data.map((material) => (
                     <div key={material.id} className='flex py-4 border-b border-main'>
                         <div className='w-12 text-center'>{material.id}</div>
-                        <div className='w-60 text-center'>{material.name}</div>
+                        <div className='w-60 text-center'><Link href={`/materials/${material.id}`} target='_blank'>{material.name}</Link></div>
                         <div className='w-52 text-center'>{material.user.name}</div>
                         <div className='w-40 text-center'>{material.category ? material.category.name : '無し'}</div>
                         <div className='w-32 text-center'>{textMap[material.status]}</div>

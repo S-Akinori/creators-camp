@@ -17,6 +17,8 @@ import { updateQueryString } from "@/app/lib/functions/updateQueryString";
 import AISearchForm from "@/app/components/organisms/AISearchForm";
 import { getUser } from "@/app/lib/auth";
 import { getUserFavoriteMaterials } from "@/app/lib/server/material";
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+
 
 export default async function AuthMaterialsIndexPage({searchParams} : {searchParams: { [key: string]: string | undefined }}) {
     const categoryId = searchParams.category_id ? Number(searchParams.category_id) : undefined;
@@ -47,6 +49,7 @@ export default async function AuthMaterialsIndexPage({searchParams} : {searchPar
             </div>
             <CategoryList url="/user/materials/favorites" categories={categories} categoryId={categoryId} />
             <div className={clsx(['flex justify-center md:justify-end mt-4', reggaeOne.className])}>
+                <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'created_at')}`} scroll={false} color={orderBy === 'created_at' ? 'main' : 'main-cont'}>新着順<br /> <FiberNewIcon /> </Button></div>
                 <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'like_count')}`} scroll={false} color={orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAltOutlined /> </Button></div>
                 <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'download_count')}`} scroll={false} color={orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
             </div>

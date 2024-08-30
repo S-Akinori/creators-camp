@@ -7,10 +7,11 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     color?: 'main' | 'accent' | 'main-cont' | 'accent-cont'
     href?: string;
     scroll?: boolean;
+    prefetch?: boolean;
     className?: string;
 }
 
-export const Button = ({ children, color = 'main', className = '', href, scroll = true, ...rest }: Props) => {
+export const Button = ({ children, color = 'main', className = '', href, scroll = true, prefetch = true, ...rest }: Props) => {
     const colors = {
         'main': 'bg-main text-main-cont border-2 border-main',
         'accent': 'bg-accent text-accent-cont',
@@ -22,7 +23,7 @@ export const Button = ({ children, color = 'main', className = '', href, scroll 
 
     if (href) {
         return (
-            <Link href={href} {...rest as React.AnchorHTMLAttributes<HTMLAnchorElement>} scroll={scroll} className={clsx(['inline-block', buttonClass])}>{children}</Link>
+            <Link href={href} {...rest as React.AnchorHTMLAttributes<HTMLAnchorElement>} scroll={scroll} prefetch={prefetch} className={clsx(['inline-block', buttonClass])}>{children}</Link>
         );
     }
 

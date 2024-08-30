@@ -13,6 +13,7 @@ import clsx from "clsx";
 import { reggaeOne } from "./fonts";
 import MaterialListClient from "./components/organisms/MaterialListClient";
 import NewsList from "./components/organisms/NewsList";
+import Frame from "./components/molecules/Frame";
 
 export default async function Home() {
   // const materialsPagination = await getMaterials()
@@ -38,12 +39,15 @@ export default async function Home() {
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/materials?category_id=2"><TextShadow className=" md:text-xl">プラグイン</TextShadow></ArrowButton></div>
           </div>
         </div>
-        <Container className="flex justify-center mb-12">
-          <div className="mx-4">
-            <Image src="/images/banner.png" width={500} height={161} alt="" />
+        <Container className="flex max-w-5xl mx-auto mb-12 flex-wrap">
+          <div className="p-4 w-1/2">
+            <Link href='https://keylandalice.wixsite.com/torapeceeno' target="_blank"><Image src="/images/banner-torape.png" width={580} height={160} alt="" /></Link>
           </div>
-          <div className="mx-4">
-            <Image src="/images/banner.png" width={500} height={161} alt="" />
+          <div className="p-4 w-1/2">
+            <Link href='https://pokapoka0802.wixsite.com/tunousaginoie82' target="_blank"><Image src="/images/banner-tsunousagi.png" width={580} height={160} alt="" /></Link>
+          </div>
+          <div className="p-4 w-1/2">
+            <Link href='https://suiko-game.com/' target="_blank"><Image src="/images/banner-suiko.jpg" width={580} height={160} alt="" /></Link>
           </div>
         </Container>
         <Container className="mb-12">
@@ -58,9 +62,12 @@ export default async function Home() {
           <div className="max-w-5xl flex justify-center flex-wrap mx-auto">
             {categories?.map((category) => (
               <div key={category.id} className="w-1/3 md:w-1/5 p-4 mb-4">
-                <Link href={`materials?category_id=${category.id}`}>
-                  <Image src={`/images/${category.slug}.png`} width={220} height={330} alt={category.name} />
-                </Link>
+                <Frame className="h-full">
+                  <Link href={`materials?category_id=${category.id}`} className="flex flex-col justify-between h-full text-center">
+                    <span className={`text-main-cont text-bold text-xl ${reggaeOne.className}`}>{category.name}</span>
+                    <Image className="mx-auto mt-4" src={category.image} width={80} height={80} alt={category.name} />
+                  </Link>
+                </Frame>
               </div>
             ))}
           </div>

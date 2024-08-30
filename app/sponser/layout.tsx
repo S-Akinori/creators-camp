@@ -4,8 +4,8 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "当サイトについて",
-  description: "当サイトについてのページです。",
+  title: "スポンサー紹介",
+  description: "当サイトのスポンサーをご紹介します",
 };
 
 export default function AboutPageLayout({

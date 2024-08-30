@@ -4,9 +4,7 @@ import TextShadow from "@/app/components/TextShadow";
 import Image from "next/image";
 import { getMaterials, getUserMaterials } from "@/app/lib/material";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
-import UserCard from "@/app/components/organisms/UserCard";
 import MaterialCard from "@/app/components/organisms/MaterialCard";
-import { getCategory } from "@/app/lib/category";
 import DownloadButton from "@/app/components/organisms/DownloadButton";
 import LikeButton from "@/app/components/organisms/LikeButton";
 import { getMaterial } from "@/app/lib/server/material";
@@ -20,13 +18,13 @@ import MaterialDeleteButton from "@/app/components/organisms/MaterialDeleteButto
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
 import PreviewButton from "@/app/components/organisms/PreviewButton";
 import Link from "next/link";
-import CommentForm from "@/app/components/organisms/CommentForm";
 import { getComments } from "@/app/lib/server/comment";
-import { toDateString } from "@/app/lib/functions/toDateString";
 import FollowButton from "@/app/components/organisms/FollowButton";
 import { getIsFollowing } from "@/app/lib/server/follow";
 import ShareButtons from "@/app/components/organisms/ShareButtons";
-import Modal from "@/app/components/molecules/Modal";
+import { limitStringLengthWithEllipsis } from "@/app/lib/functions/limitStringLengthWithEllipsis";
+import CommentClient from "@/app/components/organisms/CommentClient";
+import ReportButton from "@/app/components/organisms/ReportButton";
 
 interface Props {
     params: {
@@ -55,8 +53,8 @@ const MaterialDetailPage = async ({ params }: Props) => {
     return (
         <Container>
             <div className="md:flex">
-                <div className="md:w-1/2">
-                    <div className="bg-white p-4 relative">
+                <div className="md:w-2/3">
+                    <div className="bg-white shadow p-4 relative">
                         <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
                         {(material.is_ai_generated == 1) && (
                             <div className="absolute top-4 right-4 rounded-full border-2 border-main text-main font-bold w-12 aspect-square text-center leading-tight">
@@ -128,15 +126,16 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className="md:w-1/2 p-4">
-                    <div className="bg-white p-4 h-full">
+                <div className="md:w-1/3 p-4">
+                    <div className="bg-white shadow p-4 h-full">
                         <h2 className={clsx(["mb-4 text-center text-main text-2xl", reggaeOne.className])}>
                             ユーザー情報
                         </h2>
                         <div>
                             <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mb-4 mx-auto border-main border" />
-                            <p className={clsx(["text-center text-main text-xl mb-4", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
-                            <p className="text-center">{material.user.description}</p>
+                            <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
+                            <p className="text-center mb-4">{material.user.role}</p>
+                            <p className="text-center">{limitStringLengthWithEllipsis(material.user.description, 120)}</p>
                             {user && (
                             <div className="mt-4 text-center">
                                 <FollowButton userId={material.user.id} isFollowing={isFollowing} />
@@ -145,6 +144,20 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         </div>
                     </div>
                 </div>
+            </div>
+            {user && (
+                <div className="mt-4 mx-auto p-4 text-center bg-white shadow max-w-max">
+                    <ReportButton id={material.id}>不適切な素材として報告する</ReportButton>
+                </div>
+            )}
+            <div className="mt-16">
+                <CommentClient comments={comments} user={user} materialId={material.id} />
+                {!user && (
+                    <div className="border-2 border-main p-4 mx-auto w-max text-center">
+                        <p>コメントを投稿するにはログインが必要です</p>
+                        <Button className="mt-4 py-4" href="/login">ログインする</Button>
+                    </div>
+                )}
             </div>
             <div className="mt-16">
                 <h2 className="mb-4">
@@ -166,37 +179,6 @@ const MaterialDetailPage = async ({ params }: Props) => {
                         <MaterialCard key={material.id} material={material} />
                     ))}
                 </div>
-            </div>
-            <div className="mt-16">
-                <h2 className="mb-4">
-                    <TextShadow className="text-xl mb-4">この素材のコメント</TextShadow>
-                </h2>
-                {comments.data.length == 0 && <p className="text-center">コメントはまだありません</p>}
-                {comments.data.length > 0 && comments.data.map((comment) => (
-                    <div key={comment.id} className="bg-white border-b border-main p-4 mt-4">
-                        <div className="mb-4">
-                            <UserCard user={comment.user} />
-                            <p>{toDateString(comment.created_at)}</p>
-                        </div>
-                        <p>{comment.content}</p>
-                    </div>
-                ))}
-            </div>
-            <div className="mt-16">
-                {user && (
-                    <div>
-                        <h2 className="mb-4">
-                            <TextShadow className="text-xl">コメントを投稿する</TextShadow>
-                        </h2>
-                        <CommentForm materialId={material.id} />
-                    </div>
-                )}
-                {!user && (
-                    <div className="border-2 border-main p-4 mx-auto w-max text-center">
-                        <p>コメントを投稿するにはログインが必要です</p>
-                        <Button className="mt-4 py-4" href="/login">ログインする</Button>
-                    </div>
-                )}
             </div>
         </Container>
     )

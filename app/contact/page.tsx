@@ -43,12 +43,12 @@ export default function ContactPage() {
   }
 
   return (
-      <Container className="bg-white py-4">
+      <Container className="bg-white py-4 shadow">
         <h1><TextShadow className="text-xl">お問い合わせ</TextShadow></h1>
         <div className="max-w-3xl mx-auto mt-8">
           <form action={action}>
             <div>
-              <FormControl>
+              <FormControl flex={false}>
                 <Label htmlFor="name" className="mr-4 w-28 shrink-0">名前</Label>
                 <div className="w-full">
                   <Input id="name" name="name" className="w-full" />
@@ -57,7 +57,7 @@ export default function ContactPage() {
               </FormControl>
             </div>
             <div>
-              <FormControl>
+              <FormControl flex={false}>
                 <Label htmlFor="email" className="mr-4 w-28 shrink-0">メールアドレス</Label>
                 <div className="w-full">
                   <Input id="email" name="email" type="email" className="w-full" />
@@ -66,7 +66,7 @@ export default function ContactPage() {
               </FormControl>
             </div>
             <div>
-              <FormControl>
+              <FormControl flex={false}>
                 <Label htmlFor="content" className="mr-4 w-28 shrink-0">お問合わせ内容</Label>
                 <div className="w-full">
                   <Textarea id='content' name='content' className='w-full' rows={5} />

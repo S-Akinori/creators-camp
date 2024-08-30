@@ -218,7 +218,7 @@ const MaterialEditForm = ({ categories, material }: Props) => {
             <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
                 <div className="text-center">
                     <p className="text-2xl font-bold mb-4">保存しました</p>
-                    <Button className="mx-4 block" href={'/materials/' + material?.id}>保存した素材を確認</Button>
+                    <a className="mx-4 block bg-main text-main-cont border-2 border-main py-1 px-6 rounded-full" href={'/materials/' + material?.id}>保存した素材を確認</a>
                 </div>
             </Modal>
             {(previewMaterial && previewOpen) && (
