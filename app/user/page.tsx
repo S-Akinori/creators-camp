@@ -85,7 +85,8 @@ const UserProfilePage = async () => {
                 </div>
             </div>
             <div className="mt-4">
-                <Button><Link href='/user/material/create'>素材をアップロードする</Link></Button>
+                {user.status === 'active' && (<Button href='/user/material/create'>素材をアップロードする</Button>)}
+                {user.status === 'inactive' && (<Button disabled>アカウント凍結中のため素材を投稿できません</Button>)}
             </div>
             {materialsPagination.data.length > 0 && (
                 <div className="mt-8">

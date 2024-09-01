@@ -28,26 +28,33 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
         }
     }
 
-    // ユーザー詳細ページにアクセスした場合のステータスチェック
-    if (req.nextUrl.pathname.startsWith('/user/')) {
-        const userId = req.nextUrl.pathname.split('/')[2]; // `/user/[id]` から `id` を取得
-        const userRes = await fetch(`${process.env.API_URL}/users/${userId}`, {
-            method: 'GET',
-            headers: {
-                Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
-                referer: process.env.APP_URL ?? '',
-                origin: process.env.APP_URL ?? '',
-                Accept: 'application/json',
-            },
-            credentials: 'include',
-        });
-        
-        const userData = await userRes.json();
-        
-        if (userRes.status === 404 || userData.status !== 'active') {
+    if(req.nextUrl.pathname.startsWith('/user/material')) {
+        if (res.status === 401 || data.status !== 'active') {
             return NextResponse.redirect(new URL('/404', req.url));
         }
+
     }
+
+    // ユーザー詳細ページにアクセスした場合のステータスチェック
+    // if (req.nextUrl.pathname.startsWith('/user/')) {
+    //     const userId = req.nextUrl.pathname.split('/')[2]; // `/user/[id]` から `id` を取得
+    //     const userRes = await fetch(`${process.env.API_URL}/users/${userId}`, {
+    //         method: 'GET',
+    //         headers: {
+    //             Cookie: `re_creators_camp_session=${cookies().get("re_creators_camp_session")?.value}`,
+    //             referer: process.env.APP_URL ?? '',
+    //             origin: process.env.APP_URL ?? '',
+    //             Accept: 'application/json',
+    //         },
+    //         credentials: 'include',
+    //     });
+        
+    //     const userData = await userRes.json();
+        
+    //     if (userRes.status === 404 || userData.status !== 'active') {
+    //         return NextResponse.redirect(new URL('/404', req.url));
+    //     }
+    // }
 
     // その他のルートに対する処理
     if (res.status !== 401 && !data.email_verified_at) {
@@ -65,7 +72,7 @@ export const config = {
         '/login',
         '/register',
         '/user',
-        '/user/:path*',
+        '/user/material/:path*',
         '/materials/[id]/:path*',
         '/admin',
         '/admin/:path*',

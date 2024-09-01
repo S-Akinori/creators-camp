@@ -34,7 +34,7 @@ const CommentClient = ({comments, user, materialId}: Props) => {
                                 <UserCard user={comment.user} />
                                 <p>{toDateString(comment.created_at)}</p>
                             </div>
-                            {user && (
+                            {(user && user.status === 'active') && (
                                 <div className="absolute top-4 right-4">
                                     <ReportButton id={comment.id} style={{padding: '.25rem', display: 'flex'}} type="comment"><ReportProblemIcon className="w-4 h-4" /></ReportButton>
                                 </div>
@@ -45,7 +45,7 @@ const CommentClient = ({comments, user, materialId}: Props) => {
                 ))}
             </div>
             <div className="mt-16">
-                {user && (
+                {(user && user.status === 'active') && (
                     <div>
                         <h2 className="mb-4">
                             <TextShadow className="text-xl">コメントを投稿する</TextShadow>

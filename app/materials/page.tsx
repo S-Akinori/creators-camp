@@ -24,6 +24,7 @@ export default async function MaterialsIndexPage({searchParams} : {searchParams:
     const orderBy = searchParams.order_by ?? 'download_count'
     const keyword = searchParams.keyword ?? ''
     const exceptAi = searchParams.except_ai ?? '0'
+    const tagId = searchParams.tag_id ? Number(searchParams.tag_id): undefined;
     const categories = await getCategories();
 
     let materialsPagination : PaginationType<Material>;
@@ -31,12 +32,12 @@ export default async function MaterialsIndexPage({searchParams} : {searchParams:
     await csrf();
 
     if(keyword) {
-        materialsPagination = await getMaterials({page: page, orderBy: orderBy, search: keyword, except_ai: parseInt(exceptAi), category_id: categoryId});
+        materialsPagination = await getMaterials({page: page, tag_id: tagId, orderBy: orderBy, search: keyword, except_ai: parseInt(exceptAi), category_id: categoryId});
     } else {
         if (categoryId === 0) {
-            materialsPagination = await getMaterials({page: page, orderBy: orderBy, except_ai: parseInt(exceptAi)});
+            materialsPagination = await getMaterials({page: page, tag_id: tagId, orderBy: orderBy, except_ai: parseInt(exceptAi)});
         } else {
-            materialsPagination = await getMaterials({category_id: categoryId, page: page, orderBy: orderBy, except_ai: parseInt(exceptAi)});
+            materialsPagination = await getMaterials({category_id: categoryId, tag_id: tagId, page: page, orderBy: orderBy, except_ai: parseInt(exceptAi)});
         }
     }
 

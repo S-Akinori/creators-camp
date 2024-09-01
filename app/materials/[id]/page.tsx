@@ -145,7 +145,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
                     </div>
                 </div>
             </div>
-            {user && (
+            {(user && user.status === 'active') && (
                 <div className="mt-4 mx-auto p-4 text-center bg-white shadow max-w-max">
                     <ReportButton id={material.id}>不適切な素材として報告する</ReportButton>
                 </div>
