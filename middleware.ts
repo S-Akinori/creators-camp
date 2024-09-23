@@ -30,7 +30,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
     if(req.nextUrl.pathname.startsWith('/user/material')) {
         if (res.status === 401 || data.status !== 'active') {
-            return NextResponse.redirect(new URL('/404', req.url));
+            return NextResponse.redirect(new URL('/user', req.url));
         }
 
     }
