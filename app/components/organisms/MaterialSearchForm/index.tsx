@@ -62,7 +62,7 @@ const MaterialSearchForm: React.FC = () => {
     };
 
     // 入力の変更ハンドラ
-    const handleInputChange = (e) => {
+    const handleInputChange:  React.ChangeEventHandler<HTMLInputElement> = (e) => {
         const value = e.target.value;
         setKeyword(value);
         if (value.startsWith('#')) {
