@@ -16,6 +16,9 @@ import ErrorMessage from "../components/atoms/Error";
 import { login } from "../lib/authClient";
 import { http } from "../lib/http";
 import LoadingIcon from "../components/atoms/Icons/LoadingIcons";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import GoogleIcon from '@mui/icons-material/Google';
+import SNSLoginButtons from "../components/organisms/SNSLoginButtons";
 
 export default function Login() {
   const [errors, setErrors] = useState({} as any)
@@ -90,6 +93,7 @@ export default function Login() {
           <div className="text-center mt-8 text-main">
             <Link href="/register" className="underline">新規登録はこちら</Link>
           </div>
+          <SNSLoginButtons />
         </div>
       </Container>
   );

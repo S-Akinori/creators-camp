@@ -31,7 +31,7 @@ const AISearchForm = ({defaultChecked = false}: Props) => {
 
     return (
         <form action="">
-            <FormControl>
+            <FormControl className="flex">
                 <Checkbox id="except_ai" name="except_ai" value="except_ai" onChange={handleChange} checked={checked} />
                 <Label htmlFor="except_ai">AI素材を除外</Label>
             </FormControl>

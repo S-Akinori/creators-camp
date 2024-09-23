@@ -43,8 +43,8 @@ const MaterialPreview: React.FC<MaterialPreviewProps> = async ({ material, image
     }
 
     return(
-            <div className="md:flex">
-                <div className="md:w-1/2">
+            <div>
+                <div>
                     <div className="bg-white p-4 relative">
                         <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
                         {material.is_ai_generated == 1 && (
@@ -88,18 +88,6 @@ const MaterialPreview: React.FC<MaterialPreviewProps> = async ({ material, image
                         </div>
                         <div className="mt-4">
                             <ShareButtons />
-                        </div>
-                    </div>
-                </div>
-                <div className="md:w-1/2 p-4">
-                    <div className="bg-white p-4 h-full">
-                        <h2 className={clsx(["mb-4 text-center text-main text-2xl", reggaeOne.className])}>
-                            ユーザー情報
-                        </h2>
-                        <div>
-                            <Image src={user.image} width={200} height={200} alt={user.name} className="rounded-full mb-4 mx-auto border-main border" />
-                            <p className={clsx(["text-center text-main text-xl mb-4", reggaeOne.className])}>{user.name}</p>
-                            <p className="text-center">{user.description}</p>
                         </div>
                     </div>
                 </div>

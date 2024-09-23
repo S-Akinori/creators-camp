@@ -43,15 +43,15 @@ export default async function AuthMaterialsIndexPage({searchParams} : {searchPar
     return (
         <Container>
             <h1 className="mb-8"><TextShadow className="text-2xl">素材一覧</TextShadow></h1>
-            <div className="flex items-center">
+            <div className="items-center">
                 <div className="w-full"><MaterialSearchForm /></div>
                 <div className="shrink-0"><AISearchForm defaultChecked={exceptAi === '1' ? true : false} /></div>
             </div>
             <CategoryList url="/user/materials/favorites" categories={categories} categoryId={categoryId} />
-            <div className={clsx(['flex justify-center md:justify-end mt-4', reggaeOne.className])}>
-                <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'created_at')}`} scroll={false} color={orderBy === 'created_at' ? 'main' : 'main-cont'}>新着順<br /> <FiberNewIcon /> </Button></div>
-                <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'like_count')}`} scroll={false} color={orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAltOutlined /> </Button></div>
-                <div className="mx-4"><Button className="rounded-none text-center" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'download_count')}`} scroll={false} color={orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
+            <div className={clsx(['flex justify-end mt-4', reggaeOne.className])}>
+                <div className="mx-2 md:mx-4"><Button className="rounded-none text-center !p-2" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'created_at')}`} scroll={false} color={orderBy === 'created_at' ? 'main' : 'main-cont'}>新着順<br /> <FiberNewIcon /> </Button></div>
+                <div className="mx-2 md:mx-4"><Button className="rounded-none text-center !p-2" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'like_count')}`} scroll={false} color={orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAltOutlined /> </Button></div>
+                <div className="mx-2 md:mx-4"><Button className="rounded-none text-center !p-2" href={`/user/materials/favorites?${updateQueryString(searchParams, 'order_by', 'download_count')}`} scroll={false} color={orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
             </div>
             <MaterialList materials={materialsPagination.data} />
             <Pagination<Material> pagination={materialsPagination} api={`/user/materials/favorites?${updateQueryString(searchParams, 'page', '')}`} page={page} />

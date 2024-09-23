@@ -14,12 +14,15 @@ import ErrorMessage from "../../atoms/Error"
 import SuccessMessage from "../../atoms/Message"
 import { ChangeEvent, useState } from "react"
 import Select from "../../Form/Select"
+import { error } from "console"
+import axios from "axios"
 
 interface Props {
     user: User
 }
 
 const UserProfileUpdateForm = ({user}: Props) => {
+    const [errors, setErrors] = useState({} as any)
     const [previewUrl, setPreviewUrl] = useState<string>(user.image);
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle')
     const update = async (formData: FormData) => {
@@ -37,11 +40,17 @@ const UserProfileUpdateForm = ({user}: Props) => {
             }
             const data = Object.fromEntries(formData.entries())
             const res = await http.put('/user/profile-information', data)
+            setErrors({})
             setFormState('success')
             return res.data
         } catch (e) {
             console.error(e)
-            setFormState('error')
+            if (axios.isAxiosError(e) && e.response) {
+                const data = e.response.data
+                setErrors(data.errors)
+                console.log(data)
+              }
+              setFormState('error')
         } finally {
             setTimeout(() => setFormState('idle'), 3000)
         }
@@ -71,22 +80,26 @@ const UserProfileUpdateForm = ({user}: Props) => {
                 <FormControl flex={false}>
                     <Label htmlFor="file" className="shrink-0 mr-4">プロフィール画像</Label>
                     <Input type="file" name="file" className="w-full" accept="image/*" onChange={handleImageChange} />
+                    {errors.file && <ErrorMessage message={errors.file[0]} />}
                 </FormControl>
             </div>
             <FormControl flex={false}>
                 <Label htmlFor="name" className="shrink-0 mr-4">ユーザー名</Label>
                 <Input id="name" name="name" type="text" className="w-full" defaultValue={user.name} />
+                {errors.name && <ErrorMessage message={errors.name[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="description" className="shrink-0 mr-4">説明文</Label>
                 <Textarea id="description" name="description" className="w-full">{user.description}</Textarea>
+                {errors.description && <ErrorMessage message={errors.description[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="email" className="shrink-0 mr-4">メールアドレス</Label>
                 <Input id="email" name="email" type="text" className="w-full" defaultValue={user.email} />
+                {errors.email && <ErrorMessage message={errors.email[0]} />}
             </FormControl>
             <FormControl flex={false}>
-                <Label htmlFor="email" className="shrink-0 mr-4">クリエイタータイプ</Label>
+                <Label htmlFor="role" className="shrink-0 mr-4">クリエイタータイプ</Label>
                 <Select id="role" name="role" className="w-full" defaultValue={user.role}>
                     <option value="ゲームプランナー">ゲームプランナー</option>
                     <option value="ゲームデザイナー">ゲームデザイナー</option>
@@ -99,26 +112,32 @@ const UserProfileUpdateForm = ({user}: Props) => {
                     <option value="声優">声優</option>
                     <option value="その他クリエイター">その他クリエイター</option>
                 </Select>
+                {errors.role && <ErrorMessage message={errors.role[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="skill" className="shrink-0 mr-4">スキル</Label>
                 <Textarea id="skill" name="skill" className="w-full">{user.skill}</Textarea>
+                {errors.skill && <ErrorMessage message={errors.skill[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="x_link" className="shrink-0 mr-4">Xリンク</Label>
                 <Input id="x_link" name="x_link" type="text" className="w-full" defaultValue={user.x_link} />
+                {errors.x_link && <ErrorMessage message={errors.x_link[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="website" className="shrink-0 mr-4">WEBサイト</Label>
                 <Input id="website" name="website" type="text" className="w-full" defaultValue={user.website} />
+                {errors.website && <ErrorMessage message={errors.website[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="created_game" className="shrink-0 mr-4">作成したゲーム</Label>
                 <Textarea id="created_game" name="created_game" className="w-full">{user.created_game}</Textarea>
+                {errors.created_game && <ErrorMessage message={errors.created_game[0]} />}
             </FormControl>
             <FormControl flex={false}>
                 <Label htmlFor="contributed_game" className="shrink-0 mr-4">貢献したゲーム</Label>
                 <Textarea id="contributed_game" name="contributed_game" className="w-full">{user.contributed_game}</Textarea>
+                {errors.contributed_game && <ErrorMessage message={errors.contributed_game[0]} />}
             </FormControl>
             <div className="text-center mt-8">
                 <button type="submit" className="py-4 px-16 bg-main text-white rounded-full" disabled={formState === 'submitting'}>

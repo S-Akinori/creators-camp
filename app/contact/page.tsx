@@ -43,9 +43,9 @@ export default function ContactPage() {
   }
 
   return (
-      <Container className="bg-white py-4 shadow">
+      <Container className="py-4">
         <h1><TextShadow className="text-xl">お問い合わせ</TextShadow></h1>
-        <div className="max-w-3xl mx-auto mt-8">
+        <div className="max-w-3xl mx-auto mt-8 p-4 bg-white shadow">
           <form action={action}>
             <div>
               <FormControl flex={false}>

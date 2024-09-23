@@ -14,6 +14,7 @@ import { limitStringLengthWithEllipsis } from "../lib/functions/limitStringLengt
 import NewsList from "../components/organisms/NewsList";
 import NotificationList from "../components/organisms/NotificationList";
 import { getMaterials } from "../lib/auth/material";
+import AddIcon from '@mui/icons-material/Add';
 
 const UserProfilePage = async () => {
     const user = await getUser();
@@ -25,6 +26,9 @@ const UserProfilePage = async () => {
     const followingsPagination = await getFollowings({ id: user.id });
     return (
         <Container className={reggaeOne.className}>
+            {/* <Button className="flex items-center justify-center fixed right-4 bottom-4 z-50 w-20 aspect-square" href='/user/material/create'>
+                <AddIcon className="text-4xl" />
+            </Button> */}
             <div className="md:flex">
                 <div className="md:w-1/2 p-4">
                     <div className="flex items-center mb-4">
@@ -44,7 +48,7 @@ const UserProfilePage = async () => {
                         <h2 className="text-2xl text-main font-bold">{user.name}</h2>
                     </div>
                     <p>{limitStringLengthWithEllipsis(user.description, 120)}</p>
-                    <div className="mt-4 p-4 border border-main">
+                    <div className="mt-4 p-4 border border-main bg-white">
                         <table>
                             <tbody>
                                 <tr>
@@ -85,7 +89,7 @@ const UserProfilePage = async () => {
                 </div>
             </div>
             <div className="mt-4">
-                {user.status === 'active' && (<Button href='/user/material/create'>素材をアップロードする</Button>)}
+                {user.status === 'active' && (<Button href='/user/material/create' className="w-full md:w-auto text-center !p-4">素材をアップロードする</Button>)}
                 {user.status === 'inactive' && (<Button disabled>アカウント凍結中のため素材を投稿できません</Button>)}
             </div>
             {materialsPagination.data.length > 0 && (
@@ -117,7 +121,7 @@ const UserProfilePage = async () => {
                     <div className="flex flex-wrap">
                         {followingsPagination.data.map((paginationData) => (
                             <div key={paginationData.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
-                                <div className="bg-white p-4">
+                                <div className="bg-white p-4 shadow">
                                     <Link href={`/users/${paginationData.id}`} className="text-center">
                                         <Image src={paginationData.image} width={100} height={100} alt={paginationData.name} className="rounded-full mx-auto border-main border" />
                                     </Link>

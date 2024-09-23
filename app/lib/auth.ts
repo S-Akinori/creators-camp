@@ -53,6 +53,7 @@ export const getUser = async (): Promise<User | null> => {
         })
         return res.data;
     } catch (error) {
+        console.log(error)
         return null
     }
 }

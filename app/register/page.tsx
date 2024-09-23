@@ -14,6 +14,7 @@ import ErrorMessage from "../components/atoms/Error";
 import FormControl from "../components/Form/FormControl";
 import LoadingIcon from "../components/atoms/Icons/LoadingIcons";
 import { register } from "../lib/authClient";
+import SNSLoginButtons from "../components/organisms/SNSLoginButtons";
 
 export default function RegisterPage() {
   const [state, setState] = useState<'ready' | 'submitting' | 'error' | 'success'>('ready')
@@ -91,6 +92,7 @@ export default function RegisterPage() {
               入力したメールアドレス宛てに認証メールを送信しました。メール内のリンクをクリックして登録を完了してください。
             </div>
           )}
+          <SNSLoginButtons />
         </div>
         <div className="text-center mt-8 text-main">
           <Link href="/login" className="underline">登録済みの方はこちら</Link>

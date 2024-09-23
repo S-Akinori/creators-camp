@@ -13,6 +13,14 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'back.recreators-camp.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'avatars.githubusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
             }
         ]
     },

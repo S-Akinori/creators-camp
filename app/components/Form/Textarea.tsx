@@ -7,7 +7,7 @@ interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 const Textarea = ({children, className, ...rest }: Props) => {
   return (
-    <textarea {...rest} className={`border-main border-2 rounded p-4 bg-gray-200 ${className}`}>{children}</textarea>
+    <textarea {...rest} className={`border-main border-2 rounded p-4 ${className}`}>{children}</textarea>
   );
 };
 

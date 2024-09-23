@@ -19,7 +19,7 @@ const LogoutButton = () => {
     }
 
     return (
-        <Button onClick={onClick}>ログアウト</Button>
+        <Button color="main-cont" onClick={onClick}>ログアウト</Button>
     );
 }
 

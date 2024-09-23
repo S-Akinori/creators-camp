@@ -43,9 +43,11 @@ const UserSearchForm: React.FC = () => {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="キーワードを入力"
-                    className='mr-4 w-full'
+                    className='mb-4 md:mb-0 mr-4 w-full'
                 />
-                <Button type='submit' className='shrink-0'>検索</Button>
+                <div className='shrink-0 text-center'>
+                    <Button type='submit'>検索</Button>
+                </div>
             </FormControl>
         </form>
     );

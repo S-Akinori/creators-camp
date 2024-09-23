@@ -46,7 +46,7 @@ const UserDetailPage = async ({params}: Props) => {
                     <p>{user.description}</p>
                 </div>
             </div>
-            <div className="mt-4 p-4 border border-main">
+            <div className="mt-4 p-4 border border-main bg-white">
                 <table>
                     <tr>
                         <th className="text-left p-2">クリエイタータイプ</th>

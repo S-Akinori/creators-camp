@@ -56,23 +56,25 @@ export default async function Home() {
             <NewsList />
           </div>
         </Container>
-        <Container>
+        <Container className="mb-20">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title>ジャンル一覧</Title>
           <div className="max-w-5xl flex justify-center flex-wrap mx-auto">
             {categories?.map((category) => (
-              <div key={category.id} className="w-1/3 md:w-1/5 p-4 mb-4">
+              <div key={category.id} className="w-1/2 md:w-1/5 p-4 mb-4">
                 <Frame className="h-full">
-                  <Link href={`materials?category_id=${category.id}`} className="flex flex-col justify-between h-full text-center">
+                  <Link href={`materials?category_id=${category.id}`} className="text-center block">
                     <span className={`text-main-cont text-bold text-xl ${reggaeOne.className}`}>{category.name}</span>
-                    <Image className="mx-auto mt-4" src={category.image} width={80} height={80} alt={category.name} />
+                    <div className="relative h-20 md:h-40 m-2">
+                      <Image className="mx-auto" src={category.image} fill objectFit="contain" alt={category.name} />
+                    </div>
                   </Link>
                 </Frame>
               </div>
             ))}
           </div>
         </Container>
-        <Container className="mb-12">
+        <Container className="mb-20">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-8">素材一覧</Title>
           <MaterialListClient />
@@ -80,10 +82,10 @@ export default async function Home() {
             <Link href={'/materials'} className="bg-gray-400 py-2 px-20 text-white">素材をもっと見る →</Link>
           </div>
         </Container>
-        <Container className="mb-12">
+        <Container className="mb-20">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-4">ランキング一覧</Title>
-          <div className="mb-8">
+          <div className="mb-20">
             <div className="relative mb-4">
               <Image src='/images/icon-plugin.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">プラグインいいねランキング</TextShadow></p>
@@ -93,7 +95,7 @@ export default async function Home() {
               <Link href={'/materials?category_id=' + pluginsData.category.id} className="bg-gray-400 py-2 px-20 text-white">プラグイン素材を見る →</Link>
             </div>
           </div>
-          <div className="mb-8">
+          <div className="mb-20">
             <div className="relative mb-4">
               <Image src='/images/icon-bgm.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">BGMいいねランキング</TextShadow></p>
@@ -103,7 +105,7 @@ export default async function Home() {
               <Link href={'/materials?category_id=' + musicsData.category.id} className="bg-gray-400 py-2 px-20 text-white">BGM素材を見る →</Link>
             </div>
           </div>
-          <div className="mb-8">
+          <div className="mb-20">
             <div className="relative mb-4">
               <Image src='/images/icon-picture.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
               <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">立ち絵いいねランキング</TextShadow></p>

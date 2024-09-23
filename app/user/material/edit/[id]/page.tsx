@@ -20,7 +20,7 @@ const UserMaterialEditPage = async ({ params }: Props) => {
             <div>
                 <h1 className={clsx([reggaeOne.className, "text-2xl text-main font-bold text-center"])}>素材編集</h1>
             </div>
-            <div className="mt-8 mx-auto max-w-lg">
+            <div className="mt-8 p-4 mx-auto max-w-2xl bg-white shadow">
                 <MaterialEditForm material={material} categories={categories} />
             </div>
         </Container>

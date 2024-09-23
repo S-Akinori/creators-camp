@@ -71,7 +71,7 @@ const ReportButton = ({id, children, className, style, type = 'material'}: Props
                     </div>
                 </form>
             </Modal>
-            <Button style={style} className={clsx(['w-full py-4', className])} onClick={() => setOpen(true)} disabled={state !== 'ready'}>
+            <Button style={style} color="main-cont" className={clsx(['w-full py-4', className])} onClick={() => setOpen(true)} disabled={state !== 'ready'}>
                 {children}
             </Button>
         </>

@@ -250,7 +250,7 @@ export default function SponserPage() {
         <Container>
             <div className="relative">
                 <Image src="/images/bg-fv.png" className="mx-auto mb-4" alt="about" width={800} height={220} />
-                <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><TextShadow className="text-3xl">スポンサーの皆様</TextShadow></h1>
+                <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><TextShadow className="text-4xl">スポンサーの皆様</TextShadow></h1>
             </div>
             <div className="flex justify-center">
                 <Image src="/images/bow2.png" sizes="(max-width: 768px) 30vw" className="" alt="about" width={300} height={300} />
@@ -270,21 +270,21 @@ export default function SponserPage() {
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
                             <div>
-                                <a href={sponsor.url} className="text-blue-500 break-words">{sponsor.url}</a>
+                                <a href={sponsor.url} className="text-blue-500 break-all">{sponsor.url}</a>
                                 <p>{sponsor.description}</p>
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="flex flex-wrap mb-4 bg-gray-100">
+                <div className="md:flex flex-wrap mb-4 bg-gray-100">
                     {sponsors2.map((sponsor) => (
-                        <div key={sponsor.id} className="flex p-4 w-1/2">
+                        <div key={sponsor.id} className="flex p-4 md:w-1/2">
                             <div className="text-center mr-4 w-40 min-w-0 shrink-0">
-                                <div className="w-40 aspect-square bg-gray-200 mx-auto">画像</div>
+                                <div className="aspect-square bg-gray-200 mx-auto">画像</div>
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
-                            <div className="min-w-0	">
-                                <a href={sponsor.url} className="text-blue-500 break-words">{sponsor.url}</a>
+                            <div className="">
+                                <a href={sponsor.url} className="text-blue-500 break-all">{sponsor.url}</a>
                                 <p>{sponsor.description}</p>
                             </div>
                         </div>
@@ -292,13 +292,13 @@ export default function SponserPage() {
                 </div>
                 <div className="flex flex-wrap mb-4 bg-gray-100">
                     {sponsors3.map((sponsor) => (
-                        <div key={sponsor.id} className="p-4 w-1/3">
-                            <div className="text-center mr-4 w-40">
-                                <div className="w-40 aspect-square bg-gray-200 mx-auto">画像</div>
+                        <div key={sponsor.id} className="p-4 w-1/2 md:w-1/3">
+                            <div className="text-center mr-4 w-full">
+                                <div className="w-full md:w-40 aspect-square bg-gray-200 mx-auto">画像</div>
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
                             <div>
-                                {sponsor.url && <a href={sponsor.url} className="w-full text-blue-500 break-words">{sponsor.url}</a>}
+                                {sponsor.url && <a href={sponsor.url} className="w-full text-blue-500 break-all">{sponsor.url}</a>}
                                 <p>{sponsor.description}</p>
                             </div>
                         </div>
@@ -311,7 +311,7 @@ export default function SponserPage() {
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
                             <div>
-                                <a href={sponsor.url} className="text-blue-500 break-words">{sponsor.url}</a>
+                                <a href={sponsor.url} className="text-blue-500 break-all">{sponsor.url}</a>
                             </div>
                         </div>
                     ))}

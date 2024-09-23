@@ -234,7 +234,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
                     <div className="overflow-y-scroll h-4/5">
                         <Container>
-                            <div className="bg-white">
+                            <div className="bg-white max-w-2xl mx-auto">
                                 <MaterialPreview material={previewMaterial} images={images} />
                             </div>
                         </Container>
@@ -252,7 +252,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </Container>
                 </div>
             )}
-            <div className="mt-8 mx-auto max-w-lg">
+            <div className="p-4 mt-8 mx-auto max-w-2xl bg-white shadow">
                 <form action={preview}>
                     <FormControl flex={false}>
                         <Label htmlFor="file" className="shrink-0 mr-4">素材 *</Label>
@@ -340,7 +340,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                                     <TextField
                                         {...params}
                                         variant="filled"
-                                        className="border-main border-2 bg-gray-200 rounded"
+                                        className="border-main border-2 !bg-white rounded"
                                     />
                                 </>
                             )}
@@ -355,7 +355,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         {errors.is_ai_generated && <ErrorMessage message={errors.is_ai_generated[0]} />}
                     </FormControl>
                     <div className="text-center mt-8">
-                        <Button className="py-4 px-16 mx-4" type="submit" disabled={formState == 'submitting'}>確認</Button>
+                        <Button className="py-4 px-16 mx-4" type="submit" disabled={formState == 'submitting'}>プレビュー確認</Button>
                     </div>
                 </form>
             </div>

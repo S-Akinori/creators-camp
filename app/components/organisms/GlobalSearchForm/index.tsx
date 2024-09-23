@@ -25,7 +25,7 @@ const GlobalSearchForm: React.FC = () => {
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="キーワードを入力"
-                    className='mr-4 w-full'
+                    className='mr-4 w-full mb-4 md:mb-0'
                     style={{padding: '.5rem'}}
                 />
                 <Select

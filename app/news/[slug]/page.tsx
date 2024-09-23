@@ -15,7 +15,7 @@ const NewsDetailPage = async ({params}: Props) => {
 
     return (
         <Container>
-            <div className="p-4" style={{background: 'rgba(255,255,255,0.8)'}}>
+            <div className="p-4 bg-white shadow">
                 <div className="mb-4">
                     <div className="mb-4">
                         <h1 className="mb-0 text-center font-bold text-xl text-main">{news.title}</h1>

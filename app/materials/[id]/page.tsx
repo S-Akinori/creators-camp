@@ -122,12 +122,19 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             )}
                         </div>
                         <div className="mt-4">
-                            <ShareButtons />
+                            <div className="flex justify-between">
+                                <ShareButtons />
+                                {(user && user.status === 'active') && (
+                                    <div className="p-4 text-center max-w-max">
+                                        <ReportButton id={material.id} className="text-xs" style={{padding: '.5rem'}}>不適切な素材として報告する</ReportButton>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="md:w-1/3 p-4">
-                    <div className="bg-white shadow p-4 h-full">
+                    <div className="bg-white shadow p-4">
                         <h2 className={clsx(["mb-4 text-center text-main text-2xl", reggaeOne.className])}>
                             ユーザー情報
                         </h2>
@@ -145,11 +152,6 @@ const MaterialDetailPage = async ({ params }: Props) => {
                     </div>
                 </div>
             </div>
-            {(user && user.status === 'active') && (
-                <div className="mt-4 mx-auto p-4 text-center bg-white shadow max-w-max">
-                    <ReportButton id={material.id}>不適切な素材として報告する</ReportButton>
-                </div>
-            )}
             <div className="mt-16">
                 <CommentClient comments={comments} user={user} materialId={material.id} />
                 {!user && (
