@@ -32,8 +32,8 @@ const UserProfilePage = async () => {
             <div className="md:flex">
                 <div className="md:w-1/2 p-4">
                     <div className="flex items-center mb-4">
-                        <div>
-                            <Image src={user.image} width={100} height={100} alt={user.name} className="rounded-full border-2 border-main bg-main-cont rounded-full" />
+                        <div className="relative aspect-square w-32">
+                            <Image src={user.image} fill objectFit="cover" alt={user.name} className="rounded-full border-2 border-main bg-main-cont rounded-full" />
                         </div>
                         <div className="ml-4">
                             <div className="mb-4">
