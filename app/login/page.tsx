@@ -58,7 +58,7 @@ export default function Login() {
   return (
       <Container>
         <h1><TextShadow className="text-xl">ログイン</TextShadow></h1>
-        <div className="max-w-sm mx-auto mt-8">
+        <div className="max-w-sm mx-auto mt-8 bg-white shadow p-4">
           <form action={action}>
             <div>
               <FormControl>
@@ -87,13 +87,13 @@ export default function Login() {
               </Button>
             </div>
           </form>
+          <SNSLoginButtons />
           <div className="text-center mt-8 text-main">
             <Link href="/forgot-password" className="underline">パスワードを忘れた方はこちら</Link>
           </div>
           <div className="text-center mt-8 text-main">
             <Link href="/register" className="underline">新規登録はこちら</Link>
           </div>
-          <SNSLoginButtons />
         </div>
       </Container>
   );

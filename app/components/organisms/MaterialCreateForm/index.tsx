@@ -234,22 +234,27 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
                     <div className="overflow-y-scroll h-4/5">
                         <Container>
-                            <div className="bg-white max-w-2xl mx-auto">
-                                <MaterialPreview material={previewMaterial} images={images} />
+                            <div className="flex items-start bg-white max-w-3xl mx-auto">
+                                <div className="border-2">
+                                    <MaterialPreview material={previewMaterial} images={images} />
+                                </div>
+                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max">
+                                    <p className="text-center mb-4">保存しますか？</p>
+                                    <div className="mb-4 text-center">
+                                        <Button className="" onClick={() => store()} disabled={formState !== 'ready'}>
+                                            {formState === 'ready' && '保存する'}
+                                            {formState === 'submitting' && <LoadingIcon />}
+                                            {formState === 'error' && 'エラーが発生しました'}
+                                            {formState === 'success' && '更新しました'}
+                                        </Button>
+                                    </div>
+                                    <div className="text-center">
+                                        <Button color="main-cont" onClick={() => setPreviewOpen(false)} disabled={formState !== 'ready'}>修正する</Button>
+                                    </div>
+                                </div>
                             </div>
                         </Container>
                     </div>
-                    <Container>
-                        <div className="mt-4 p-4 mx-auto flex justify-center bg-white max-w-max">
-                            <Button className="mr-4" onClick={() => store()} disabled={formState !== 'ready'}>
-                                {formState === 'ready' && '保存する'}
-                                {formState === 'submitting' && <LoadingIcon />}
-                                {formState === 'error' && 'エラーが発生しました'}
-                                {formState === 'success' && '更新しました'}
-                            </Button>
-                            <Button onClick={() => setPreviewOpen(false)} disabled={formState !== 'ready'}>修正する</Button>
-                        </div>
-                    </Container>
                 </div>
             )}
             <div className="p-4 mt-8 mx-auto max-w-2xl bg-white shadow">

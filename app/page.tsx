@@ -119,9 +119,9 @@ export default async function Home() {
         <Container className="mt-24 mb-24">
           <div className="relative text-center">
             <Image src="/images/bg-camp.png" width={570} height={180} alt="クリエイターズキャンプ" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute top-1/2 -translate-y-1/2 left-0 w-1/5 max-w-60 aspect-[2/3]"><Image src="/images/character_RECY_01.png" width={200} height={150} alt="" className="absolute top-1/2 -translate-y-1/2 right-0" /></div>
+            <div className="absolute top-1/2 -translate-y-1/2 left-0 w-1/5 max-w-60"><Image src="/images/character.png" width={200} height={178} alt="" className="absolute top-1/2 -translate-y-1/2 right-0" /></div>
             <div className="relative"><Button href="/register"><TextShadow className={clsx(["text-3xl", reggaeOne.className])}>新規登録</TextShadow></Button></div>
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 w-1/5 max-w-60 aspect-square"><Image src="/images/character_CLE_01.png" fill alt="" /></div>
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 w-1/5 max-w-60"><Image src="/images/character2.png" width={200} height={150} alt="" /></div>
           </div>
         </Container>
       </main>

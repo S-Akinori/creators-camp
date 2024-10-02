@@ -49,7 +49,7 @@ export default function RegisterPage() {
   return (
       <Container>
         <h1><TextShadow className="text-xl">登録</TextShadow></h1>
-        <div className="max-w-sm mx-auto mt-8">
+        <div className="max-w-sm mx-auto mt-8 bg-white shadow p-4">
           <form action={create}>
             <div>
               <FormControl>
