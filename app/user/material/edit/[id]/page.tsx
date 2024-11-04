@@ -4,7 +4,6 @@ import { reggaeOne } from "@/app/fonts";
 import { getMaterial } from "@/app/lib/material";
 import { getCategories } from "@/app/lib/category";
 import MaterialCreateForm from "@/app/components/organisms/MaterialCreateForm";
-import MaterialEditForm from "@/app/components/organisms/MaterialEditForm";
 
 interface Props {
     params: {
