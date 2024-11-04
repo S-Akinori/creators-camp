@@ -13,28 +13,32 @@ const sponsors1 = [
 
 const sponsors2 = [
     {
-        id:2,
+        id: 2,
         name: 'ＴＥＡＭ海の藻屑',
         url: 'http://twitter.com/umijinko404',
         description: '金曜ロードショーと、オールドゲーム好きな海産物が、ゲーム制作はじめました。',
+        image: ''
     },
     {
-        id:3,
+        id: 3,
         name: 'とらぺちぃの',
         url: '',
         description: '',
+        image: ''
     },
     {
-        id:4,
+        id: 4,
         name: '水降 恵来',
         url: 'https://www.youtube.com/channel/UCqUsAUzgTZRZToIYXm6MOFg/',
         description: '心が動くゲームと出会ったとき、『パッと世界に色が灯る』そんな感覚になったことはありませんか？ゲームを通して『私とあなたの人生が幸せに満ちたものになること』を願い、今日もゲームを実況中。スクリーン リーダーのサポートを有効にする',
+        image: '/images/suiko-keirai.png'
     },
     {
-        id:5,
+        id: 5,
         name: 'panda (werepanda.jp)',
         url: 'http://www.werepanda.jp/',
         description: 'RPGツクールで王道的なフリーゲーム制作や、単純かつ汎用的なスクリプト/プラグイン作成を行っています。◆公開中ゲーム：和風探索RPG『天下御免！からくり屋敷』／正統派王道RPG『小さな大冒険』／試行錯誤系ミニゲーム『夫婦戦争MZ』◆制作中ゲーム：王道長編RPG『王国の英雄』',
+        image: ''
     }
 ]
 
@@ -44,72 +48,84 @@ const sponsors3 = [
         name: '上海ラプソディ公式　@shanhai_rap',
         url: 'http://syanrap.web.fc2.com/',
         description: 'フリーゲーム製作サークル「上海ラプソディ」の公式アカウントです。募集や広告中心のつもりです。',
+        image: ''
     },
     {
         id: 7,
         name: 'ヒイラギ',
         url: '',
         description: '',
+        image: ''
     },
     {
         id: 8,
         name: 'ソウ',
         url: '',
         description: '',
+        image: ''
     },
     {
         id: 9,
         name: '龍神リウズ@ゲームクリエイター応援ch「はじまりの村」',
         url: 'https://bit.ly/3bC81d1',
         description: 'ゲーム制作未経験、初心者の方を対象としたYoutubeチャンネルを運営しています。下の?にあてはまる人はぜひチャンネル登録を！-ゲームを作ってみたい-Unityってよく分からない-エンジニアってなにするの？',
+        image: ''
     },
     {
         id: 10,
         name: 'ジャグリングドラゴン　ヒョウガ',
         url: 'http://fine.tok2.com/home/ryuhan/hyoga/RPG_hyoga/hyo_etcgame.html',
         description: 'ジャグリングドラゴンヒョウガと申します。普段は大道芸をしているドラゴンです。ゲームも作ります。大道芸がメインなのでゲームだけじゃなくてパフォーマンスも見に来てくださいね！',
+        image: ''
     },
     {
         id: 11,
         name: 'ヨシ-yoshi-',
         url: 'https://youtube.com/channel/UCOk6xKN1t6GKFhjXOG0gNyQ',
         description: 'ゲーム実況者です。',
+        image: ''
     },
     {
         id: 12,
         name: '野中ソルト',
         url: '',
         description: '',
+        image: ''
     },
     {
         id: 13,
         name: 'ソルト',
         url: 'https://note.com/salt40',
         description: 'フリーゲームの感想を書いています。あまりに広大なフリゲ界では好みの作品を探すのも大変です。なので、自分が好きなフリゲを発信して同好の士に情報を届けたいという気持ちで活動しています。',
+        image: ''
     },
     {
         id: 14,
         name: 'ツキヤモリ',
         url: '',
         description: 'バカゲーに魂を売った男。アツマールにてゲームを投稿してます',
+        image: ''
     },
     {
         id: 15,
         name: 'Sherlock',
         url: 'https://twitter.com/Sherloc_221b',
         description: '名探偵諸君、事件現場へようこそ。』…自作の謎解き公演に登場する、姿は女性・口調は英国グラナダTV版シャーロック・ホームズな探偵。',
+        image: ''
     },
     {
         id: 16,
         name: 'たちやま',
         url: 'https://twitter.com/wtc_79562',
         description: 'ゲーム制作という表現手段が持つ無限の可能性を信じています！ばけねこ探偵事務所シリーズもよろしく！?',
+        image: ''
     },
     {
         id: 17,
         name: 'ありすめぐみ/MEGUTOPIA',
-        url: 'https://aricemegumiofficial.jimdofree.com/',
-        description: '生々しい話と人間が好き。ツクールやティラノで制作。人様の作品への素材、技術提供も好きです。',
+        url: 'https://x.com/aricemegumi',
+        description: '創作大好き、ゲーム制作頑張ってます。鬱っぽいのが好き。素材制作も興味アリ。ゲ制サークル「おぷちゃゲーム製作委員会」管理中。メンバー募集中！',
+        image: '/images/aricemegumi.png'
     },
 ]
 
@@ -152,7 +168,7 @@ const sponsors4 = [
     {
         id: 25,
         name: '露木佑太郎',
-        url: 'http://blog.livedoor.jp/ing_tdk/',
+        url: 'https://tsuyuking.com/',
     },
     {
         id: 26,
@@ -280,7 +296,12 @@ export default function SponserPage() {
                     {sponsors2.map((sponsor) => (
                         <div key={sponsor.id} className="flex p-4 md:w-1/2">
                             <div className="text-center mr-4 w-40 min-w-0 shrink-0">
-                                <div className="aspect-square bg-gray-200 mx-auto">画像</div>
+                                {sponsor.image &&
+                                    <div className="aspect-square mx-auto relative"><Image src={sponsor.image} fill alt={sponsor.name} /></div>
+                                }
+                                {!sponsor.image &&
+                                    <div className="aspect-square bg-gray-200 mx-auto">画像</div>
+                                }
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
                             <div className="">
@@ -294,7 +315,12 @@ export default function SponserPage() {
                     {sponsors3.map((sponsor) => (
                         <div key={sponsor.id} className="p-4 w-1/2 md:w-1/3">
                             <div className="text-center mr-4 w-full">
-                                <div className="w-full md:w-40 aspect-square bg-gray-200 mx-auto">画像</div>
+                                {sponsor.image &&
+                                    <div><Image src={sponsor.image} width={160} height={160} alt={sponsor.name} className="mx-auto" /></div>
+                                }
+                                {!sponsor.image &&
+                                    <div className="aspect-square w-40 bg-gray-200 mx-auto">画像</div>
+                                }
                                 <h2 className="text-main">{sponsor.name}</h2>
                             </div>
                             <div>

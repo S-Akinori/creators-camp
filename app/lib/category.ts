@@ -10,6 +10,7 @@ export const getCategories = async () : Promise<Category[]> => {
 export const getCategory = async (id: number, page = 1, orderBy = 'download_count') : Promise<{category:Category, materialsPagination:Pagination<Material>}> => {
     const res = await http.get(`/categories/${id}?page=${page}&order_by=${orderBy}`)
     const category = res.data.category as Category
+    console.log(category)
     const materialsPagination = res.data.materials as Pagination<Material>
     return {'category': category, 'materialsPagination': materialsPagination}
 }

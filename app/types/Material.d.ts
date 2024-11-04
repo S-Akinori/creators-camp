@@ -35,6 +35,7 @@ export interface MaterialError {
     permission?: string[];
     file?: string[];
     image?: string[];
+    images?: string[];
     tag?: string[];
     is_ai_generated?: string[];
 }

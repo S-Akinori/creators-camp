@@ -16,14 +16,16 @@ import LoadingIcon from "@/app/components/atoms/Icons/LoadingIcons";
 import Modal from "@/app/components/molecules/Modal";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
 import { Autocomplete, Chip, IconButton, TextField, Tooltip } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Message } from "@mui/icons-material";
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
 import { getTags, storeTag } from "@/app/lib/tag";
 import { Tag } from "@/app/types/Tag";
 import { useRouter } from "next/navigation";
 import MaterialPreview from "../MaterialPreview";
 import Container from "../../Container";
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useFormState } from "react-dom";
+import { createMaterial } from "@/app/lib/actions/createMaterial";
+import { editMaterial } from "@/app/lib/actions/editMaterial";
 
 
 interface ImageFile {
@@ -61,8 +63,9 @@ interface MaterialPreviewProps {
 const MaterialCreateForm = ({ categories, material }: Props) => {
     const router = useRouter();
     const [errors, setErrors] = useState<MaterialError>({})
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [previewFileUrl, setPreviewFileUrl] = useState<string | null>(null);
     const [images, setImages] = useState<ImageFile[]>([]);
+    const [thumbnail, setThumbnail] = useState<ImageFile | null>(null);
     const [fileType, setFileType] = useState<string | null>(null);
     const [formState, setFormState] = useState<'error' | 'success' | 'submitting' | 'ready'>('ready')
     const [isNew, setIsNew] = useState<boolean>(!material)
@@ -72,6 +75,13 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const [previewMaterial, setPreviewMaterial] = useState<MaterialPreviewProps | null>(null);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [materialFormData, setMaterialFormData] = useState<FormData>(new FormData());
+
+    const initialState = {
+        errors: {},
+        message: null,
+    }
+
+    const [state, disPatch] = useFormState(material ? editMaterial : createMaterial, initialState)
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
@@ -88,7 +98,12 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
             const reader = new FileReader();
             reader.onload = (loadEvent) => {
                 const result = loadEvent.target?.result;
-                setPreviewUrl(result as string);
+                if(event.target.name === 'file') {
+                    setPreviewFileUrl(result as string);
+                } else if(event.target.name === 'image') {
+                    const url = URL.createObjectURL(file);
+                    setThumbnail({ file, url });
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -110,12 +125,18 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         images.forEach((image, index) => {
             formData.append(`images[]`, image.file);
         });
-        setErrors({});
-        const obj = formDataToObject(formData) as MaterialPreviewProps;
-        obj.tags = tags
-        setMaterialFormData(formData);
-        setPreviewMaterial(obj);
-        setPreviewOpen(true);
+        tags.forEach((tag) => {
+            formData.append('tags[]', tag);
+        });
+        disPatch(formData)
+        formData.delete('tags[]')
+        if(!Object.keys(state.errors).length) {
+            const obj = formDataToObject(formData) as MaterialPreviewProps;
+            obj.tags = tags
+            setMaterialFormData(formData);
+            setPreviewMaterial(obj);
+            setPreviewOpen(true);
+        }
     }
 
     const store = async () => {
@@ -128,6 +149,8 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
             tagIds.forEach((tagId) => {
                 materialFormData.append('tags[]', tagId.toString());
             });
+            console.log(materialFormData.getAll('tags[]'))
+            
             if (isNew) {
                 const res = await http.post('/materials', materialFormData, {
                     headers: {
@@ -135,6 +158,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     }
                 });
                 const data = res.data as Material;
+                console.log(data)
                 setStoredMaterial(data);
             } else {
                 const res = await http.post(`/materials/${material?.id}`, materialFormData, {
@@ -192,11 +216,13 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
             });
             const blob = new Blob([res.data], { type: res.data.type });
             const url = URL.createObjectURL(blob)
-            setPreviewUrl(url)
+            setPreviewFileUrl(url)
             const type = identifyFileTypeByExtension(material.file);
             setFileType(type);
             const imageRes = await fetch('/images/dummy.png');
             const imageBlob = await imageRes.blob();
+
+            setThumbnail({ file: new File([imageBlob], 'thumbnail.png', { type: 'image/png' }), url: material.image });
 
             setImages(material.images.map((image) => {
                 const lastSlashIndex = image.lastIndexOf('/');
@@ -226,19 +252,29 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
             <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
                 <div className="text-center">
                     <p className="text-2xl font-bold mb-4">アップロード完了</p>
-                    <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
-                    <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+                    {isNew && (
+                        <div>
+                            <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                            <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+                        </div>
+                    )}
+                    {!isNew && (
+                        <div>
+                            <Button className="mx-4 block" href={'/materials/' + material?.id}>アップした素材を見る</Button>
+                            <Button className="mx-4 block" href={'/user'}>マイページへ</Button>
+                        </div>
+                    )}
                 </div>
             </Modal>
-            {(previewMaterial && previewOpen) && (
+            {(previewMaterial && thumbnail && previewOpen) && (
                 <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
                     <div className="overflow-y-scroll h-4/5">
                         <Container>
-                            <div className="flex items-start bg-white max-w-3xl mx-auto">
+                            <div className="flex items-start bg-white max-w-5xl mx-auto">
                                 <div className="border-2">
-                                    <MaterialPreview material={previewMaterial} images={images} />
+                                    <MaterialPreview material={previewMaterial} images={images} thumbnail={thumbnail} />
                                 </div>
-                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max">
+                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max shrink-0">
                                     <p className="text-center mb-4">保存しますか？</p>
                                     <div className="mb-4 text-center">
                                         <Button className="" onClick={() => store()} disabled={formState !== 'ready'}>
@@ -263,32 +299,42 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         <Label htmlFor="file" className="shrink-0 mr-4">素材 *</Label>
                         <Input id="file" type="file" name="file" className="w-full" onChange={handleFileChange} />
                         <span>※複数素材をアップするにはzipファイルでアップしてください</span>
-                        {errors.file && <ErrorMessage message={errors.file[0]} />}
-                        {(fileType == 'image' && previewUrl) && (
+                        {state.errors?.file && <ErrorMessage message={state.errors.file[0]} />}
+                        {(fileType == 'image' && previewFileUrl) && (
                             <div className="mt-4">
-                                <Thumbnail src={previewUrl} />
+                                <Thumbnail src={previewFileUrl} />
                             </div>
                         )}
-                        {(fileType == 'video' && previewUrl) && (
-                            <video className="w-full aspect-video mt-4" src={previewUrl} controls />
+                        {(fileType == 'video' && previewFileUrl) && (
+                            <video className="w-full aspect-video mt-4" src={previewFileUrl} controls />
                         )}
-                        {(fileType == 'audio' && previewUrl) && (
-                            <audio className="w-full mt-4" src={previewUrl} controls />
+                        {(fileType == 'audio' && previewFileUrl) && (
+                            <audio className="w-full mt-4" src={previewFileUrl} controls />
                         )}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="name" className="shrink-0 mr-4">タイトル *</Label>
-                        <Input id="name" type="text" name="name" className="w-full" />
-                        {errors.name && <ErrorMessage message={errors.name[0]} />}
+                        <Input id="name" type="text" name="name" className="w-full" defaultValue={material?.name} />
+                        {state.errors?.name && <ErrorMessage message={state.errors.name[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="description" className="shrink-0 mr-4">説明 *</Label>
-                        <Textarea id="description" rows={5} name="description" className="w-full" />
-                        {errors.description && <ErrorMessage message={errors.description[0]} />}
+                        <Textarea id="description" rows={5} name="description" className="w-full" defaultValue={material?.description} />
+                        {state.errors?.description && <ErrorMessage message={state.errors.description[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
-                        <Label className="shrink-0 mr-4">スクリーンショット *</Label>
-                        {errors.image && <ErrorMessage message={errors.image[0]} />}
+                        <Label htmlFor="image" className="shrink-0 mr-4">サムネイル *</Label>
+                        <Input id="image" type="file" name="image" className="w-full" onChange={handleFileChange} accept="image" />
+                        {state.errors?.image && <ErrorMessage message={state.errors.image[0]} />}
+                        {(fileType == 'image' && thumbnail?.url) && (
+                            <div className="mt-4">
+                                <Thumbnail src={thumbnail?.url} />
+                            </div>
+                        )}
+                    </FormControl>
+                    <FormControl flex={false}>
+                        <Label className="shrink-0 mr-4">その他画像</Label>
+                        {state.errors?.images && <ErrorMessage message={state.errors.images[0]} />}
                         <div className="flex items-start flex-wrap">
                             {images.map((image, index) => (
                                 <div key={index} className="relative mb-4 p-2 w-1/3">
@@ -301,27 +347,27 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                                 </div>
                             ))}
                             <button type="button" className="block mb-4 w-1/3 aspect-video bg-gray-200">
-                                <label htmlFor={`image`} className="flex items-center justify-center w-full h-full cursor-pointer">画像を追加</label>
-                                <Input id={`image`} type="file" name="image" className="w-full" onChange={handleImageChange} hidden />
+                                <label htmlFor={`images`} className="flex items-center justify-center w-full h-full cursor-pointer">画像を追加</label>
+                                <Input id={`images`} type="file" className="w-full" onChange={handleImageChange} hidden accept="image/png, image/jpeg"/>
                             </button>
                         </div>
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="category_id" className="shrink-0 mr-4">カテゴリー</Label>
-                        <Select id="category_id" name="category_id" className="w-full">
+                        <Select id="category_id" name="category_id" className="w-full" defaultValue={material?.category_id}>
                             {categories && categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </Select>
-                        {errors.category_id && <ErrorMessage message={errors.category_id[0]} />}
+                        {state.errors?.category_id && <ErrorMessage message={state.errors.category_id[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="permission" className="shrink-0 mr-4">承認の有無</Label>
-                        <Select id="permission" name="permission" className="w-full">
+                        <Select id="permission" name="permission" className="w-full" defaultValue={material?.permission}>
                             <option value="1">承認を必要にする</option>
                             <option value="0">承認を必要にしない</option>
                         </Select>
-                        {errors.permission && <ErrorMessage message={errors.permission[0]} />}
+                        {state.errors?.permission && <ErrorMessage message={state.errors.permission[0]} />}
                     </FormControl>
                     <FormControl flex={false}>
                         <Autocomplete
@@ -353,11 +399,11 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </FormControl>
                     <FormControl flex={false}>
                         <Label htmlFor="is_ai_generated" className="shrink-0 mr-4">AIの利用</Label>
-                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full">
+                        <Select id="is_ai_generated" name="is_ai_generated" className="w-full" defaultValue={material?.is_ai_generated}>
                             <option value="1">利用している</option>
                             <option value="0">利用していない</option>
                         </Select>
-                        {errors.is_ai_generated && <ErrorMessage message={errors.is_ai_generated[0]} />}
+                        {state.errors?.is_ai_generated && <ErrorMessage message={state.errors.is_ai_generated[0]} />}
                     </FormControl>
                     <div className="text-center mt-8">
                         <Button className="py-4 px-16 mx-4" type="submit" disabled={formState == 'submitting'}>プレビュー確認</Button>
