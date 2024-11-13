@@ -33,6 +33,7 @@ interface Props {
 }
 
 const checkPermissionState = (required: number, permission_tokens: PermissionToken[]) => {
+    console.log('required: ', required)
     if (required == 0) return 'approved'
     else if (permission_tokens.length && permission_tokens[0].is_active == 1) return 'pending'
     else if (permission_tokens.length && permission_tokens[0].is_active == 0 && permission_tokens[0].is_approved == 0) return 'disapproved'
@@ -95,7 +96,7 @@ const MaterialDetailPage = async ({ params }: Props) => {
                             <p className="text-lg">{material.description}</p>
                             <div>
                                 {material.tags.map((tag) => (
-                                    <Link key={tag.id} href={`/materials?tag_id=${tag.id}`} className="text-main">#{tag.name}</Link>
+                                    <Link key={tag.id} href={`/materials?keyword=%23${tag.name}`} className="text-main">#{tag.name}</Link>
                                 ))}
                             </div>
                         </div>

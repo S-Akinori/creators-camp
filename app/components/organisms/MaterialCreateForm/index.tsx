@@ -50,15 +50,15 @@ interface InputProps {
 }
 
 interface MaterialPreviewProps {
-      name: string
-      description: string
-      file: File | string
-      image: File | string
-      images: File[]
-      tags: string[]
-      permission: number
-      is_ai_generated: number
-  }
+    name: string
+    description: string
+    file: File | string
+    image: File | string
+    images: File[]
+    tags: string[]
+    permission: number
+    is_ai_generated: number
+}
 
 const MaterialCreateForm = ({ categories, material }: Props) => {
     const router = useRouter();
@@ -75,6 +75,8 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const [previewMaterial, setPreviewMaterial] = useState<MaterialPreviewProps | null>(null);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [materialFormData, setMaterialFormData] = useState<FormData>(new FormData());
+    const [uploadProgress, setUploadProgress] = useState(0);
+
 
     const initialState = {
         errors: {},
@@ -98,9 +100,9 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
             const reader = new FileReader();
             reader.onload = (loadEvent) => {
                 const result = loadEvent.target?.result;
-                if(event.target.name === 'file') {
+                if (event.target.name === 'file') {
                     setPreviewFileUrl(result as string);
-                } else if(event.target.name === 'image') {
+                } else if (event.target.name === 'image') {
                     const url = URL.createObjectURL(file);
                     setThumbnail({ file, url });
                 }
@@ -130,7 +132,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         });
         disPatch(formData)
         formData.delete('tags[]')
-        if(!Object.keys(state.errors).length) {
+        if (!Object.keys(state.errors).length) {
             const obj = formDataToObject(formData) as MaterialPreviewProps;
             obj.tags = tags
             setMaterialFormData(formData);
@@ -141,6 +143,9 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
 
     const store = async () => {
         await csrf();
+        setFormState('submitting');
+        setPreviewOpen(false);
+
         try {
             const tagIds = await Promise.all(tags.map(async (tag) => {
                 const res = await storeTag(tag);
@@ -150,15 +155,20 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 materialFormData.append('tags[]', tagId.toString());
             });
             console.log(materialFormData.getAll('tags[]'))
-            
+
             if (isNew) {
                 const res = await http.post('/materials', materialFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
-                    }
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total!
+                        );
+                        setUploadProgress(percentCompleted);
+                    },
                 });
                 const data = res.data as Material;
-                console.log(data)
                 setStoredMaterial(data);
             } else {
                 const res = await http.post(`/materials/${material?.id}`, materialFormData, {
@@ -168,7 +178,6 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     }
                 });
             }
-            setPreviewOpen(false);
             setFormState('success');
         } catch (e) {
             if (Axios.isAxiosError(e) && e.response) {
@@ -186,26 +195,26 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         const object: { [key: string]: any } = {};
 
         formData.forEach((value, key) => {
-          // Keyが `[]` で終わっている場合、配列として扱う
-          if (key.endsWith('[]')) {
-            const cleanKey = key.slice(0, -2); // `[]` を削除
-            if (!object[cleanKey]) {
-              object[cleanKey] = [];
-            }
-            object[cleanKey].push(value);
-          } else {
-            if (object[key]) {
-              if (Array.isArray(object[key])) {
-                object[key].push(value);
-              } else {
-                object[key] = [object[key], value];
-              }
+            // Keyが `[]` で終わっている場合、配列として扱う
+            if (key.endsWith('[]')) {
+                const cleanKey = key.slice(0, -2); // `[]` を削除
+                if (!object[cleanKey]) {
+                    object[cleanKey] = [];
+                }
+                object[cleanKey].push(value);
             } else {
-              object[key] = value;
+                if (object[key]) {
+                    if (Array.isArray(object[key])) {
+                        object[key].push(value);
+                    } else {
+                        object[key] = [object[key], value];
+                    }
+                } else {
+                    object[key] = value;
+                }
             }
-          }
         });
-      
+
         return object;
     }
 
@@ -247,24 +256,34 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         setTags(newValue);
     };
 
+    console.log(uploadProgress)
+
     return (
         <>
-            <Modal open={formState == 'success'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
-                <div className="text-center">
-                    <p className="text-2xl font-bold mb-4">アップロード完了</p>
-                    {isNew && (
-                        <div>
-                            <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
-                            <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
-                        </div>
-                    )}
-                    {!isNew && (
-                        <div>
-                            <Button className="mx-4 block" href={'/materials/' + material?.id}>アップした素材を見る</Button>
-                            <Button className="mx-4 block" href={'/user'}>マイページへ</Button>
-                        </div>
-                    )}
-                </div>
+            <Modal open={formState == 'success' || formState == 'submitting'} setOpen={(open) => setFormState(open ? 'success' : 'ready')}>
+                {(uploadProgress >= 0 && uploadProgress < 100 )&& (
+                    <div>
+                        <p>アップロード進捗: {uploadProgress}%</p>
+                        <progress value={uploadProgress} max="100">{uploadProgress}%</progress>
+                    </div>
+                )}
+                {(uploadProgress === 100) && (
+                    <div className="text-center">
+                        <p className="text-2xl font-bold mb-4">アップロード完了</p>
+                        {isNew && (
+                            <div>
+                                <Button className="mx-4 mb-4"><a href='/user/material/create'>続けて素材をアップする</a></Button>
+                                <Button className="mx-4 block" href={'/materials/' + storedMaterial?.id}>アップした素材を見る</Button>
+                            </div>
+                        )}
+                        {!isNew && (
+                            <div>
+                                <Button className="mx-4 block" href={'/materials/' + material?.id}>アップした素材を見る</Button>
+                                <Button className="mx-4 block" href={'/user'}>マイページへ</Button>
+                            </div>
+                        )}
+                    </div>
+                )}
             </Modal>
             {(previewMaterial && thumbnail && previewOpen) && (
                 <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
@@ -348,7 +367,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                             ))}
                             <button type="button" className="block mb-4 w-1/3 aspect-video bg-gray-200">
                                 <label htmlFor={`images`} className="flex items-center justify-center w-full h-full cursor-pointer">画像を追加</label>
-                                <Input id={`images`} type="file" className="w-full" onChange={handleImageChange} hidden accept="image/png, image/jpeg"/>
+                                <Input id={`images`} type="file" className="w-full" onChange={handleImageChange} hidden accept="image/png, image/jpeg" />
                             </button>
                         </div>
                     </FormControl>

@@ -16,11 +16,10 @@ const MaterialSearchForm: React.FC = () => {
     const pathname = usePathname()
     const searchParams = useSearchParams();
 
-    const [keyword, setKeyword] = useState('');
+    const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
     const [query, setQuery] = useState<{ [key: string]: string }>({});
     const [suggestedTags, setSuggestedTags] = useState<Tag[]>([]);
     const [isTagSearch, setIsTagSearch] = useState(false);
-
 
     useEffect(() => {
         if (isTagSearch && keyword.length > 1) {
@@ -84,7 +83,6 @@ const MaterialSearchForm: React.FC = () => {
         // タグ検索を実行する関数 (APIリクエストやリダイレクトを処理)
         console.log('Searching for tag:', tag);
     };
-
 
     return (
         <form onSubmit={handleSubmit} className="p-4">

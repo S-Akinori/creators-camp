@@ -20,7 +20,7 @@ const MaterialCard = ({ material }: { material: Material }) => {
                     </div>
                 </div>
                 <div className={clsx(["bg-white p-2", reggaeOne.className])}>
-                    <p>{material.name}</p>
+                    <p><Link href={`/materials/${material.id}`}>{material.name}</Link></p>
                     {material.user && <UserCard user={material.user} />}
                 </div>
             </div>
