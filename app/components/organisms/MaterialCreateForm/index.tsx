@@ -20,7 +20,6 @@ import { Delete, Edit, Message } from "@mui/icons-material";
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
 import { getTags, storeTag } from "@/app/lib/tag";
 import { Tag } from "@/app/types/Tag";
-import { useRouter } from "next/navigation";
 import MaterialPreview from "../MaterialPreview";
 import Container from "../../Container";
 import { useFormState } from "react-dom";
@@ -61,7 +60,6 @@ interface MaterialPreviewProps {
 }
 
 const MaterialCreateForm = ({ categories, material }: Props) => {
-    const router = useRouter();
     const [errors, setErrors] = useState<MaterialError>({})
     const [previewFileUrl, setPreviewFileUrl] = useState<string | null>(null);
     const [images, setImages] = useState<ImageFile[]>([]);
@@ -87,15 +85,18 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
+        const targetName = event.target.name;
         if (file) {
-            if (file.type.startsWith('image/')) {
-                setFileType('image');
-            } else if (file.type.startsWith('video/')) {
-                setFileType('video');
-            } else if (file.type.startsWith('audio/')) {
-                setFileType('audio');
-            } else {
-                setFileType(null);
+            if(targetName === 'file') {
+                if (file.type.startsWith('image/')) {
+                    setFileType('image');
+                } else if (file.type.startsWith('video/')) {
+                    setFileType('video');
+                } else if (file.type.startsWith('audio/')) {
+                    setFileType('audio');
+                } else {
+                    setFileType(null);
+                }
             }
             const reader = new FileReader();
             reader.onload = (loadEvent) => {
@@ -290,10 +291,10 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     <div className="overflow-y-scroll h-4/5">
                         <Container>
                             <div className="flex items-start bg-white max-w-5xl mx-auto">
-                                <div className="border-2">
+                                <div className="border-2 w-3/4">
                                     <MaterialPreview material={previewMaterial} images={images} thumbnail={thumbnail} />
                                 </div>
-                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max shrink-0">
+                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max w-1/4">
                                     <p className="text-center mb-4">保存しますか？</p>
                                     <div className="mb-4 text-center">
                                         <Button className="" onClick={() => store()} disabled={formState !== 'ready'}>
