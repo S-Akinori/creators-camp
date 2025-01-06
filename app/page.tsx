@@ -89,24 +89,10 @@ export default async function Home() {
             <MaterialListClient categoryId={2} title="プラグインいいねランキング" icon="/images/icon-plugin.png" moreLinkText="プラグイン素材を見る →" />
           </div>
           <div className="mb-20">
-            <div className="relative mb-4">
-              <Image src='/images/icon-bgm.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">BGMいいねランキング</TextShadow></p>
-            </div>
-            <MaterialListClient categoryId={3} />
-            <div className="text-right">
-              <Link href={'/materials?category_id=' + musicsData.category.id} className="bg-gray-400 py-2 px-20 text-white">BGM素材を見る →</Link>
-            </div>
+            <MaterialListClient categoryId={3} title="BGMいいねランキング" icon="/images/icon-bgm.png" moreLinkText="BGM素材を見る →" />
           </div>
           <div className="mb-20">
-            <div className="relative mb-4">
-              <Image src='/images/icon-picture.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">立ち絵いいねランキング</TextShadow></p>
-            </div>
-            <MaterialListClient categoryId={6} />
-            <div className="text-right">
-              <Link href={'/materials?category_id=' + illustrationsData.category.id} className="bg-gray-400 py-2 px-20 text-white">立ち絵素材を見る →</Link>
-            </div>
+            <MaterialListClient categoryId={6} title="立ち絵いいねランキング" icon="/images/icon-picture.png" moreLinkText="立ち絵素材を見る →" />
           </div>
         </Container>
         <Container className="mt-24 mb-24">
