@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.15.8",
     "@mui/material": "^5.15.7",
     "@mui/x-data-grid": "^7.6.2",
+    "@vercel/speed-insights": "^1.1.0",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "draft-js": "^0.11.7",

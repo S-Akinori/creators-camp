@@ -24,12 +24,12 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <div className="flex justify-end mt-8">
-        <Link href="/news" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
-        <Link href="/materials" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
-        <Link href="/user/material/create" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
-      </div>
-      <main className="min-h-screen">
+      <main className="py-16 min-h-screen">
+        <div className="flex justify-end mt-8">
+          <Link href="/news" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
+          <Link href="/materials" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
+          <Link href="/user/material/create" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
+        </div>
         <FV />
         <div className="mb-8">
           <div className={clsx(["flex flex-wrap justify-center max-w-5xl mx-auto", reggaeOne.className])}>
@@ -86,14 +86,7 @@ export default async function Home() {
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-4">ランキング一覧</Title>
           <div className="mb-20">
-            <div className="relative mb-4">
-              <Image src='/images/icon-plugin.png' width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
-              <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">プラグインいいねランキング</TextShadow></p>
-            </div>
-            <MaterialListClient categoryId={2} />
-            <div className="text-right">
-              <Link href={'/materials?category_id=' + pluginsData.category.id} className="bg-gray-400 py-2 px-20 text-white">プラグイン素材を見る →</Link>
-            </div>
+            <MaterialListClient categoryId={2} title="プラグインいいねランキング" icon="/images/icon-plugin.png" moreLinkText="プラグイン素材を見る →" />
           </div>
           <div className="mb-20">
             <div className="relative mb-4">

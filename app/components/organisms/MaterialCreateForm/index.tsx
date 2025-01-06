@@ -176,7 +176,13 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-HTTP-Method-Override': 'PUT'
-                    }
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total!
+                        );
+                        setUploadProgress(percentCompleted);
+                    },
                 });
             }
             setFormState('success');
@@ -256,8 +262,6 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const handleChange = (event: React.SyntheticEvent, newValue: string[]) => {
         setTags(newValue);
     };
-
-    console.log(uploadProgress)
 
     return (
         <>
@@ -346,7 +350,7 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         <Label htmlFor="image" className="shrink-0 mr-4">サムネイル *</Label>
                         <Input id="image" type="file" name="image" className="w-full" onChange={handleFileChange} accept="image" />
                         {state.errors?.image && <ErrorMessage message={state.errors.image[0]} />}
-                        {(fileType == 'image' && thumbnail?.url) && (
+                        {thumbnail?.url && (
                             <div className="mt-4">
                                 <Thumbnail src={thumbnail?.url} />
                             </div>

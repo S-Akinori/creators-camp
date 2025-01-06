@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { notoSansJP } from "./fonts";
 import GoogleAdsense from "./components/molecules/GoogleAdsense.tsx";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // const inter = Inter({ subsets: ["latin"] });
 const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
@@ -29,6 +30,7 @@ export default function RootLayout({
       <GoogleAdsense pId="1983473550632743" />
       <body className={notoSansJP.className}>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
