@@ -15,14 +15,12 @@ export default function UserLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={notoSansJP.className}>
-        <Header />
-        <main className="py-16 min-h-screen">
-            {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="py-16 min-h-screen">
+          {children}
+      </main>
+      <Footer />
+    </>
   );
 }
