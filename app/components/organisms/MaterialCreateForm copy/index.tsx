@@ -25,7 +25,6 @@ import Container from "../../Container";
 import { useFormState } from "react-dom";
 import { createMaterial } from "@/app/lib/actions/createMaterial";
 import { editMaterial } from "@/app/lib/actions/editMaterial";
-import { useRouter } from "next/navigation";
 
 
 interface ImageFile {
@@ -60,9 +59,12 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
     const [storedMaterial, setStoredMaterial] = useState<Material | null>(null)
     const [fetchedTags, setFetchedTags] = useState<Tag[]>([])
     const [tags, setTags] = useState<string[]>([]);
+    const [previewMaterial, setPreviewMaterial] = useState<MaterialPreviewProps | null>(null);
+    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+    const [materialFormData, setMaterialFormData] = useState<FormData>(new FormData());
     const [uploadProgress, setUploadProgress] = useState(0);
 
-    const router = useRouter();
+    const formRef = useRef<HTMLFormElement | null>(null);
 
     const initialState = {
         errors: {},
@@ -112,24 +114,44 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
         setImages(images.filter((_, i) => i !== index));
     };
 
+    const handlePreview = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (formRef.current) {
+            const formData = new FormData(formRef.current); // FormDataで取得
+            images.forEach((image, index) => {
+                formData.append(`images[]`, image.file);
+            });
+            tags.forEach((tag) => {
+                formData.append('tags[]', tag);
+            });
+            disPatch(formData)
+            formData.delete('tags[]')
+            if (!Object.keys(state.errors).length) {
+                const obj = formDataToObject(formData) as MaterialPreviewProps;
+                obj.tags = tags
+                setMaterialFormData(formData);
+                setPreviewMaterial(obj);
+                setPreviewOpen(true);
+            }
+        }
+    }
 
-    const store = async (formData: FormData) => {
+    const store = async () => {
         await csrf();
         setFormState('submitting');
+        setPreviewOpen(false);
+
         try {
             const tagIds = await Promise.all(tags.map(async (tag) => {
                 const res = await storeTag(tag);
                 return res.id;
             }));
-            images.forEach((image, index) => {
-                formData.append(`images[]`, image.file);
-            });
             tagIds.forEach((tagId) => {
-                formData.append('tags[]', tagId.toString());
+                materialFormData.append('tags[]', tagId.toString());
             });
-            disPatch(formData)
+            console.log(materialFormData.getAll('tags[]'))
+
             if (isNew) {
-                const res = await http.post('/materials', formData, {
+                const res = await http.post('/materials', materialFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
@@ -142,12 +164,8 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 });
                 const data = res.data as Material;
                 setStoredMaterial(data);
-                if(formData.get('status') === 'inactive') { //プレビュー画面を表示
-                    window.open(`/materials/${data.id}`, '_blank');
-                    router.push('/user/material/edit/' + data.id);
-                }
             } else {
-                const res = await http.post(`/materials/${material?.id}`, formData, {
+                const res = await http.post(`/materials/${material?.id}`, materialFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-HTTP-Method-Override': 'PUT'
@@ -159,13 +177,8 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         setUploadProgress(percentCompleted);
                     },
                 });
-                const data = res.data as Material;
-                setStoredMaterial(data);
-                if(formData.get('status') === 'inactive') { //プレビュー画面を表示
-                    window.open(`/materials/${data.id}`, '_blank');
-                    window.location.reload()
-                }
             }
+            setFormState('success');
         } catch (e) {
             if (Axios.isAxiosError(e) && e.response) {
                 const data = e.response.data
@@ -176,6 +189,33 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                 setFormState('ready');
             }, 3000);
         };
+    }
+
+    const formDataToObject = (formData: FormData) => {
+        const object: { [key: string]: any } = {};
+
+        formData.forEach((value, key) => {
+            // Keyが `[]` で終わっている場合、配列として扱う
+            if (key.endsWith('[]')) {
+                const cleanKey = key.slice(0, -2); // `[]` を削除
+                if (!object[cleanKey]) {
+                    object[cleanKey] = [];
+                }
+                object[cleanKey].push(value);
+            } else {
+                if (object[key]) {
+                    if (Array.isArray(object[key])) {
+                        object[key].push(value);
+                    } else {
+                        object[key] = [object[key], value];
+                    }
+                } else {
+                    object[key] = value;
+                }
+            }
+        });
+
+        return object;
     }
 
     useEffect(() => {
@@ -243,8 +283,35 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                     </div>
                 )}
             </Modal>
+            {(previewMaterial && thumbnail && previewOpen) && (
+                <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex flex-col justify-center'>
+                    <div className="overflow-y-scroll h-4/5">
+                        <Container>
+                            <div className="flex items-start bg-white max-w-5xl mx-auto">
+                                <div className="border-2 w-3/4">
+                                    <MaterialPreview material={previewMaterial} images={images} thumbnail={thumbnail} />
+                                </div>
+                                <div className="mt-4 p-4 mx-auto justify-center bg-white max-w-max w-1/4">
+                                    <p className="text-center mb-4">保存しますか？</p>
+                                    <div className="mb-4 text-center">
+                                        <Button className="" onClick={() => store()} disabled={formState !== 'ready'}>
+                                            {formState === 'ready' && '保存する'}
+                                            {formState === 'submitting' && <LoadingIcon />}
+                                            {formState === 'error' && 'エラーが発生しました'}
+                                            {formState === 'success' && '更新しました'}
+                                        </Button>
+                                    </div>
+                                    <div className="text-center">
+                                        <Button color="main-cont" onClick={() => setPreviewOpen(false)} disabled={formState !== 'ready'}>修正する</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Container>
+                    </div>
+                </div>
+            )}
             <div className="p-4 mt-8 mx-auto max-w-2xl bg-white shadow">
-                <form action={store}>
+                <form action={store} ref={formRef}>
                     <FormControl flex={false}>
                         <Label htmlFor="file" className="shrink-0 mr-4">素材 *</Label>
                         <Input id="file" type="file" name="file" className="w-full" onChange={handleFileChange} />
@@ -355,14 +422,11 @@ const MaterialCreateForm = ({ categories, material }: Props) => {
                         </Select>
                         {state.errors?.is_ai_generated && <ErrorMessage message={state.errors.is_ai_generated[0]} />}
                     </FormControl>
-                    <div className="text-center mt-8">
-                        <Button name="status" color="main-cont" value='inactive' className="py-4 px-16 mx-4" disabled={formState == 'submitting'}>プレビュー確認</Button>
-                        <Button name="status" value='active' className="py-4 px-16 mx-4" disabled={formState == 'submitting'}>保存</Button>
-                    </div>
-                    <div className="text-center mt-4">
-                        プレビュー確認をすると自動で下書き保存されます。
-                    </div>
                 </form>
+                <div className="text-center mt-8">
+                    <Button className="py-4 px-16 mx-4" type="button" disabled={formState == 'submitting'} onClick={handlePreview}>プレビュー確認</Button>
+                    <Button className="py-4 px-16 mx-4" type="button" disabled={formState == 'submitting'} onClick={handlePreview}>保存</Button>
+                </div>
             </div>
         </>
     );

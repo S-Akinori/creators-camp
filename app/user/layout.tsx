@@ -7,6 +7,9 @@ import { notoSansJP } from "../fonts";
 export const metadata: Metadata = {
   title: "ユーザー画面",
   description: "ゲーム開発者のための素材共有サイト",
+  robots: {
+    index: false
+  }
 };
 
 export default function UserLayout({

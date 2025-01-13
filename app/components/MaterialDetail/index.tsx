@@ -1,7 +1,15 @@
 import Button from "@/app/components/atoms/Button";
+import Container from "@/app/components/Container";
+import TextShadow from "@/app/components/TextShadow";
 import Image from "next/image";
 import { getMaterials, getUserMaterials } from "@/app/lib/material";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
+import MaterialCard from "@/app/components/organisms/MaterialCard";
+import DownloadButton from "@/app/components/organisms/DownloadButton";
+import LikeButton from "@/app/components/organisms/LikeButton";
+import { getMaterial } from "@/app/lib/server/material";
+import FavoriteButton from "@/app/components/organisms/FavoriteButton";
+import PermissionRequestButton from "@/app/components/organisms/PermissionRequestButton";
 import { PermissionToken } from "@/app/types/PermissionToken";
 import clsx from "clsx";
 import { reggaeOne } from "@/app/fonts";
@@ -10,13 +18,14 @@ import MaterialDeleteButton from "@/app/components/organisms/MaterialDeleteButto
 import { identifyFileTypeByExtension } from "@/app/lib/identifyFileTypeByExtension";
 import PreviewButton from "@/app/components/organisms/PreviewButton";
 import Link from "next/link";
+import { getComments } from "@/app/lib/server/comment";
+import FollowButton from "@/app/components/organisms/FollowButton";
+import { getIsFollowing } from "@/app/lib/server/follow";
 import ShareButtons from "@/app/components/organisms/ShareButtons";
 import { limitStringLengthWithEllipsis } from "@/app/lib/functions/limitStringLengthWithEllipsis";
+import CommentClient from "@/app/components/organisms/CommentClient";
+import ReportButton from "@/app/components/organisms/ReportButton";
 import { Material } from "@/app/types/Material";
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-
-
 
 const checkPermissionState = (required: number, permission_tokens: PermissionToken[]) => {
     console.log('required: ', required)
@@ -32,18 +41,20 @@ interface Props {
     material: Material
 }
 
-const MaterialPreview = async ({id, material}: Props) => {
+const MaterialDetail = async ({id, material}: Props) => {
     const user = await getUser()
     // const material = await getMaterial(id)
+    const userMaterialsPagination = await getUserMaterials(material.user.id)
+    const relatedMaterialsPagination = material.category_id > 0 ? await getMaterials({category_id: material.category_id}) : await getMaterials()
     const permissionState = user ? checkPermissionState(material.permission, material.permission_tokens) : 'ready'
     const fileType = identifyFileTypeByExtension(material.file)
-    
+    const comments = await getComments(material.id)
+    const isFollowing = user ? await getIsFollowing(material.user.id) : false
     return (
         <>
             <div className="md:flex">
                 <div className="md:w-2/3">
                     <div className="bg-white shadow p-4 relative">
-                        <div className="text-center p-4 underline">※こちらはプレビュー画面です</div>
                         <h1 className={clsx(["text-main font-bold text-3xl mb-4", reggaeOne.className])}>{material.name}</h1>
                         {(material.is_ai_generated == 1) && (
                             <div className="absolute top-4 right-4 rounded-full border-2 border-main text-main font-bold w-12 aspect-square text-center leading-tight">
@@ -51,10 +62,12 @@ const MaterialPreview = async ({id, material}: Props) => {
                                 利用
                             </div>
                         )}
-                        <div className="md:flex">
-                            <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
-                            <MaterialDeleteButton material={material} />
-                        </div>
+                        {(material.user_id == user?.id) && (
+                            <div className="md:flex">
+                                <Button href={`/user/material/edit/${material.id}`} className={clsx([reggaeOne.className, 'mb-4 mx-2'])}>素材を編集する</Button>
+                                <MaterialDeleteButton material={material} />
+                            </div>
+                        )}
                         <div className="relative border-main border-2">
                             <Thumbnail src={material.image} alt={material.name} />
                             {(fileType === 'music' || fileType === 'video') && (
@@ -73,8 +86,8 @@ const MaterialPreview = async ({id, material}: Props) => {
                         <div className="flex items-center justify-end mt-4 text-sm">
                             {user && (
                                 <>
-                                    <Button color='main-cont' className="mx-2 mb-4">いいね！ <ThumbUpOffAltIcon className="fill-main" /></Button>
-                                    <Button color='accent-cont' className="mx-2 mb-4">お気に入り！ <StarBorderIcon className='fill-accent' /></Button>
+                                    <LikeButton materialId={material.id} defaultLiked={material.likes.length > 0} likeId={material.likes.length > 0 ? material.likes[0].id : null} />
+                                    <FavoriteButton materialId={material.id} defaultFavorited={material.favorites.length > 0} favoriteId={material.favorites.length > 0 ? material.favorites[0].id : null} />
                                 </>
                             )}
                         </div>
@@ -88,22 +101,34 @@ const MaterialPreview = async ({id, material}: Props) => {
                         </div>
                         <div className={reggaeOne.className}>
                             {permissionState === 'approved' && (
-                                <Button className="mt-8 w-full py-4">ダウンロード</Button>
+                                <DownloadButton id={id} name={material.name}>ダウンロード</DownloadButton>
                             )}
                             {permissionState === 'ready' && (
                                 <>
                                     {user && (
                                         <>
-                                            <Button className="mt-8 w-full py-4">クリエイターへ承認依頼する</Button>
+                                            <PermissionRequestButton id={id}>クリエイターへ承認依頼する</PermissionRequestButton>
                                         </>
                                     )}
+                                    {!user && <Button className="mt-8 w-full py-4 text-center" href="/login">ログインして承認依頼する</Button>}
                                     <p className="text-red-600 text-center">この素材はクリエイターへの承認依頼が必要です</p>
                                 </>
+                            )}
+                            {permissionState === 'pending' && (
+                                <Button className="mt-8 w-full py-4" disabled>クリエイターへの承認依頼中です</Button>
+                            )}
+                            {permissionState === 'disapproved' && (
+                                <Button className="mt-8 w-full py-4" disabled>承認されませんでした</Button>
                             )}
                         </div>
                         <div className="mt-4">
                             <div className="flex justify-between">
                                 <ShareButtons />
+                                {(user && user.status === 'active') && (
+                                    <div className="p-4 text-center max-w-max">
+                                        <ReportButton id={material.id} className="text-xs" style={{ padding: '.5rem' }}>不適切な素材として報告する</ReportButton>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -120,15 +145,45 @@ const MaterialPreview = async ({id, material}: Props) => {
                             <p className="text-center">{limitStringLengthWithEllipsis(material.user.description, 120)}</p>
                             {user && (
                                 <div className="mt-4 text-center">
-                                    <Button color="main-cont">フォローする</Button>
+                                    <FollowButton userId={material.user.id} isFollowing={isFollowing} />
                                 </div>
                             )}
                         </div>
                     </div>
                 </div>
             </div>
+            <div className="mt-16">
+                <CommentClient comments={comments} user={user} materialId={material.id} />
+                {!user && (
+                    <div className="border-2 border-main p-4 mx-auto w-max text-center">
+                        <p>コメントを投稿するにはログインが必要です</p>
+                        <Button className="mt-4 py-4" href="/login">ログインする</Button>
+                    </div>
+                )}
+            </div>
+            <div className="mt-16">
+                <h2 className="mb-4">
+                    <TextShadow className="text-xl">{material.user.name}さんの</TextShadow>
+                    <TextShadow className="text-xl">その他の素材</TextShadow>
+                </h2>
+                <div className="flex flex-wrap">
+                    {userMaterialsPagination.data.map((material) => (
+                        <MaterialCard key={material.id} material={material} />
+                    ))}
+                </div>
+            </div>
+            <div className="mt-16">
+                <h2 className="mb-4">
+                    <TextShadow className="text-xl">同じカテゴリーの素材</TextShadow>
+                </h2>
+                <div className="flex flex-wrap">
+                    {relatedMaterialsPagination.data.map((material) => (
+                        <MaterialCard key={material.id} material={material} />
+                    ))}
+                </div>
+            </div>
         </>
     )
 }
 
-export default MaterialPreview;
+export default MaterialDetail;

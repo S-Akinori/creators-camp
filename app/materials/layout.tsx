@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 // const inter = Inter({ subsets: ["latin"] });
-const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
+const reggaeOne = Reggae_One({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "素材検索",
@@ -19,14 +19,12 @@ export default function LoginLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={notoSansJP.className}>
-        <Header />
-        <main className="py-16 min-h-screen">
-            {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="py-16 min-h-screen">
+        {children}
+      </main>
+      <Footer />
+    </>
   );
 }
