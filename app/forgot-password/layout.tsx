@@ -6,8 +6,11 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "ログイン",
+  title: "メール認証",
   description: "ゲーム開発者のための素材共有サイト",
+  robots: {
+    index: false,
+  }
 };
 
 export default function LoginLayout({
@@ -16,14 +19,12 @@ export default function LoginLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={notoSansJP.className}>
-        <Header />
-        <main className="py-16 min-h-screen">
-            {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="py-16 min-h-screen">
+          {children}
+      </main>
+      <Footer />
+      </>
   );
 }

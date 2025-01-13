@@ -1,22 +1,8 @@
-import Button from "@/app/components/atoms/Button";
+
 import Container from "@/app/components/Container";
-import TextShadow from "@/app/components/TextShadow";
-import Title from "@/app/components/Title";
-import { user } from "@/contents/user";
 import Image from "next/image";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { IconButton, Tooltip } from "@mui/material"; import useMaterial from "@/app/lib/hooks/useMaterial";
-import { getUserMaterials } from "@/app/lib/material";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
-import UserCard from "@/app/components/organisms/UserCard";
-import MaterialCard from "@/app/components/organisms/MaterialCard";
-import { getCategory } from "@/app/lib/category";
-import DownloadButton from "@/app/components/organisms/DownloadButton";
-import LikeButton from "@/app/components/organisms/LikeButton";
-import { csrf } from "@/app/lib/csrf";
 import { getMaterial } from "@/app/lib/server/material";
-import FavoriteButton from "@/app/components/organisms/FavoriteButton";
-import PermissionRequestButton from "@/app/components/organisms/PermissionRequestButton";
 import { http } from "@/app/lib/http";
 import { cookies } from "next/headers";
 import AcceptButton from "@/app/components/organisms/AcceptButton";

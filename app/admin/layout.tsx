@@ -8,6 +8,9 @@ import AdminMenu from "../components/AdminMenu";
 export const metadata: Metadata = {
   title: "管理画面",
   description: "管理画面",
+  robots: {
+    index: false,
+  }
 };
 
 export default function AdminPageLayout({

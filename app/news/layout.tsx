@@ -4,8 +4,8 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "当サイトについて",
-  description: "当サイトについてのページです。",
+  title: "お知らせ | " + process.env.NEXT_PUBLIC_SITE_NAME,
+  description: "運営者のお知らせ一覧です。",
 };
 
 export default function AboutPageLayout({
@@ -14,14 +14,12 @@ export default function AboutPageLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={notoSansJP.className}>
+      <>
         <Header />
         <main className="py-16 min-h-screen">
             {children}
         </main>
         <Footer />
-      </body>
-    </html>
+      </>
   );
 }

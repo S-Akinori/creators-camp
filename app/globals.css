@@ -77,3 +77,10 @@ h1 {
   font-weight: bold;
   color: var(--main-color);
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #FCFCFC;
+    color: #222;
+  }
+}

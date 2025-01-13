@@ -17,16 +17,13 @@ import Frame from "./components/molecules/Frame";
 
 export default async function Home() {
   // const materialsPagination = await getMaterials()
-  const pluginsData = await getCategory(2)
-  const musicsData = await getCategory(3)
-  const illustrationsData = await getCategory(6)
   const categories = await getCategories();
   return (
     <>
       <Header />
       <main className="py-16 min-h-screen">
         <div className="flex justify-end mt-8">
-          <Link href="/news" className="mx-2"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
+          <Link href="/news" className="mx-2 hidden md:block"><Image src="/images/news.png" width={212} height={85} alt="twitter" /></Link>
           <Link href="/materials" className="mx-2"><Image src="/images/search.png" width={212} height={85} alt="twitter" /></Link>
           <Link href="/user/material/create" className="mx-2"><Image src="/images/post.png" width={212} height={85} alt="twitter" /></Link>
         </div>
@@ -39,14 +36,14 @@ export default async function Home() {
             <div className="w-1/2 md:w-1/4"><ArrowButton className="w-full" href="/materials?category_id=2"><TextShadow className=" md:text-xl">プラグイン</TextShadow></ArrowButton></div>
           </div>
         </div>
-        <Container className="flex max-w-5xl mx-auto mb-12 flex-wrap">
-          <div className="p-4 w-1/2">
+        <Container className="md:flex max-w-5xl mx-auto mb-12 flex-wrap">
+          <div className="p-4 md:w-1/2">
             <Link href='https://keylandalice.wixsite.com/torapeceeno' target="_blank"><Image src="/images/banner-torape.png" width={580} height={160} alt="" /></Link>
           </div>
-          <div className="p-4 w-1/2">
+          <div className="p-4 md:w-1/2">
             <Link href='https://pokapoka0802.wixsite.com/tunousaginoie82' target="_blank"><Image src="/images/banner-tsunousagi.png" width={580} height={160} alt="" /></Link>
           </div>
-          <div className="p-4 w-1/2">
+          <div className="p-4 md:w-1/2">
             <Link href='https://suiko-game.com/' target="_blank"><Image src="/images/banner-suiko.jpg" width={580} height={160} alt="" /></Link>
           </div>
         </Container>
@@ -78,7 +75,7 @@ export default async function Home() {
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-8">素材一覧</Title>
           <MaterialListClient />
-          <div className="text-right">
+          <div className="text-right mt-8">
             <Link href={'/materials'} className="bg-gray-400 py-2 px-20 text-white">素材をもっと見る →</Link>
           </div>
         </Container>

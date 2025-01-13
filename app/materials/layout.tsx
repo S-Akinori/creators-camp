@@ -9,8 +9,8 @@ import { notoSansJP } from "../fonts";
 const reggaeOne = Reggae_One({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "素材検索",
-  description: "ゲーム開発者のための素材共有サイト",
+  title: "ユニークなゲーム素材が集まる。ゲーム素材一覧 | " + process.env.NEXT_PUBLIC_SITE_NAME,
+  description: `ゲーム開発者のための素材共有サイト${process.env.NEXT_PUBLIC_SITE_NAME}の素材一覧です。ツール、プラグイン、音楽、UIなど様々なカテゴリーの素材を自由に検索してダウンロードできます。`,
 };
 
 export default function LoginLayout({

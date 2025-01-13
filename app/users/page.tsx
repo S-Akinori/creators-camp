@@ -2,30 +2,17 @@ import Image from "next/image";
 import Container from "../components/Container";
 import TextShadow from "../components/TextShadow";
 import Button from "../components/atoms/Button";
-import MaterialCard from "../components/organisms/MaterialCard";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { getUsers } from "../lib/server/user";
-import UserCard from "../components/organisms/UserCard";
 import Pagination from "../components/organisms/Pagination";
 import { User } from "../types/User";
 import UserSearchForm from "../components/organisms/UserSearchForm";
 import { Pagination as PaginationType } from "../types/Material";
-import { search } from "../lib/search";
 import { limitStringLengthWithEllipsis } from "../lib/functions/limitStringLengthWithEllipsis";
-
-const roles = [
-    'ゲームプランナー',
-    'ゲームデザイナー',
-    'イラストレーター',
-    'グラフィッカー',
-    'サウンドクリエイター',
-    'シナリオライター',
-    'テスター',
-    'プログラマー',
-    '声優',
-    'その他クリエイター'
-];
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import UserCategoryList from "../components/organisms/UserCategoryList";
+import RoundedImage from "../components/molecules/RoundedImage";
 
 export default async function UsersIndexPage({searchParams} : {searchParams: { [key: string]: string | undefined }}) {
     const page = searchParams.page ? Number(searchParams.page) : 1;
@@ -44,26 +31,29 @@ export default async function UsersIndexPage({searchParams} : {searchParams: { [
         <Container>
             <h1 className="mb-4"><TextShadow className="text-2xl">ユーザー一覧</TextShadow></h1>
             <UserSearchForm />
-            <div className="flex flex-wrap">
-                <div className="p-2 w-1/2 md:w-1/5">
-                    <Button href='users' className="w-full py-2 block text-center" scroll={false} color={!roleParam ? 'main' : 'main-cont'}>
-                        すべて
-                    </Button>
-                </div>
-                {roles.map((role, index) => (
-                    <div key={index} className="p-2 w-1/2 md:w-1/5">
-                        <Button href={`/users?role=${role}`} scroll={false} className="w-full py-2 block text-center" color={role === roleParam ? 'main' : 'main-cont'}>
-                            {role}
-                        </Button>
-                    </div>
-                ))}
+            <div className="md:hidden">
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                    >
+                        カテゴリーを選択
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <UserCategoryList roleParam={roleParam} />
+                    </AccordionDetails>
+                </Accordion>
             </div>
-            <div className="flex flex-wrap">
+            <div className="hidden md:block">
+                <UserCategoryList roleParam={roleParam} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {usersPagination.data?.map((user) => (
-                    <div key={user.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
+                    <div key={user.id}>
                         <div className="bg-white p-4 shadow">
                             <Link href={`/users/${user.id}`} className="text-center">
-                                <Image src={user.image} width={100} height={100} alt={user.name} className="rounded-full mx-auto border-main border" />
+                                <RoundedImage src={user.image} alt={user.name} width={120} />
                             </Link>
                             <div className="text-center"><Link href={`/users/${user.id}`} className="text-center text-main text-xl">{user.name}</Link></div>
                             <p className="text-center mb-4">{user.role}</p>

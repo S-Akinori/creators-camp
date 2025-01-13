@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Reggae_One } from "next/font/google";
 import "./globals.css";
-import Head from "next/head";
-import TypekitLoader from "./components/TypekitLoader";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import { notoSansJP } from "./fonts";
 import GoogleAdsense from "./components/molecules/GoogleAdsense.tsx";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -13,10 +9,17 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "クリエイターズキャンプ",
-  description: "ゲーム開発者のための素材共有サイトです。誰でも素材の共有ができます。",
-  robots: {
-    index: false
+  title: "ゲーム開発者のための素材共有サイト | " + process.env.NEXT_PUBLIC_SITE_NAME,
+  description: "Re-creator's Campは「素材を再活用する、生き返らせる」という意味を込めたゲーム素材共有サイトです。単に素材が集まる場所だけでなく、クリエイターのコミュニケーションの場として活用いただけます。",
+  openGraph: {
+    images: [
+      {
+        url: process.env.APP_URL + "/images/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Re-creator's Camp",
+      },
+    ],
   }
 };
 

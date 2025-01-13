@@ -1,8 +1,10 @@
+import type { Metadata, ResolvingMetadata } from 'next'
 import Button from "@/app/components/atoms/Button";
 import Thumbnail from "@/app/components/atoms/Thumbnail";
 import Container from "@/app/components/Container";
 import { toDateString } from "@/app/lib/functions/toDateString";
 import { getNews, getNewsDetail } from "@/app/lib/news";
+
 
 interface Props {
     params: {
@@ -10,7 +12,30 @@ interface Props {
     }
 }
 
-const NewsDetailPage = async ({params}: Props) => {
+type MetadataProps = {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata(
+    { params, searchParams }: MetadataProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const slug = (await params).slug
+    const news = await getNewsDetail(slug)
+    const previousImages = (await parent).openGraph?.images || []
+    const description = news.description || news.content.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g, '').slice(0, 200)
+    return {
+        title: news.title,
+        description: description,
+        openGraph: {
+            images: [news.image, ...previousImages],
+        }
+    }
+}
+
+
+const NewsDetailPage = async ({ params }: Props) => {
     const news = await getNewsDetail(params.slug)
 
     return (
@@ -27,7 +52,7 @@ const NewsDetailPage = async ({params}: Props) => {
                         </div>
                     )}
                 </div>
-                <div className="page" dangerouslySetInnerHTML={{__html: news.content}}></div>
+                <div className="page" dangerouslySetInnerHTML={{ __html: news.content }}></div>
             </div>
             <div className="text-center">
                 <Button href='/news'>ニュース一覧へ</Button>

@@ -5,11 +5,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 // const inter = Inter({ subsets: ["latin"] });
-const reggaeOne = Reggae_One({weight: "400", subsets: ["latin"]});
+const reggaeOne = Reggae_One({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "素材検索",
-  description: "ゲーム開発者のための素材共有サイト",
+  title: "ユニークなゲームクリエイターが集まる。ユーザー一覧 | " + process.env.NEXT_PUBLIC_SITE_NAME,
+  description: `ゲーム開発者のための素材共有サイト${process.env.NEXT_PUBLIC_SITE_NAME}のユーザー一覧です。ユーザー一覧から気になるユーザーを見つけてフォローしよう。`,
 };
 
 export default function LoginLayout({
@@ -18,14 +18,12 @@ export default function LoginLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={reggaeOne.className}>
-        <Header />
-        <main className="py-16 min-h-screen">
-            {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="py-16 min-h-screen">
+        {children}
+      </main>
+      <Footer />
+    </>
   );
 }

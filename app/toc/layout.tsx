@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "利用規約",
+  title: "利用規約 | " + process.env.NEXT_PUBLIC_SITE_NAME,
   description: "利用規約についてのページです。",
 };
 
@@ -16,14 +16,12 @@ export default function TOCLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body className={notoSansJP.className}>
+      <>
         <Header />
         <main className="py-16">
             {children}
         </main>
         <Footer />
-      </body>
-    </html>
+      </>
   );
 }

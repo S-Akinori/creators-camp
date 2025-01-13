@@ -6,8 +6,8 @@ import Footer from "../components/Footer";
 import { notoSansJP } from "../fonts";
 
 export const metadata: Metadata = {
-  title: "ログイン",
-  description: "ゲーム開発者のための素材共有サイト",
+  title: "ログイン | " + process.env.NEXT_PUBLIC_SITE_NAME,
+  description: `ゲーム開発者のための素材共有サイト${process.env.NEXT_PUBLIC_SITE_NAME}のログインページです`,
 };
 
 export default function LoginLayout({

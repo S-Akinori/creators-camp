@@ -26,6 +26,7 @@ import { limitStringLengthWithEllipsis } from "@/app/lib/functions/limitStringLe
 import CommentClient from "@/app/components/organisms/CommentClient";
 import ReportButton from "@/app/components/organisms/ReportButton";
 import { Material } from "@/app/types/Material";
+import RoundedImage from "../molecules/RoundedImage";
 
 const checkPermissionState = (required: number, permission_tokens: PermissionToken[]) => {
     console.log('required: ', required)
@@ -133,13 +134,13 @@ const MaterialDetail = async ({id, material}: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className="md:w-1/3 p-4">
+                <div className="md:w-1/3 md:p-4">
                     <div className="bg-white shadow p-4">
                         <h2 className={clsx(["mb-4 text-center text-main text-2xl", reggaeOne.className])}>
                             ユーザー情報
                         </h2>
                         <div>
-                            <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mb-4 mx-auto border-main border" />
+                            <RoundedImage src={material.user.image} alt={material.user.name} width={200} />
                             <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
                             <p className="text-center mb-4">{material.user.role}</p>
                             <p className="text-center">{limitStringLengthWithEllipsis(material.user.description, 120)}</p>
@@ -166,7 +167,7 @@ const MaterialDetail = async ({id, material}: Props) => {
                     <TextShadow className="text-xl">{material.user.name}さんの</TextShadow>
                     <TextShadow className="text-xl">その他の素材</TextShadow>
                 </h2>
-                <div className="flex flex-wrap">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {userMaterialsPagination.data.map((material) => (
                         <MaterialCard key={material.id} material={material} />
                     ))}
@@ -176,7 +177,7 @@ const MaterialDetail = async ({id, material}: Props) => {
                 <h2 className="mb-4">
                     <TextShadow className="text-xl">同じカテゴリーの素材</TextShadow>
                 </h2>
-                <div className="flex flex-wrap">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {relatedMaterialsPagination.data.map((material) => (
                         <MaterialCard key={material.id} material={material} />
                     ))}

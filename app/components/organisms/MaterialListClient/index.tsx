@@ -45,30 +45,35 @@ const MaterialListClient = ({ categoryId, orderBy = 'download_count', title, ico
     }
     return (
         <div>
-            <div className="md:flex justify-between items-center mb-4">
-                <div className="md:flex items-center ">
+            <div className="md:flex justify-between items-center">
+                <div className="md:flex items-center mb-4">
                     {(title && icon) && (
-                        <div className="relative mb-8">
+                        <div className="relative mb-4 md:mb-0">
                             <Image src={icon} width={50} height={50} alt='ランキング' className="absolute left-0 top-0" />
                             <p className="relative pl-4"><TextShadow className=" md:text-2xl" color="accent" align="left">{title}</TextShadow></p>
                         </div>
                     )}
-                    <div className={clsx(['flex justify-center mb-8', reggaeOne.className])}>
+                    <div className={clsx(['flex justify-center', reggaeOne.className])}>
                         <div className="mx-2 md:mx-4"><Button className="rounded-none !p-2" onClick={() => fetchNewData({ categoryId: categoryId, orderBy: 'like_count' })} color={params.orderBy === 'like_count' ? 'main' : 'main-cont'}>イイね順<br /> <ThumbUpOffAlt /> </Button></div>
                         <div className="mx-2 md:mx-4"><Button className="rounded-none !p-2" onClick={() => fetchNewData({ categoryId: categoryId, orderBy: 'download_count' })} color={params.orderBy === 'download_count' ? 'main' : 'main-cont'}>DL順<br /> <Download /> </Button></div>
                     </div>
                 </div>
                 {moreLinkText && (
-                    <div className="text-right">
-                        <Link href={'/materials?category_id=' + categoryId} className="bg-gray-400 py-2 px-20 text-white">{moreLinkText}</Link>
+                    <div className="hidden lg:block text-right">
+                        <Link href={'/materials?category_id=' + categoryId} className="bg-gray-400 py-2 px-4 text-white">{moreLinkText}</Link>
                     </div>
                 )}
             </div>
-            <div className="flex flex-wrap">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {materialsPagination?.data?.map((material) => (
                     <MaterialCard key={material.id} material={material} />
                 ))}
             </div>
+            {moreLinkText && (
+                <div className="block lg:hidden text-right mt-8">
+                    <Link href={'/materials?category_id=' + categoryId} className="bg-gray-400 py-2 px-4 text-white">{moreLinkText}</Link>
+                </div>
+            )}
         </div>
     );
 }

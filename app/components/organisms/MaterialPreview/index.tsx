@@ -15,6 +15,7 @@ import { limitStringLengthWithEllipsis } from "@/app/lib/functions/limitStringLe
 import { Material } from "@/app/types/Material";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import RoundedImage from "../../molecules/RoundedImage";
 
 
 
@@ -108,13 +109,13 @@ const MaterialPreview = async ({id, material}: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className="md:w-1/3 p-4">
+                <div className="md:w-1/3 md:p-4">
                     <div className="bg-white shadow p-4">
                         <h2 className={clsx(["mb-4 text-center text-main text-2xl", reggaeOne.className])}>
                             ユーザー情報
                         </h2>
                         <div>
-                            <Image src={material.user.image} width={200} height={200} alt={material.user.name} className="rounded-full mb-4 mx-auto border-main border" />
+                            <RoundedImage src={material.user.image} alt={material.user.name} width={200} />
                             <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + material.user_id}>{material.user.name}</Link></p>
                             <p className="text-center mb-4">{material.user.role}</p>
                             <p className="text-center">{limitStringLengthWithEllipsis(material.user.description, 120)}</p>
