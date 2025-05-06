@@ -4,6 +4,7 @@ import Button from "../../atoms/Button"
 import { csrf } from "@/app/lib/csrf"
 import { useState } from "react"
 import LoadingIcon from "../../atoms/Icons/LoadingIcons"
+import { useRouter } from "next/navigation"
 
 interface Props {
     id: number | string
@@ -14,6 +15,7 @@ interface Props {
 
 const AcceptButton = ({id, token, is_approved, children}: Props) => {
     const [state, setState] = useState<'ready' | 'submitting' | 'error' | 'success'>('ready')
+    const router = useRouter()
     const onClick = async () => {
         setState('submitting')
         await csrf();
@@ -22,7 +24,7 @@ const AcceptButton = ({id, token, is_approved, children}: Props) => {
                 is_approved: is_approved,
                 token: token
             })
-            setState('success')
+            router.refresh()
         } catch (error) {
             console.log(error)
             setState('error')
@@ -33,7 +35,7 @@ const AcceptButton = ({id, token, is_approved, children}: Props) => {
             {state == 'ready' && children}
             {state == 'submitting' && <LoadingIcon />}
             {state == 'error' && 'エラーが発生しました'}
-            {state == 'success' && '承認依頼を送りました'}
+            {state == 'success' && '承認しました'}
         </Button>
     )
 

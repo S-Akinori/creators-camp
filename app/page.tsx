@@ -53,7 +53,7 @@ export default async function Home() {
             <NewsList />
           </div>
         </Container>
-        <Container className="mb-20">
+        <Container className="mb-20 max-w-5xl mx-auto">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title>ジャンル一覧</Title>
           <div className="max-w-5xl flex justify-center flex-wrap mx-auto">
@@ -71,7 +71,7 @@ export default async function Home() {
             ))}
           </div>
         </Container>
-        <Container className="mb-20">
+        <Container className="mb-20 max-w-5xl mx-auto">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-8">素材一覧</Title>
           <MaterialListClient />
@@ -79,7 +79,7 @@ export default async function Home() {
             <Link href={'/materials'} className="bg-gray-400 py-2 px-20 text-white">素材をもっと見る →</Link>
           </div>
         </Container>
-        <Container className="mb-20">
+        <Container className="mb-20 max-w-5xl mx-auto">
           <div className="absolute left-0 -top-4 z-[-1] aspect-[6/1] w-full"><Image src="/images/flag.png" fill alt="" /></div>
           <Title className="mb-4">ランキング一覧</Title>
           <div className="mb-20">

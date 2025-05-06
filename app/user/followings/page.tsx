@@ -38,7 +38,7 @@ export default async function UsersIndexPage({searchParams} : {searchParams: { [
             <div className="flex flex-wrap">
                 {usersPagination.data?.map((user) => (
                     <div key={user.id} className="w-full md:w-1/3 lg:w-1/4 p-4 mb-4">
-                        <div className="bg-white p-4">
+                        <div className="bg-white p-4 h-full shadow">
                             <Link href={`/users/${user.id}`} className="text-center">
                                 <Image src={user.image} width={100} height={100} alt={user.name} className="rounded-full mx-auto border-main border" />
                             </Link>

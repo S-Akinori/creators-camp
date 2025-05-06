@@ -73,13 +73,6 @@ const UserProfilePage = async () => {
                     </div>
                 </div>
                 <div className="md:w-1/2 mb-8 mb-0 md:p-4">
-                    <div className="mb-8">
-                        <h2 className="mb-4"><TextShadow className="text-2xl">運営からのお知らせ</TextShadow></h2>
-                        <NewsList />
-                        <div className="text-center">
-                            <Button><Link href='/news'>お知らせ一覧へ</Link></Button>
-                        </div>
-                    </div>
                     <div>
                         <h2 className="mb-4"><TextShadow className="text-2xl">マイニュース</TextShadow></h2>
                         <NotificationList />
@@ -121,8 +114,8 @@ const UserProfilePage = async () => {
                     <h2 className="mb-4"><TextShadow className="text-2xl">フォローしたユーザー</TextShadow></h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {followingsPagination.data.map((paginationData) => (
-                            <div key={paginationData.id}>
-                                <div className="bg-white p-4 shadow">
+                            <div key={paginationData.id} className="h-full">
+                                <div className="bg-white p-4 shadow h-full">
                                     <Link href={`/users/${paginationData.id}`} className="text-center">
                                         <RoundedImage src={paginationData.image} alt={paginationData.name} width={120} />
                                     </Link>

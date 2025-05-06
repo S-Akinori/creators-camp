@@ -36,9 +36,11 @@ const PermissionRequestButton = ({id, children}: Props) => {
                         {state == 'error' && 'エラーが発生しました'}
                         {state == 'success' && '承認依頼を送りました'}
                     </Button>
-                    <Button color="main-cont" onClick={() => setOpen(false)} disabled={state !== 'ready'}>
-                        いいえ
-                    </Button>
+                    {state !== 'success' && (
+                        <Button color="main-cont" onClick={() => setOpen(false)} disabled={state !== 'ready'}>
+                            いいえ
+                        </Button>
+                    )}
                 </div>
             </Modal>
             <Button className="mt-8 w-full py-4" onClick={() => setOpen(true)} disabled={state !== 'ready'}>

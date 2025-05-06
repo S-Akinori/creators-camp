@@ -8,6 +8,11 @@ import { cookies } from "next/headers";
 import AcceptButton from "@/app/components/organisms/AcceptButton";
 import clsx from "clsx";
 import { reggaeOne } from "@/app/fonts";
+import RoundedImage from "@/app/components/molecules/RoundedImage";
+import { limitStringLengthWithEllipsis } from "@/app/lib/functions/limitStringLengthWithEllipsis";
+import FollowButton from "@/app/components/organisms/FollowButton";
+import Link from "next/link";
+import Button from "@/app/components/atoms/Button";
 
 interface Props {
     params: {
@@ -32,6 +37,8 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
     const user = userRes.data
     const token = searchParams.token as string
 
+    console.log(permissionToken)
+
     return (
         <Container>
             <div className="md:flex">
@@ -43,10 +50,17 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
                     <div>
                         <p>{material.description}</p>
                     </div>
-                    <div>
-                        <AcceptButton id={params.permissionId} is_approved={1} token={token}>承認する</AcceptButton>
-                        <AcceptButton id={params.permissionId} is_approved={0} token={token}>承認しない</AcceptButton>
-                    </div>
+                    {permissionToken.is_active == 1 && (
+                        <div>
+                            <AcceptButton id={params.permissionId} is_approved={1} token={token}>承認する</AcceptButton>
+                            <AcceptButton id={params.permissionId} is_approved={0} token={token}>承認しない</AcceptButton>
+                        </div>
+                    )}
+                    {permissionToken.is_active == 0 && (
+                        <div>
+                            <Button className="mt-8 w-full py-4" disabled>{permissionToken.is_approved == 1 ? '承認しました' : '承認依頼を却下しました'}</Button>
+                        </div>
+                    )}
                 </div>
                 <div className="md:w-1/2 p-4">
                     <div className="bg-white p-4 h-full">
@@ -54,9 +68,11 @@ const MaterialDetailPage = async ({params, searchParams}: Props) => {
                             こちらのユーザーから承認依頼が届いています
                         </h2>
                         <div>
-                            <Image src={user.image} width={200} height={200} alt={user.name} className="rounded-full mx-auto border-main border" />
-                            <p className="text-center text-main text-xl">{user.name}</p>
-                            <p className="text-center">{user.description}</p>
+                            <RoundedImage src={user.image} alt={user.name} width={200} />
+                            <p className={clsx(["text-center text-main text-xl", reggaeOne.className])}><Link href={'/users/' + user.id}>{user.name}</Link></p>
+                            <p className="text-center mb-4">{user.role}</p>
+                            <p className="text-center">{limitStringLengthWithEllipsis(user.description, 120)}</p>
+                            
                         </div>
                     </div>
                 </div>
