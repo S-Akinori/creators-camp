@@ -2,7 +2,7 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import Input from '../../Form/Input';
 import Select from '../../Form/Select';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Button from '../../atoms/Button';
 import FormControl from '../../Form/FormControl';
 import { Tag } from '@/app/types/Tag';
@@ -10,11 +10,9 @@ import { http } from '@/app/lib/http';
 
 const GlobalSearchForm: React.FC = () => {
     const router = useRouter();
-    const pathname = usePathname()
-    const searchParams = useSearchParams();
     const [type, setType] = useState('materials');
 
-    const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
+    const [keyword, setKeyword] = useState('');
     const [query, setQuery] = useState<{ [key: string]: string }>({});
     const [suggestedTags, setSuggestedTags] = useState<Tag[]>([]);
     const [isTagSearch, setIsTagSearch] = useState(false);
@@ -115,40 +113,6 @@ const GlobalSearchForm: React.FC = () => {
             </FormControl>
         </form>
     );
-    // const router = useRouter();
-
-    // const [keyword, setKeyword] = useState('');
-    // const [type, setType] = useState('materials');
-
-    // const handleSubmit = (e: FormEvent) => {
-    //     e.preventDefault();
-    //     router.push(`/${type}?keyword=${keyword}`);
-    // };
-
-    // return (
-    //     <form onSubmit={handleSubmit}>
-    //         <FormControl style={{marginBottom: 0}}>
-    //             <Input
-    //                 type="text"
-    //                 value={keyword}
-    //                 onChange={(e) => setKeyword(e.target.value)}
-    //                 placeholder="キーワードを入力"
-    //                 className='mr-4 w-full mb-4 md:mb-0'
-    //                 style={{padding: '.5rem'}}
-    //             />
-    //             <Select
-    //                 value={type}
-    //                 onChange={(e) => setType(e.target.value)}
-    //                 className='mr-4'
-    //                 style={{padding: '.5rem'}}
-    //             >
-    //                 <option value='materials'>素材</option>
-    //                 <option value='users'>ユーザー</option>
-    //             </Select>
-    //             <Button type='submit' className='shrink-0'>検索</Button>
-    //         </FormControl>
-    //     </form>
-    // );
 };
 
 export default GlobalSearchForm;
