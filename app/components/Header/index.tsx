@@ -6,6 +6,7 @@ import { reggaeOne } from "@/app/fonts";
 import GlobalSearchForm from "../organisms/GlobalSearchForm";
 import SPMenu from "../organisms/SPMenu";
 import { getUser } from "@/app/lib/auth";
+import React from "react";
 
 const Header = async () => {
     const user = await getUser();
@@ -17,7 +18,9 @@ const Header = async () => {
                     <Link href="/"><Image src="/images/logo.png" width={200} height={80} alt="logo" /></Link>
                 </div>
                 <div className="hidden md:block">
-                    <GlobalSearchForm />
+                    <React.Suspense>
+                        <GlobalSearchForm />
+                    </React.Suspense>
                 </div>
                 <div className="hidden md:flex justify-end">
                     <Link href="/" className="mx-2 px-4 py-2" style={{backgroundColor: '#24332e', borderRadius: '0 0 1rem 1rem'}}><Image src="/images/x-logo.png" width={30} height={30} alt="x" /></Link>
