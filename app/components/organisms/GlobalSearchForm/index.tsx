@@ -82,6 +82,7 @@ const GlobalSearchForm: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="キーワードを入力"
                         className='mb-4 md:mb-0 w-full'
+                        style={{padding: '.5rem'}}
                     />
                     {/* タグのサジェストリスト */}
                     {isTagSearch && suggestedTags.length > 0 && (
