@@ -32,8 +32,13 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
         if (res.status === 401 || data.status !== 'active') {
             return NextResponse.redirect(new URL('/user', req.url));
         }
-
     }
+
+    // if(req.nextUrl.pathname.startsWith('/materials/')) {
+    //     if( res.status === 401) {
+    //         return NextResponse.redirect(new URL('/login', req.url));
+    //     }
+    // }
 
     // ユーザー詳細ページにアクセスした場合のステータスチェック
     // if (req.nextUrl.pathname.startsWith('/user/')) {
@@ -57,6 +62,7 @@ export default async function middleware(req: NextRequest, ev: NextFetchEvent) {
     // }
 
     // その他のルートに対する処理
+
     if (res.status !== 401 && !data.email_verified_at) {
         return NextResponse.redirect(new URL('/login/email-verify', req.url));
     } else if (res.status !== 401) {
@@ -73,7 +79,8 @@ export const config = {
         '/register',
         '/user',
         '/user/material/:path*',
-        '/materials/[id]/:path*',
+        // '/materials/:path*',
+        '/materials/:path*/permission/:path*',
         '/admin',
         '/admin/:path*',
     ],
