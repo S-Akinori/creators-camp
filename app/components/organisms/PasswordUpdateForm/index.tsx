@@ -19,6 +19,7 @@ const PasswordUpdateForm = () => {
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'error' | 'success'>('idle')
     const update = async (formData: FormData) => {
         setFormState('submitting')
+        // formData.append('_method', 'put')
         const data = Object.fromEntries(formData.entries())
         await csrf()
         try {
@@ -41,6 +42,10 @@ const PasswordUpdateForm = () => {
             <FormControl flex={false}>
                 <Label htmlFor="password" className="shrink-0 mr-4">新しいパスワード</Label>
                 <Input id="password" name="password" type="password" className="w-full" />
+            </FormControl>
+            <FormControl flex={false}>
+                <Label htmlFor="password_confirmation" className="shrink-0 mr-4">パスワード確認</Label>
+                <Input id="password_confirmation" name="password_confirmation" type="password" className="w-full" />
             </FormControl>
             <div className="text-center mt-8">
                 <button type="submit" className="py-4 px-16 bg-main text-white rounded-full" disabled={formState === 'submitting'}>
